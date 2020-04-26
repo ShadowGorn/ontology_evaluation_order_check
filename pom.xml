@@ -1,18 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>edu.stanford.swrl</groupId>
-    <artifactId>swrlapi-parent</artifactId>
-    <version>2.0.8</version>
-  </parent>
-
-  <groupId>edu.stanford.swrl</groupId>
-  <artifactId>swrlapi-example</artifactId>
-  <version>2.0.8</version>
+  <groupId>edu.vstu.poas</groupId>
+  <artifactId>ontology_cpp_parsing</artifactId>
+  <version>0.0.1</version>
   <packaging>jar</packaging>
 
-  <name>SWRLAPI Example</name>
+  <name>ontology_cpp_parsing</name>
   <description>Minimal SWRLAPI-based project</description>
 
   <properties>
@@ -23,10 +17,10 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git@github.com:protegeproject/swrlapi-example.git</connection>
-    <developerConnection>scm:git:git@github.com:protegeproject/swrlapi-example.git</developerConnection>
-    <url>https://github.com/protegeproject/swrlapi-example</url>
-    <tag>release-2.0.8</tag>
+    <connection>scm:git:git@github.com:ShadowGorn/ontology_cpp_parsing.git</connection>
+    <developerConnection>scm:git:git@github.com:ShadowGorn/ontology_cpp_parsing.git</developerConnection>
+    <url>https://github.com/ShadowGorn/ontology_cpp_parsing.git</url>
+    <tag>unstable-0.0.1</tag>
   </scm>
 
   <dependencies>
