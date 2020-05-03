@@ -235,7 +235,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#app -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#app">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:comment>app - метка &quot;использовано&quot;, проставляется, когда использовано другой операцией как операнд.</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -244,7 +243,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#arity -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#arity">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment>arity - арность операции, бывает &apos;unary&apos;, &apos;binary&apos;, &apos;ternary&apos;, &apos;complex&apos; (для скобок всяких).</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -253,7 +251,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#associativity -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#associativity">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment>associativity - ассоциативность, бывает &apos;L&apos; и &apos;R&apos;, есть не у всех операций (как минимум у скобок нету)</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -262,7 +259,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#complex_beggining -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#complex_beggining">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:comment>complex_beggining - маркер начала сложной операции</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -295,7 +291,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#eval -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#eval">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:comment>eval - метка, проставляется после определения оперндов для операции, считается уже выполнившейся</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -320,7 +315,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#unsignedInt"/>
         <rdfs:comment>Индекс - номер по порядку слева направо в инфиксной записи, начиная с 1</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -329,7 +323,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#init -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#init">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:comment>init - метка, выставляется с самого начала для операндов, для операторов после определения данных об операции</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -346,7 +339,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#last -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#last">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:comment>last - пометка о том, что это последний элемент</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -355,7 +347,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#prefix_postfix -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#prefix_postfix">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment>prefix_postfix - показывает для унарной операции, префиксная она или постфиксная</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -364,7 +355,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#priority -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#priority">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#unsignedInt"/>
         <rdfs:comment>priority - приоритет операции (больше - позже выполнится) https://en.cppreference.com/w/cpp/language/operator_precedence</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -373,7 +363,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#real_pos -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#real_pos">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#unsignedInt"/>
         <rdfs:comment>real_pos - позиция в тексте для показа ошибок</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -382,7 +371,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#unsignedInt"/>
         <rdfs:comment>step - номер шага</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -391,7 +379,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#student_pos -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#student_pos">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#unsignedInt"/>
         <rdfs:comment>student_pos - порядок в ответе у студента</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -400,8 +387,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment>text - строковое представление операции или операнда</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -410,7 +395,6 @@ REFACTORING:
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#time_object -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#time_object">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:comment>time_object - признак того, что это спец объект, хранящий операцию на этом шаге</rdfs:comment>
     </owl:DatatypeProperty>
     
@@ -885,25 +869,25 @@ REFACTORING:
     <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#other">
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_next">
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
-    </rdf:Description>
     <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c_next">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#other">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
     <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#other_next">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_index">
+    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_next">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#other_index">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
     <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c_index">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#other_index">
+    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_index">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
     <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#d">
@@ -954,16 +938,10 @@ REFACTORING:
     <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_prior">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_i">
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_i">
+    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
     <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_assoc">
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
-    </rdf:Description>
-    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index">
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
     </rdf:Description>
     <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_plus_1">
@@ -1143,7 +1121,7 @@ REFACTORING:
                                         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
                                         <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
                                         <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_i"/>
+                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_index"/>
                                     </rdf:Description>
                                 </rdf:first>
                                 <rdf:rest>
@@ -1154,7 +1132,7 @@ REFACTORING:
                                                 <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
                                                 <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
                                                 <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
-                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_i"/>
+                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
                                             </rdf:Description>
                                         </rdf:first>
                                         <rdf:rest>
@@ -1324,7 +1302,7 @@ REFACTORING:
                                         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
                                         <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
                                         <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_i"/>
+                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_index"/>
                                     </rdf:Description>
                                 </rdf:first>
                                 <rdf:rest>
@@ -1335,7 +1313,7 @@ REFACTORING:
                                                 <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
                                                 <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
                                                 <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
-                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_i"/>
+                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
                                             </rdf:Description>
                                         </rdf:first>
                                         <rdf:rest>
