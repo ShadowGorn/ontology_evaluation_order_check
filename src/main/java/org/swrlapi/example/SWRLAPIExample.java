@@ -1,65 +1,80 @@
 package org.swrlapi.example;
 
+import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
+import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
+
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.swrlapi.factory.SWRLAPIFactory;
-import org.swrlapi.parser.SWRLParseException;
-import org.swrlapi.sqwrl.SQWRLQueryEngine;
-import org.swrlapi.sqwrl.SQWRLResult;
-import org.swrlapi.sqwrl.exceptions.SQWRLException;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.Node;
+import org.semanticweb.owlapi.reasoner.NodeSet;
 
 import java.io.File;
-import java.util.Optional;
+import java.util.Set;
 
 public class SWRLAPIExample
 {
   public static void main(String[] args)
   {
-    if (args.length > 1)
-      Usage();
-
-    Optional<String> owlFilename = args.length == 0 ? Optional.<String>empty() : Optional.of(args[0]);
-    Optional<File> owlFile = (owlFilename != null && owlFilename.isPresent()) ?
-      Optional.of(new File(owlFilename.get())) :
-      Optional.<File>empty();
+    String filename = "ontology/ast_by_marks.owl";
+    ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+    File file = new File(classloader.getResource(filename).getFile());
 
     try {
       // Create an OWL ontology using the OWLAPI
       OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
-      OWLOntology ontology = owlFile.isPresent() ?
-        ontologyManager.loadOntologyFromOntologyDocument(owlFile.get()) :
-        ontologyManager.createOntology();
+      OWLOntology ontology = ontologyManager.loadOntologyFromOntologyDocument(file);
 
-      // Create SQWRL query engine using the SWRLAPI
-      SQWRLQueryEngine queryEngine = SWRLAPIFactory.createSQWRLQueryEngine(ontology);
+      PelletReasoner reasoner = PelletReasonerFactory.getInstance().createReasoner( ontology );
 
-      // Create and execute a SQWRL query using the SWRLAPI
-      SQWRLResult result = queryEngine.runSQWRLQuery("q1", "swrlb:add(?x, 2, 2) -> sqwrl:select(?x)");
+      // http://www.w3.org/2002/07/owl#Thing
+      OWLClass Thing = ontologyManager.getOWLDataFactory().getOWLClass(IRI.create("http://www.w3.org/2002/07/owl#Thing"));
+      String ontologyIRI = "http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks";
+      OWLObjectProperty hasOperand = ontologyManager.getOWLDataFactory().getOWLObjectProperty(IRI.create(ontologyIRI + "#has_operand"));
+      OWLDataProperty text = ontologyManager.getOWLDataFactory().getOWLDataProperty(IRI.create(ontologyIRI + "#text"));
+      OWLDataProperty index = ontologyManager.getOWLDataFactory().getOWLDataProperty(IRI.create(ontologyIRI + "#index"));
+      OWLDataProperty step = ontologyManager.getOWLDataFactory().getOWLDataProperty(IRI.create(ontologyIRI + "#step"));
 
-      // Process the SQWRL result
-      if (result.next())
-        System.out.println("x: " + result.getLiteral("x").getInteger());
+      NodeSet<OWLNamedIndividual> individuals = reasoner.getInstances(Thing, false);
+      for(Node<OWLNamedIndividual> sameInd : individuals) {
+        OWLNamedIndividual ind = sameInd.getRepresentativeElement();
+
+        NodeSet<OWLNamedIndividual> operands = reasoner.getObjectPropertyValues(ind, hasOperand);
+
+        if (operands.isEmpty()) {
+          continue;
+        }
+
+        Set<OWLLiteral> texts = reasoner.getDataPropertyValues(ind, text);
+        Set<OWLLiteral> indexes = reasoner.getDataPropertyValues(ind, index);
+        Set<OWLLiteral> steps = reasoner.getDataPropertyValues(ind, step);
+
+        String operatorText = texts.iterator().next().getLiteral();
+        String operatorIndex = indexes.iterator().next().getLiteral();
+        String operatorStep = steps.iterator().next().getLiteral();
+
+        for(Node<OWLNamedIndividual> sameOpInd : operands) {
+          OWLNamedIndividual opInd = sameOpInd.getRepresentativeElement();
+
+          Set<OWLLiteral> opTexts = reasoner.getDataPropertyValues(opInd, text);
+          Set<OWLLiteral> opIndexes = reasoner.getDataPropertyValues(opInd, index);
+          Set<OWLLiteral> opSteps = reasoner.getDataPropertyValues(opInd, step);
+
+          String operandText = opTexts.iterator().next().getLiteral();
+          String operandIndex = opIndexes.iterator().next().getLiteral();
+          String operandStep = opSteps.iterator().next().getLiteral();
+
+          System.out.println("operation: " + operatorText + " | index: " + operatorIndex + " | step: " + operatorStep);
+          System.out.println("operand: " + operandText + " | index: " + operandIndex + " | step: " + operandStep);
+          System.out.println("--------------------------");
+        }
+      }
 
     } catch (OWLOntologyCreationException e) {
       System.err.println("Error creating OWL ontology: " + e.getMessage());
-      System.exit(-1);
-    } catch (SWRLParseException e) {
-      System.err.println("Error parsing SWRL rule or SQWRL query: " + e.getMessage());
-      System.exit(-1);
-    } catch (SQWRLException e) {
-      System.err.println("Error running SWRL rule or SQWRL query: " + e.getMessage());
       System.exit(-1);
     } catch (RuntimeException e) {
       System.err.println("Error starting application: " + e.getMessage());
       System.exit(-1);
     }
-  }
-
-  private static void Usage()
-  {
-    System.err.println("Usage: " + SWRLAPIExample.class.getName() + " [ <owlFileName> ]");
-    System.exit(1);
   }
 }
