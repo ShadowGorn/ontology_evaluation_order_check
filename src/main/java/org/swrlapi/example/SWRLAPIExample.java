@@ -21,9 +21,10 @@ class OntologyHelper {
 
         try {
             OntologyManager = OWLManager.createOWLOntologyManager();
-            OWLOntology ontology = OntologyManager.loadOntologyFromOntologyDocument(file);
+            Ontology = OntologyManager.loadOntologyFromOntologyDocument(file);
+            DataFactory = OntologyManager.getOWLDataFactory();
 
-            Reasoner = PelletReasonerFactory.getInstance().createReasoner(ontology);
+            Reasoner = PelletReasonerFactory.getInstance().createReasoner(Ontology);
         } catch (OWLOntologyCreationException e) {
             System.err.println("Error creating OWL ontology: " + e.getMessage());
             System.exit(-1);
@@ -43,13 +44,26 @@ class OntologyHelper {
         return OntologyManager.getOWLDataFactory().getOWLDataProperty(getFullIRI(propertyName));
     }
 
+    public void addInstance(String text, int index, int step) {
+        IRI name = getFullIRI("op-" + String.valueOf(step) + "-" + String.valueOf(index));
+        OWLNamedIndividual op = DataFactory.getOWLNamedIndividual(name);
+
+        OWLDataProperty dpText = getDataProperty("text");
+        OWLDataProperty dpIndex = getDataProperty("index");
+        OWLDataProperty dpStep = getDataProperty("step");
+
+        OntologyManager.addAxiom(Ontology, DataFactory.getOWLDeclarationAxiom(op));
+        OntologyManager.addAxiom(Ontology, DataFactory.getOWLDataPropertyAssertionAxiom(dpText, op, DataFactory.getOWLLiteral(text)));
+        OntologyManager.addAxiom(Ontology, DataFactory.getOWLDataPropertyAssertionAxiom(dpIndex, op, DataFactory.getOWLLiteral(index)));
+        OntologyManager.addAxiom(Ontology, DataFactory.getOWLDataPropertyAssertionAxiom(dpStep, op, DataFactory.getOWLLiteral(step)));
+    }
+
     public OWLReasoner getReasoner() {
         return Reasoner;
     }
 
     public String getDataValue(OWLNamedIndividual ind, OWLDataProperty dataProperty) {
         Set<OWLLiteral> data = Reasoner.getDataPropertyValues(ind, dataProperty);
-        assert data.size() <= 1;
 
         if (data.isEmpty()) {
             return "";
@@ -64,6 +78,8 @@ class OntologyHelper {
 
     String OntologyIRI;
     OWLOntologyManager OntologyManager;
+    OWLOntology Ontology;
+    OWLDataFactory DataFactory;
     PelletReasoner Reasoner;
 }
 
@@ -72,6 +88,12 @@ public class SWRLAPIExample {
         String filename = "ontology/ast_by_marks.owl";
         String ontologyIRI = "http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks";
         OntologyHelper helper = new OntologyHelper(filename, ontologyIRI);
+
+        helper.addInstance(")", 10, 10);
+        helper.addInstance("(", 10, 11);
+
+        OWLReasoner reasoner = helper.getReasoner();
+        reasoner.flush();
 
         OWLClass Thing = helper.getThingClass();
         OWLObjectProperty hasOperand = helper.getObjectProperty("has_operand");
@@ -99,8 +121,6 @@ public class SWRLAPIExample {
         OWLDataProperty priority = helper.getDataProperty("priority");
         OWLDataProperty realPos = helper.getDataProperty("real_pos");
         OWLDataProperty studentPos = helper.getDataProperty("student_pos");
-
-        OWLReasoner reasoner = helper.getReasoner();
 
         NodeSet<OWLNamedIndividual> individuals = reasoner.getInstances(Thing, true);
         for (Node<OWLNamedIndividual> sameInd : individuals) {
