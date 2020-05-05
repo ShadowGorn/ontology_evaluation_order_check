@@ -1,7 +1,7 @@
 package org.swrlapi.example;
 
-import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
-import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
+import openllet.owlapi.OpenlletReasoner;
+import openllet.owlapi.OpenlletReasonerFactory;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -10,7 +10,6 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.util.Set;
 
 class OntologyHelper {
@@ -24,7 +23,7 @@ class OntologyHelper {
             Ontology = OntologyManager.loadOntologyFromOntologyDocument(file);
             DataFactory = OntologyManager.getOWLDataFactory();
 
-            Reasoner = PelletReasonerFactory.getInstance().createReasoner(Ontology);
+            Reasoner = OpenlletReasonerFactory.getInstance().createReasoner(Ontology);
         } catch (OWLOntologyCreationException e) {
             System.err.println("Error creating OWL ontology: " + e.getMessage());
             System.exit(-1);
@@ -80,7 +79,7 @@ class OntologyHelper {
     OWLOntologyManager OntologyManager;
     OWLOntology Ontology;
     OWLDataFactory DataFactory;
-    PelletReasoner Reasoner;
+    OpenlletReasoner Reasoner;
 }
 
 public class SWRLAPIExample {
