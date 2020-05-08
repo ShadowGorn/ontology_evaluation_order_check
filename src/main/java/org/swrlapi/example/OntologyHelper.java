@@ -4,14 +4,12 @@ import openllet.owlapi.OpenlletReasoner;
 import openllet.owlapi.OpenlletReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
 
 public class OntologyHelper {
     static final String DEFAULT_FILENAME = "ontology/ast_by_marks.owl";
@@ -59,6 +57,10 @@ public class OntologyHelper {
         return ind;
     }
 
+    public NodeSet<OWLNamedIndividual> getAllIndividuals() {
+        return Reasoner.getInstances(getThingClass());
+    }
+
     public NodeSet<OWLNamedIndividual> getIndividuals() {
         OWLClassExpression exp = DataFactory.getOWLDataHasValue(getDataProperty("step"), DataFactory.getOWLLiteral(0));
         return Reasoner.getInstances(exp);
@@ -98,24 +100,83 @@ public class OntologyHelper {
         }
     }
 
+    public void dump(boolean all) {
+        NodeSet<OWLNamedIndividual> inds = all ? getAllIndividuals() : getIndividuals();
+
+        for (OWLNamedIndividual ind : getSortedIndividuals(inds)) {
+            dumpDataProperties(ind);
+            dumpObjectProperties(ind);
+            System.out.println();
+        }
+    }
+
+    public List<OWLNamedIndividual> getSortedIndividuals(NodeSet<OWLNamedIndividual> inds) {
+        ArrayList<OWLNamedIndividual> sortedInds = new ArrayList<>();
+        for (Node<OWLNamedIndividual> sameInd : inds) {
+            OWLNamedIndividual ind = sameInd.getRepresentativeElement();
+            sortedInds.add(ind);
+        }
+        sortedInds.sort(Comparator
+                .comparing((OWLNamedIndividual cInd) -> {
+                    return Integer.parseInt(getDataValue(cInd, getDataProperty("step")));
+                })
+                .thenComparing((OWLNamedIndividual cInd) -> {
+                    return Integer.parseInt(getDataValue(cInd, getDataProperty("index")));
+                })
+        );
+        return sortedInds;
+    }
+
     void dumpDataProperty(OWLNamedIndividual ind, String dataProperty) {
         System.out.println(dataProperty + ": " + getDataValue(ind, getDataProperty(dataProperty)));
     }
 
-    public void dumpInstance(OWLNamedIndividual ind) {
-        System.out.println("Individual " + ind.toStringID());
-        System.out.println("-");
+    public void dumpDataProperties(OWLNamedIndividual ind) {
+        dumpCoreDataProperties(ind);
         List<String> properties = Arrays.asList(
-                "text", "index", "step", "last",
+                "last",
                 "init", "eval", "app",
                 "arity", "associativity", "prefixPostfix", "priority",
                 "complexBeginning", "complexEnding",
                 "copy", "copyWithoutMarks",
                 "hasHighestPriorityToLeft", "hasHighestPriorityToRight",
-                "realPos", "studentPos", "isOperand");
+                "realPos", "studentPos", "isOperand"
+        );
 
         for (String property : properties) {
             dumpDataProperty(ind, property);
+        }
+    }
+
+    public void dumpCoreDataProperties(OWLNamedIndividual ind) {
+        System.out.println("Individual " + ind.toStringID());
+        List<String> properties = Arrays.asList("text", "index", "step");
+
+        for (String property : properties) {
+            dumpDataProperty(ind, property);
+        }
+    }
+
+    public void dumpObjectProperty(OWLNamedIndividual ind, String property) {
+        System.out.println("Object property: " + property);
+        NodeSet<OWLNamedIndividual> indNodeSet = Reasoner.getObjectPropertyValues(ind, getObjectProperty(property));
+        for (OWLNamedIndividual pInd : getSortedIndividuals(indNodeSet)) {
+            dumpCoreDataProperties(pInd);
+        }
+        System.out.println("-----");
+    }
+
+    public void dumpObjectProperties(OWLNamedIndividual ind) {
+        List<String> properties = Arrays.asList(
+                "all_app_to_left", "all_app_to_right", "all_eval_to_right",
+                "before", "complex_boundaries", "find_left_operand", "find_right_operand",
+                "has_operand", "high_priority", "in_complex", "more_priority_left_by_step",
+                "more_priority_right_by_step", "next_index", "next_step", "not_index", "operation_time",
+                "prev_index", "prev_operand", "prev_operation", "same_step", "0_step"
+        );
+
+        for (String property : properties) {
+            dumpObjectProperty(ind, property);
         }
     }
 
