@@ -21,4 +21,4 @@ You can then run the application as follows:
 
     mvn exec:java
 
-![](https://github.com/shadowgorn/ShadowGorn/ontology_cpp_parsing/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Java CI with Maven](https://github.com/ShadowGorn/ontology_cpp_parsing/workflows/Java%20CI%20with%20Maven/badge.svg)
