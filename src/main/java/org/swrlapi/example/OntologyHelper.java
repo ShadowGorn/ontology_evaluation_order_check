@@ -140,7 +140,7 @@ public class OntologyHelper {
                 "complex_beginning", "complex_ending",
                 "copy", "copy_without_marks",
                 "has_highest_priority_to_left", "has_highest_priority_to_right",
-                "real_pos", "student_pos", "is_operand"
+                "real_pos", "student_pos", "is_operand", "is_function_call"
         );
 
         for (String property : properties) {
