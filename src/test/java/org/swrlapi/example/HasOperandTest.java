@@ -182,7 +182,7 @@ public class HasOperandTest {
     @Test
     public void ManyPostfixInComplexTest() {
         List<String> texts = Arrays.asList("(", "(", "var", "--", ")", "--", ")", "--");
-        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts, true);
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
         expOperands.put(1, Set.of(6, 7));
@@ -192,7 +192,7 @@ public class HasOperandTest {
         expOperands.put(5, Set.of());
         expOperands.put(6, Set.of(2));
         expOperands.put(7, Set.of());
-        expOperands.put(8, Set.of());
+        expOperands.put(8, Set.of(1));
 
         assertEquals(expOperands, realOperands);
     }
@@ -349,6 +349,135 @@ public class HasOperandTest {
         expOperands.put(11, Set.of());
         expOperands.put(12, Set.of(2, 13));
         expOperands.put(13, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void SimpleFunctionTest() {
+        List<String> texts = Arrays.asList("func", "(", ")");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of());
+        expOperands.put(2, Set.of(1, 3));
+        expOperands.put(3, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void ComplexNameFunctionTest() {
+        List<String> texts = Arrays.asList("scope", "::", "func", "(", ")");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of());
+        expOperands.put(2, Set.of(1, 3));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of(2, 5));
+        expOperands.put(5, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void ManyComplexNameFunctionTest() {
+        List<String> texts = Arrays.asList("scope1", "::", "scope2", "::", "func", "(", ")");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of());
+        expOperands.put(2, Set.of(1, 3));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of(2, 5));
+        expOperands.put(5, Set.of());
+        expOperands.put(6, Set.of(4, 7));
+        expOperands.put(7, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void FunctionWithOneParamTest() {
+        List<String> texts = Arrays.asList("func", "(", "var", ")");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of());
+        expOperands.put(2, Set.of(1, 3, 4));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void FunctionWithSeveralParamTest() {
+        List<String> texts = Arrays.asList("func", "(", "var", ",", "var2", ")");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of());
+        expOperands.put(2, Set.of(1, 3, 5, 6));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of());
+        expOperands.put(5, Set.of());
+        expOperands.put(6, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void FunctionWithManyParamTest() {
+        List<String> texts = Arrays.asList("func", "(", "var", ",", "var2", ",", "var3", ",", "var4", ")");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of());
+        expOperands.put(2, Set.of(1, 3, 5, 7, 9, 10));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of());
+        expOperands.put(5, Set.of());
+        expOperands.put(6, Set.of());
+        expOperands.put(7, Set.of());
+        expOperands.put(8, Set.of());
+        expOperands.put(9, Set.of());
+        expOperands.put(10, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void ComplexLikeFunctionWithSeveralParamTest() {
+        List<String> texts = Arrays.asList("(", "var", ",", "var2", ")");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of(3, 5));
+        expOperands.put(2, Set.of());
+        expOperands.put(3, Set.of(2, 4));
+        expOperands.put(4, Set.of());
+        expOperands.put(5, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+
+    @Test
+    public void FunctionWithComplexNameSeveralParamTest() {
+        List<String> texts = Arrays.asList("scope", "::", "func", "(", "var", ",", "var2", ")");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of());
+        expOperands.put(2, Set.of(1, 3));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of(2, 5, 7, 8));
+        expOperands.put(5, Set.of());
+        expOperands.put(6, Set.of());
+        expOperands.put(7, Set.of());
+        expOperands.put(8, Set.of());
 
         assertEquals(expOperands, realOperands);
     }
