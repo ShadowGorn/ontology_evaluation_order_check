@@ -50,8 +50,8 @@ public class HasOperandTest {
         HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
-        expOperands.put(1, Set.of(2));
-        expOperands.put(2, Set.of());
+        expOperands.put(1, new HashSet<>(Arrays.asList((2))));
+        expOperands.put(2, new HashSet<>(Arrays.asList()));
 
         Assert.assertEquals(expOperands, realOperands);
     }
@@ -62,8 +62,8 @@ public class HasOperandTest {
         HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
-        expOperands.put(1, Set.of());
-        expOperands.put(2, Set.of(1));
+        expOperands.put(1, new HashSet<>(Arrays.asList()));
+        expOperands.put(2, new HashSet<>(Arrays.asList(1)));
 
         Assert.assertEquals(expOperands, realOperands);
     }
@@ -74,9 +74,9 @@ public class HasOperandTest {
         HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
-        expOperands.put(2, Set.of(1, 3));
-        expOperands.put(1, Set.of());
-        expOperands.put(3, Set.of());
+        expOperands.put(2, new HashSet<>(Arrays.asList(1, 3)));
+        expOperands.put(1, new HashSet<>(Arrays.asList()));
+        expOperands.put(3, new HashSet<>(Arrays.asList()));
 
         Assert.assertEquals(expOperands, realOperands);
     }
@@ -87,14 +87,14 @@ public class HasOperandTest {
         HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
-        expOperands.put(1, Set.of(5));
-        expOperands.put(2, Set.of());
-        expOperands.put(3, Set.of(2, 4));
-        expOperands.put(4, Set.of());
-        expOperands.put(5, Set.of());
-        expOperands.put(6, Set.of(1, 7));
-        expOperands.put(7, Set.of(8));
-        expOperands.put(8, Set.of());
+        expOperands.put(1, new HashSet<>(Arrays.asList(5)));
+        expOperands.put(2, new HashSet<>(Arrays.asList()));
+        expOperands.put(3, new HashSet<>(Arrays.asList(2, 4)));
+        expOperands.put(4, new HashSet<>(Arrays.asList()));
+        expOperands.put(5, new HashSet<>(Arrays.asList()));
+        expOperands.put(6, new HashSet<>(Arrays.asList(1, 7)));
+        expOperands.put(7, new HashSet<>(Arrays.asList(8)));
+        expOperands.put(8, new HashSet<>(Arrays.asList()));
 
         Assert.assertEquals(expOperands, realOperands);
     }
