@@ -136,11 +136,11 @@ public class OntologyHelper {
         List<String> properties = Arrays.asList(
                 "last",
                 "init", "eval", "app",
-                "arity", "associativity", "prefixPostfix", "priority",
-                "complexBeginning", "complexEnding",
-                "copy", "copyWithoutMarks",
-                "hasHighestPriorityToLeft", "hasHighestPriorityToRight",
-                "realPos", "studentPos", "isOperand"
+                "arity", "associativity", "prefix_postfix", "priority",
+                "complex_beginning", "complex_ending",
+                "copy", "copy_without_marks",
+                "has_highest_priority_to_left", "has_highest_priority_to_right",
+                "real_pos", "student_pos", "is_operand"
         );
 
         for (String property : properties) {
