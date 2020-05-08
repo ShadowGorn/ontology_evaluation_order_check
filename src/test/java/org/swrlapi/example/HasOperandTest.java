@@ -14,8 +14,16 @@ import java.util.*;
 public class HasOperandTest {
 
     HashMap<Integer, Set<Integer>> getOperands(List<String> texts) {
+        return getOperands(texts, false);
+    }
+
+    HashMap<Integer, Set<Integer>> getOperands(List<String> texts, boolean dump) {
         HashMap<Integer, Set<Integer>> operandsIndexes = new HashMap<>();
         OntologyHelper helper = new OntologyHelper(texts);
+
+        if (dump) {
+            helper.dump(true);
+        }
 
         for (Node<OWLNamedIndividual> sameInd : helper.getIndividuals()) {
             OWLNamedIndividual ind = sameInd.getRepresentativeElement();
@@ -46,7 +54,6 @@ public class HasOperandTest {
         assertEquals(expOperands, realOperands);
     }
 
-    @Disabled
     @Test
     public void SimplePrefixTest() {
         List<String> texts = Arrays.asList("--", "var");
@@ -59,7 +66,6 @@ public class HasOperandTest {
         assertEquals(expOperands, realOperands);
     }
 
-    @Disabled
     @Test
     public void SimplePostfixTest() {
         List<String> texts = Arrays.asList("var", "--");
