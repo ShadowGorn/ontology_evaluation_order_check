@@ -81,7 +81,7 @@ public class HasOperandTest {
     @Test
     public void InnerComplexTest() {
         List<String> texts = Arrays.asList("(", "(", ")", ")");
-        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts, true);
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
         expOperands.put(1, Set.of(2, 4));
@@ -252,7 +252,7 @@ public class HasOperandTest {
     @Test
     public void InComplexTest() {
         List<String> texts = Arrays.asList("(", "var", "+", "var2", ")");
-        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts, true);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
         expOperands.put(1, Set.of(3, 5));
