@@ -164,7 +164,7 @@ public class HasOperandTest {
         assertEquals(expOperands, realOperands);
     }
 
-    @Disabled
+    @Disabled("Core bug. Prefix/postfix define by previous term. Operation - prefix, operand - postfix")
     @Test
     public void ManyPostfixTest() {
         List<String> texts = Arrays.asList("var", "--", "--", "--");
@@ -175,6 +175,24 @@ public class HasOperandTest {
         expOperands.put(2, Set.of(1));
         expOperands.put(3, Set.of(2));
         expOperands.put(4, Set.of(3));
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void ManyPostfixInComplexTest() {
+        List<String> texts = Arrays.asList("(", "(", "var", "--", ")", "--", ")", "--");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts, true);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of(6, 7));
+        expOperands.put(2, Set.of(4, 5));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of(3));
+        expOperands.put(5, Set.of());
+        expOperands.put(6, Set.of(2));
+        expOperands.put(7, Set.of());
+        expOperands.put(8, Set.of());
 
         assertEquals(expOperands, realOperands);
     }
@@ -224,6 +242,21 @@ public class HasOperandTest {
     @Test
     public void RightAssocBinaryTest() {
         List<String> texts = Arrays.asList("var", "=", "var2", "=", "var3");
+        HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of());
+        expOperands.put(2, Set.of(1, 4));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of(3, 5));
+        expOperands.put(5, Set.of());
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
+    public void SimpleDiffAssocBinaryTest() {
+        List<String> texts = Arrays.asList("var", "=", "var2", "+", "var3");
         HashMap<Integer, Set<Integer>> realOperands = getOperands(texts);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
