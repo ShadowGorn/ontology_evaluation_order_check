@@ -11,40 +11,19 @@ import org.junit.jupiter.api.Disabled;
 
 import java.util.*;
 
-public class HasOperandTest {
+public class HasOperandTest extends OntologyTest {
 
     HashMap<Integer, Set<Integer>> getOperands(List<String> texts) {
         return getOperands(texts, false);
     }
 
     HashMap<Integer, Set<Integer>> getOperands(List<String> texts, boolean dump) {
-        HashMap<Integer, Set<Integer>> operandsIndexes = new HashMap<>();
-        OntologyHelper helper = new OntologyHelper(texts);
+        OntologyHelper helper = initHelper(texts);
 
         if (dump) {
             helper.dump(true);
         }
-
-        for (Node<OWLNamedIndividual> sameInd : helper.getIndividuals()) {
-            OWLNamedIndividual ind = sameInd.getRepresentativeElement();
-
-            OWLDataProperty dpIndex = helper.getDataProperty("index");
-            OWLObjectProperty opHasOperand = helper.getObjectProperty("has_operand");
-
-            int index = Integer.parseInt(helper.getDataValue(ind, dpIndex));
-
-            Set<Integer> opIndexes = new HashSet<>();
-
-            for (Node<OWLNamedIndividual> sameOpInd : helper.getReasoner().getObjectPropertyValues(ind, opHasOperand)) {
-                OWLNamedIndividual opInd = sameOpInd.getRepresentativeElement();
-                int opIndex = Integer.parseInt(helper.getDataValue(opInd, dpIndex));
-                opIndexes.add(opIndex);
-            }
-
-            operandsIndexes.put(index, opIndexes);
-        }
-
-        return operandsIndexes;
+        return getObjectPropertyRelationsByIndex(helper, "has_operand");
     }
 
     @Test
