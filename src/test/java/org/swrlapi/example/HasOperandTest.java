@@ -1,17 +1,14 @@
 package org.swrlapi.example;
 
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.reasoner.Node;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
+import static org.swrlapi.example.OntologyUtil.getObjectPropertyRelationsByIndex;
+import static org.swrlapi.example.OntologyUtil.initHelper;
 
 import java.util.*;
 
-public class HasOperandTest extends OntologyTest {
+public class HasOperandTest {
 
     HashMap<Integer, Set<Integer>> getOperands(List<String> texts) {
         return getOperands(texts, false);
