@@ -1,9 +1,6 @@
 package org.swrlapi.example;
 
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.Node;
-import org.semanticweb.owlapi.reasoner.NodeSet;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 import java.util.Arrays;
 
