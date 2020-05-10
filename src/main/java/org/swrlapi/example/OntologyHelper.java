@@ -16,20 +16,28 @@ public class OntologyHelper {
     static final String DEFAULT_ONTOLOGY_IRI = "http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks";
 
     public OntologyHelper(List<String> texts) {
-        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, texts);
+        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, texts, new ArrayList<>());
     }
 
-    public OntologyHelper(String ontologyFilename, String ontologyIRI, List<String> texts) {
+    public OntologyHelper(List<String> texts, List<Optional<Integer>> studentPos) {
+        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, texts, studentPos);
+    }
+
+    public OntologyHelper(String ontologyFilename, String ontologyIRI, List<String> texts, List<Optional<Integer>> studentPos) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         File file = new File(classloader.getResource(ontologyFilename).getFile());
         OntologyIRI = ontologyIRI;
+
+        while(studentPos.size() < texts.size()) {
+            studentPos.add(Optional.empty());
+        }
 
         try {
             OntologyManager = OWLManager.createOWLOntologyManager();
             Ontology = OntologyManager.loadOntologyFromOntologyDocument(file);
             DataFactory = OntologyManager.getOWLDataFactory();
 
-            fillInstances(texts);
+            fillInstances(texts, studentPos);
 
             Reasoner = OpenlletReasonerFactory.getInstance().createReasoner(Ontology);
         } catch (OWLOntologyCreationException e) {
@@ -79,13 +87,17 @@ public class OntologyHelper {
         OntologyManager.addAxiom(Ontology, DataFactory.getOWLDataPropertyAssertionAxiom(dataProperty, ind, val));
     }
 
-    void fillInstances(List<String> texts) {
+    void fillInstances(List<String> texts, List<Optional<Integer>> studentPos) {
         int size = texts.size();
 
         ListIterator<String> it = texts.listIterator();
         while (it.hasNext()) {
-            OWLNamedIndividual ind = addInstance(it.nextIndex() + 1, 0);
+            int index = it.nextIndex();
+            OWLNamedIndividual ind = addInstance( index+ 1, 0);
             setDataProperty(getDataProperty("text"), ind, DataFactory.getOWLLiteral(it.next()));
+
+            Optional<Integer> currentStudentPos = studentPos.get(index);
+            currentStudentPos.ifPresent(integer -> setDataProperty(getDataProperty("student_pos"), ind, DataFactory.getOWLLiteral(integer)));
 
             if (!it.hasNext()) {
                 setDataProperty(getDataProperty("last"), ind, DataFactory.getOWLLiteral(true));
