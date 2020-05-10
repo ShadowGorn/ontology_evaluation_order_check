@@ -47,6 +47,21 @@ class BeforeTest {
     }
 
     @Test
+    public void ComplexOrTest() {
+        List<String> texts = Arrays.asList("var1", "||", "var2", "+", "var3");
+        HashMap<Integer, Set<Integer>> realOperands = getBefore(texts);
+
+        HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
+        expOperands.put(1, Set.of(2, 3, 4, 5));
+        expOperands.put(2, Set.of());
+        expOperands.put(3, Set.of(2, 4));
+        expOperands.put(4, Set.of(2));
+        expOperands.put(5, Set.of(2, 4));
+
+        assertEquals(expOperands, realOperands);
+    }
+
+    @Test
     public void SimpleAndTest() {
         List<String> texts = Arrays.asList("var1", "&&", "var2");
         HashMap<Integer, Set<Integer>> realOperands = getBefore(texts);
@@ -97,7 +112,7 @@ class BeforeTest {
         expOperands.put(1, Set.of(2, 12, 13));
         expOperands.put(2, Set.of(12, 13));
         expOperands.put(3, Set.of(2, 12, 13));
-        expOperands.put(4, Set.of(2, 3, 5, 6, 12, 13));
+        expOperands.put(4, Set.of(2, 3, 5, 6, 7, 8, 9, 10, 12, 13));
         expOperands.put(5, Set.of(2, 3, 12, 13));
         expOperands.put(6, Set.of(2, 3, 5, 12, 13));
         expOperands.put(7, Set.of(2, 3, 5, 6, 8, 12, 13));

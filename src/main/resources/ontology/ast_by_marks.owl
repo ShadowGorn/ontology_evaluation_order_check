@@ -87,6 +87,14 @@ REFACTORING:
     
 
 
+    <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before_all_operands -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before_all_operands">
+        <rdfs:comment>before_all_operands - операция выполнится раньше всех операндов данной операции</rdfs:comment>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#complex_boundaries -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#complex_boundaries">
@@ -694,6 +702,105 @@ REFACTORING:
                     </rdf:Description>
                 </rdf:first>
                 <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">operator_binary&amp;</rdfs:label>
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">&amp;</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</swrl:argument2>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#prev_operand"/>
+                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#arity"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">binary</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#priority"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">11</swrl:argument2>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#associativity"/>
+                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">L</swrl:argument2>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#init"/>
+                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
             </rdf:Description>
         </swrl:head>
     </rdf:Description>
@@ -2841,173 +2948,6 @@ REFACTORING:
     <rdf:Description>
         <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">copy_without_marks</rdfs:label>
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#copy"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#copy_without_marks"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-            </rdf:Description>
-        </swrl:head>
-    </rdf:Description>
-    <rdf:Description>
-        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
-        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">next_step</rdfs:label>
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_index"/>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
-                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
-                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#equal"/>
-                                        <swrl:arguments rdf:parseType="Collection">
-                                            <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_index"/>
-                                            <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
-                                        </swrl:arguments>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step"/>
-                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_step"/>
-                                            </rdf:Description>
-                                        </rdf:first>
-                                        <rdf:rest>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                                <rdf:first>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step"/>
-                                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
-                                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_step"/>
-                                                    </rdf:Description>
-                                                </rdf:first>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                                        <rdf:first>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
-                                                                <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#add"/>
-                                                                <swrl:arguments>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                                        <rdf:first rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_plus_1"/>
-                                                                        <rdf:rest>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                                                <rdf:first rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_step"/>
-                                                                                <rdf:rest>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
-                                                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</rdf:first>
-                                                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                                                                    </rdf:Description>
-                                                                                </rdf:rest>
-                                                                            </rdf:Description>
-                                                                        </rdf:rest>
-                                                                    </rdf:Description>
-                                                                </swrl:arguments>
-                                                            </rdf:Description>
-                                                        </rdf:first>
-                                                        <rdf:rest>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                                                <rdf:first>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
-                                                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#equal"/>
-                                                                        <swrl:arguments rdf:parseType="Collection">
-                                                                            <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_plus_1"/>
-                                                                            <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_step"/>
-                                                                        </swrl:arguments>
-                                                                    </rdf:Description>
-                                                                </rdf:first>
-                                                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                                            </rdf:Description>
-                                                        </rdf:rest>
-                                                    </rdf:Description>
-                                                </rdf:rest>
-                                            </rdf:Description>
-                                        </rdf:rest>
-                                    </rdf:Description>
-                                </rdf:rest>
-                            </rdf:Description>
-                        </rdf:rest>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#next_step"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-            </rdf:Description>
-        </swrl:head>
-    </rdf:Description>
-    <rdf:Description>
-        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
-        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">eval_complex_operation_copy_other_left</rdfs:label>
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
         <swrl:body>
@@ -3256,6 +3196,173 @@ REFACTORING:
                         <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#copy"/>
                         <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#other"/>
                         <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">copy_without_marks</rdfs:label>
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#copy"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#copy_without_marks"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">next_step</rdfs:label>
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_index"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
+                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#equal"/>
+                                        <swrl:arguments rdf:parseType="Collection">
+                                            <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_index"/>
+                                            <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
+                                        </swrl:arguments>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step"/>
+                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_step"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step"/>
+                                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_step"/>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                                <rdf:rest>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                                        <rdf:first>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
+                                                                <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#add"/>
+                                                                <swrl:arguments>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                                                        <rdf:first rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_plus_1"/>
+                                                                        <rdf:rest>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                                                                <rdf:first rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_step"/>
+                                                                                <rdf:rest>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                                                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</rdf:first>
+                                                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                                                    </rdf:Description>
+                                                                                </rdf:rest>
+                                                                            </rdf:Description>
+                                                                        </rdf:rest>
+                                                                    </rdf:Description>
+                                                                </swrl:arguments>
+                                                            </rdf:Description>
+                                                        </rdf:first>
+                                                        <rdf:rest>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                                                <rdf:first>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
+                                                                        <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#equal"/>
+                                                                        <swrl:arguments rdf:parseType="Collection">
+                                                                            <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_plus_1"/>
+                                                                            <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_step"/>
+                                                                        </swrl:arguments>
+                                                                    </rdf:Description>
+                                                                </rdf:first>
+                                                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                            </rdf:Description>
+                                                        </rdf:rest>
+                                                    </rdf:Description>
+                                                </rdf:rest>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#next_step"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
                     </rdf:Description>
                 </rdf:first>
                 <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
@@ -5799,92 +5906,6 @@ REFACTORING:
     <rdf:Description>
         <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">operator&gt;&gt;</rdfs:label>
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">&gt;&gt;</swrl:argument2>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</swrl:argument2>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#arity"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">binary</swrl:argument2>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#priority"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</swrl:argument2>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#associativity"/>
-                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">L</swrl:argument2>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#init"/>
-                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
-                                            </rdf:Description>
-                                        </rdf:first>
-                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                    </rdf:Description>
-                                </rdf:rest>
-                            </rdf:Description>
-                        </rdf:rest>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:head>
-    </rdf:Description>
-    <rdf:Description>
-        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
-        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">eval_complex_operation</rdfs:label>
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
         <swrl:body>
@@ -6076,6 +6097,92 @@ REFACTORING:
                                                 <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
                                             </rdf:Description>
                                         </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">operator&gt;&gt;</rdfs:label>
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">&gt;&gt;</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</swrl:argument2>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#arity"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">binary</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#priority"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</swrl:argument2>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#associativity"/>
+                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">L</swrl:argument2>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#init"/>
+                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
                                     </rdf:Description>
                                 </rdf:rest>
                             </rdf:Description>
@@ -8184,6 +8291,66 @@ REFACTORING:
     <rdf:Description>
         <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">before_all_operands</rdfs:label>
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before_all_operands"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#has_operand"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before_all_operands"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">in_complex_step_skip_inner_complex</rdfs:label>
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
         <swrl:body>
@@ -10102,7 +10269,20 @@ REFACTORING:
                         <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
                     </rdf:Description>
                 </rdf:first>
-                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before_all_operands"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                    </rdf:Description>
+                </rdf:rest>
             </rdf:Description>
         </swrl:head>
     </rdf:Description>
@@ -10203,108 +10383,20 @@ REFACTORING:
                         <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
                     </rdf:Description>
                 </rdf:first>
-                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-            </rdf:Description>
-        </swrl:head>
-    </rdf:Description>
-    <rdf:Description>
-        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
-        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">before||</rdfs:label>
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">||</swrl:argument2>
-                    </rdf:Description>
-                </rdf:first>
                 <rdf:rest>
                     <rdf:Description>
                         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
                         <rdf:first>
                             <rdf:Description>
                                 <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#has_operand"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before_all_operands"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
                             </rdf:Description>
                         </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
-                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#has_operand"/>
-                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
-                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
-                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
-                                            </rdf:Description>
-                                        </rdf:first>
-                                        <rdf:rest>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                                <rdf:first>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
-                                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
-                                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c_index"/>
-                                                    </rdf:Description>
-                                                </rdf:first>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                                        <rdf:first>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
-                                                                <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThan"/>
-                                                                <swrl:arguments rdf:parseType="Collection">
-                                                                    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
-                                                                    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c_index"/>
-                                                                </swrl:arguments>
-                                                            </rdf:Description>
-                                                        </rdf:first>
-                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                                    </rdf:Description>
-                                                </rdf:rest>
-                                            </rdf:Description>
-                                        </rdf:rest>
-                                    </rdf:Description>
-                                </rdf:rest>
-                            </rdf:Description>
-                        </rdf:rest>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
                     </rdf:Description>
                 </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
-                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
             </rdf:Description>
         </swrl:head>
     </rdf:Description>
@@ -10506,6 +10598,120 @@ REFACTORING:
                                 <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
                             </rdf:Description>
                         </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">before||</rdfs:label>
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">||</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#has_operand"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#has_operand"/>
+                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
+                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#index"/>
+                                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
+                                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c_index"/>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                                <rdf:rest>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                                        <rdf:first>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#BuiltinAtom"/>
+                                                                <swrl:builtin rdf:resource="http://www.w3.org/2003/11/swrlb#lessThan"/>
+                                                                <swrl:arguments rdf:parseType="Collection">
+                                                                    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b_index"/>
+                                                                    <rdf:Description rdf:about="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c_index"/>
+                                                                </swrl:arguments>
+                                                            </rdf:Description>
+                                                        </rdf:first>
+                                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                                    </rdf:Description>
+                                                </rdf:rest>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#before_all_operands"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#c"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
                     </rdf:Description>
                 </rdf:rest>
             </rdf:Description>
@@ -12468,66 +12674,6 @@ REFACTORING:
     <rdf:Description>
         <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
         <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">copy_without_marks_text</rdfs:label>
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#copy_without_marks"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#next_step"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_next"/>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
-                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_text"/>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                            </rdf:Description>
-                        </rdf:rest>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_next"/>
-                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_text"/>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-            </rdf:Description>
-        </swrl:head>
-    </rdf:Description>
-    <rdf:Description>
-        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
-        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">eval_complex_operation_copy_other_right</rdfs:label>
         <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
         <swrl:body>
@@ -12776,6 +12922,66 @@ REFACTORING:
                         <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#copy"/>
                         <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#other"/>
                         <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
+        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">copy_without_marks_text</rdfs:label>
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#copy_without_marks"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#next_step"/>
+                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_next"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
+                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
+                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_text"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
+                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_next"/>
+                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a_text"/>
                     </rdf:Description>
                 </rdf:first>
                 <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
@@ -13079,105 +13285,6 @@ REFACTORING:
                     </rdf:Description>
                 </rdf:first>
                 <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-            </rdf:Description>
-        </swrl:head>
-    </rdf:Description>
-    <rdf:Description>
-        <swrla:isRuleEnabled rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrla:isRuleEnabled>
-        <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></rdfs:comment>
-        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">operator_binary&amp;</rdfs:label>
-        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#text"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">&amp;</swrl:argument2>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#step"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</swrl:argument2>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
-                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#prev_operand"/>
-                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                        <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                            </rdf:Description>
-                        </rdf:rest>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#arity"/>
-                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">binary</swrl:argument2>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#priority"/>
-                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">11</swrl:argument2>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#associativity"/>
-                                        <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                        <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">L</swrl:argument2>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#init"/>
-                                                <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
-                                                <swrl:argument2 rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</swrl:argument2>
-                                            </rdf:Description>
-                                        </rdf:first>
-                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-                                    </rdf:Description>
-                                </rdf:rest>
-                            </rdf:Description>
-                        </rdf:rest>
-                    </rdf:Description>
-                </rdf:rest>
             </rdf:Description>
         </swrl:head>
     </rdf:Description>

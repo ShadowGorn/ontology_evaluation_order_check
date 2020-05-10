@@ -1,19 +1,14 @@
 package org.swrlapi.example;
 
-import openllet.core.utils.Pair;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.reasoner.Node;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.swrlapi.example.OntologyUtil.getObjectPropertyRelationsByIndex;
-import static org.swrlapi.example.OntologyUtil.initHelper;
 
 class StudentErrorTest {
     class StudentError {
