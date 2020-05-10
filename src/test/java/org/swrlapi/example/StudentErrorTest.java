@@ -19,6 +19,17 @@ class StudentErrorTest {
         String AfterText;
         List<Integer> BeforePropertiesSequence;
 
+        @Override
+        public String toString() {
+            return "StudentError{" +
+                    "BeforePos=" + BeforePos +
+                    ", AfterPos=" + AfterPos +
+                    ", BeforeText='" + BeforeText + '\'' +
+                    ", AfterText='" + AfterText + '\'' +
+                    ", BeforePropertiesSequence=" + BeforePropertiesSequence +
+                    '}';
+        }
+
         StudentError(int beforePos, int afterPos, String beforeText, String afterText, List<Integer> beforePropertiesSequence) {
             BeforePos = beforePos;
             AfterPos = afterPos;
@@ -83,8 +94,8 @@ class StudentErrorTest {
         }
     }
 
-    List<StudentError> getError(List<String> texts, List<Optional<Integer>> studentPos) {
-        List<StudentError> errors = new ArrayList<>();
+    Set<StudentError> getError(List<String> texts, List<Optional<Integer>> studentPos) {
+        Set<StudentError> errors = new HashSet<>();
         OntologyHelper helper = new OntologyHelper(texts, studentPos);
         for (OWLNamedIndividual ind : helper.getSortedIndividuals(helper.getIndividuals())) {
             OWLObjectProperty opProperty = helper.getObjectProperty("student_error");
@@ -111,41 +122,43 @@ class StudentErrorTest {
 
     @Test
     public void EmptyTest() {
-        List<StudentError> real = getError(new ArrayList<>(), new ArrayList<>());
-        List<StudentError> exp = new ArrayList<>();
+        Set<StudentError> real = getError(new ArrayList<>(), new ArrayList<>());
+        Set<StudentError> exp = new HashSet<>();
         assertEquals(exp, real);
     }
 
     @Test
     public void SimpleDiffPriorityTest() {
         List<String> texts = Arrays.asList("var1", "+", "var2", "*", "var3");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("3", "1", "", "2", ""));
+        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "1", "", "2", ""));
 
-        List<StudentError> real = getError(texts, studentPos);
-        List<StudentError> exp = new ArrayList<>();
+        Set<StudentError> real = getError(texts, studentPos);
+        Set<StudentError> exp = new HashSet<>();
         exp.add(new StudentError(4, 2, "*", "+", Arrays.asList(4, 2)));
+        assertEquals(exp, real);
+    }
+
+    @Test
+    public void SimpleNotNextStudentPosTest() {
+        List<String> texts = Arrays.asList("var1", "+", "var2", "*", "var3");
+        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "2", "", "1", "3"));
+
+        Set<StudentError> real = getError(texts, studentPos);
+        Set<StudentError> exp = new HashSet<>();
+        exp.add(new StudentError(5, 4, "var3", "*", Arrays.asList(5, 4)));
+        exp.add(new StudentError(5, 2, "var3", "+", Arrays.asList(5, 4, 2)));
         assertEquals(exp, real);
     }
 
     @Test
     public void SimpleComplexTest() {
         List<String> texts = Arrays.asList("(", "var1", "+", "var2", ")", "*", "var3");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("2", "", "3", "", "", "1", "4"));
+        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("2", "", "3", "", "", "1", ""));
 
-        List<StudentError> real = getError(texts, studentPos);
-        List<StudentError> exp = new ArrayList<>();
+        Set<StudentError> real = getError(texts, studentPos);
+        Set<StudentError> exp = new HashSet<>();
         exp.add(new StudentError(1, 6, "(", "*", Arrays.asList(1, 6)));
         exp.add(new StudentError(3, 1, "+", "(", Arrays.asList(3, 1)));
-        assertEquals(exp, real);
-    }
-
-    @Test
-    public void SimpleLongTest() {
-        List<String> texts = Arrays.asList("(", "var1", "+", "var2", ")", "*", "var3");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "", "2", "", "", "1", ""));
-
-        List<StudentError> real = getError(texts, studentPos);
-        List<StudentError> exp = new ArrayList<>();
         exp.add(new StudentError(3, 6, "+", "*", Arrays.asList(3, 1, 6)));
         assertEquals(exp, real);
     }
