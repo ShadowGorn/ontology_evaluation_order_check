@@ -37,6 +37,19 @@ public class OntologyUtil {
         return relations;
     }
 
+    /**
+     * Not optimal. Check OWL API to find quicker method
+     */
+    static public boolean checkObjectPropertyExist(OntologyHelper helper, OWLNamedIndividual a, OWLNamedIndividual b, OWLObjectProperty property) {
+        for (Node<OWLNamedIndividual> sameOpInd : helper.getReasoner().getObjectPropertyValues(a, property)) {
+            OWLNamedIndividual opInd = sameOpInd.getRepresentativeElement();
+            if (opInd.equals(b)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static public HashMap<Integer, String> getDataProperties(OntologyHelper helper, String dataProperty) {
         HashMap<Integer, String> properties = new HashMap<>();
 
