@@ -96,8 +96,9 @@ public class OntologyHelper {
             OWLNamedIndividual ind = addInstance( index+ 1, 0);
             setDataProperty(getDataProperty("text"), ind, DataFactory.getOWLLiteral(it.next()));
 
-            Optional<Integer> currentStudentPos = studentPos.get(index);
-            currentStudentPos.ifPresent(integer -> setDataProperty(getDataProperty("student_pos"), ind, DataFactory.getOWLLiteral(integer)));
+            final int INF = 1000000;
+            Integer currentStudentPos = studentPos.get(index).orElse(INF);
+            setDataProperty(getDataProperty("student_pos"), ind, DataFactory.getOWLLiteral(currentStudentPos));
 
             if (!it.hasNext()) {
                 setDataProperty(getDataProperty("last"), ind, DataFactory.getOWLLiteral(true));
@@ -150,7 +151,7 @@ public class OntologyHelper {
                 "init", "eval", "app",
                 "arity", "associativity", "prefix_postfix", "priority",
                 "complex_beginning", "complex_ending",
-                "copy", "copy_without_marks",
+                "copy", "copy_without_marks", "eval_step", "describe_error",
                 "has_highest_priority_to_left", "has_highest_priority_to_right",
                 "real_pos", "student_pos", "is_operand", "is_function_call"
         );
@@ -184,7 +185,8 @@ public class OntologyHelper {
                 "before", "complex_boundaries", "find_left_operand", "find_right_operand",
                 "has_operand", "high_priority", "in_complex", "more_priority_left_by_step",
                 "more_priority_right_by_step", "next_index", "next_step", "not_index", "operation_time",
-                "prev_index", "prev_operand", "prev_operation", "same_step", "0_step"
+                "prev_index", "prev_operand", "prev_operation", "same_step", "0_step",
+                "student_error_more_priority_left", "student_error_more_priority_right"
         );
 
         for (String property : properties) {
