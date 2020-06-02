@@ -11,16 +11,96 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.swrlapi.example.OntologyUtil.*;
 
-class StudentErrorTest {
+enum StudentErrorType {
+    HIGH_PRIORITY_TO_LEFT,
+    HIGH_PRIORITY_TO_RIGHT,
+    LEFT_ASSOC_TO_LEFT,
+    RIGHT_ASSOC_TO_RIGHT,
+    IN_COMPLEX,
+    SAME_OPERATION,
+}
 
-    HashMap<Integer, Set<Integer>> getMorePriorityLeftError(List<String> texts, List<Optional<Integer>> studentPos) {
-        OntologyHelper helper = new OntologyHelper(texts, studentPos);
-        return getObjectPropertyRelationsByIndex(helper, "student_error_more_priority_left");
+class StudentError {
+    public StudentError(int errorPos, int reasonPos, StudentErrorType type) {
+        ErrorPos = errorPos;
+        ReasonPos = reasonPos;
+        Type = type;
     }
 
-    HashMap<Integer, Set<Integer>> getMorePriorityRightError(List<String> texts, List<Optional<Integer>> studentPos) {
+    public int getErrorPos() {
+        return ErrorPos;
+    }
+
+    public int getReasonPos() {
+        return ReasonPos;
+    }
+
+    public StudentErrorType getType() {
+        return Type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StudentError that = (StudentError) o;
+        return getErrorPos() == that.getErrorPos() &&
+                getReasonPos() == that.getReasonPos() &&
+                getType() == that.getType();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getErrorPos(), getReasonPos(), getType());
+    }
+
+    @Override
+    public String toString() {
+        return "StudentError{" +
+                "ErrorPos=" + ErrorPos +
+                ", ReasonPos=" + ReasonPos +
+                ", Type=" + Type +
+                '}';
+    }
+
+    int ErrorPos;
+    int ReasonPos;
+    StudentErrorType Type;
+}
+
+class StudentErrorTest {
+    Set<StudentError> GetErrors(List<String> texts, List<Optional<Integer>> studentPos) {
+        Set<StudentError> resultErrors = new HashSet<>();
         OntologyHelper helper = new OntologyHelper(texts, studentPos);
-        return getObjectPropertyRelationsByIndex(helper, "student_error_more_priority_right");
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_more_priority_left"),
+                StudentErrorType.HIGH_PRIORITY_TO_LEFT);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_more_priority_right"),
+                StudentErrorType.HIGH_PRIORITY_TO_RIGHT);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_left_assoc"),
+                StudentErrorType.LEFT_ASSOC_TO_LEFT);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_right_assoc"),
+                StudentErrorType.RIGHT_ASSOC_TO_RIGHT);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_in_complex"),
+                StudentErrorType.IN_COMPLEX);
+        return resultErrors;
+    }
+
+    void FillErrors(Set<StudentError> resultErrors, HashMap<Integer, Set<Integer>> errors, StudentErrorType type) {
+        errors.forEach((error,reasons) -> {
+            for (Integer reason : reasons) {
+                resultErrors.add(new StudentError(error, reason, type));
+            }
+        });
     }
 
     List<Optional<Integer>> parseStudentPos(List<String> studentPos) {
@@ -35,67 +115,71 @@ class StudentErrorTest {
         return result;
     }
 
-    //@Test
+    @Test
     public void EmptyTest() {
-        HashMap<Integer, Set<Integer>> realLeft = getMorePriorityLeftError(new ArrayList<>(), new ArrayList<>());
-        HashMap<Integer, Set<Integer>> realRight = getMorePriorityRightError(new ArrayList<>(), new ArrayList<>());
+        Set<StudentError> real = GetErrors(new ArrayList<>(), new ArrayList<>());
+        Set<StudentError> exp = new HashSet<>();
 
-        HashMap<Integer, Set<Integer>> exp = new HashMap<Integer, Set<Integer>>();
-        assertEquals(exp, realLeft);
-        assertEquals(exp, realRight);
+        assertEquals(exp, real);
     }
 
     @Test
-    public void SimpleDiffPriorityTest() {
+    public void SimpleHighPriorityRightTest() {
         List<String> texts = Arrays.asList("var1", "+", "var2", "*", "var3");
         List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "1", "", "2", ""));
 
-        HashMap<Integer, Set<Integer>> realLeft = getMorePriorityLeftError(texts, studentPos);
-        HashMap<Integer, Set<Integer>> realRight = getMorePriorityRightError(texts, studentPos);
-        HashMap<Integer, Set<Integer>> expLeft = new HashMap<>();
-        expLeft.put(1, Set.of());
-        expLeft.put(2, Set.of());
-        expLeft.put(3, Set.of());
-        expLeft.put(4, Set.of());
-        expLeft.put(5, Set.of());
+        Set<StudentError> real = GetErrors(texts, studentPos);
+        Set<StudentError> exp = new HashSet<>();
+        exp.add(new StudentError(2, 4, StudentErrorType.HIGH_PRIORITY_TO_RIGHT));
 
-        HashMap<Integer, Set<Integer>> expRight = new HashMap<>();
-        expRight.put(1, Set.of());
-        expRight.put(2, Set.of(4));
-        expRight.put(3, Set.of());
-        expRight.put(4, Set.of());
-        expRight.put(5, Set.of());
-
-        assertEquals(expLeft, realLeft);
-        assertEquals(expRight, realRight);
+        assertEquals(exp, real);
     }
 
-    //@Test
-    public void SimpleComplexTest() {
-        List<String> texts = Arrays.asList("(", "var1", "+", "var2", ")", "*", "var3");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("2", "", "3", "", "", "1", ""));
+    @Test
+    public void SimpleHighPriorityLeftTest() {
+        List<String> texts = Arrays.asList("var1", "*", "var2", "+", "var3");
+        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "2", "", "1", ""));
 
-        HashMap<Integer, Set<Integer>> realLeft = getMorePriorityLeftError(texts, studentPos);
-        HashMap<Integer, Set<Integer>> realRight = getMorePriorityRightError(texts, studentPos);
-        HashMap<Integer, Set<Integer>> expLeft = new HashMap<>();
-        expLeft.put(1, Set.of());
-        expLeft.put(2, Set.of());
-        expLeft.put(3, Set.of());
-        expLeft.put(4, Set.of());
-        expLeft.put(5, Set.of());
-        expLeft.put(6, Set.of(1));
-        expLeft.put(7, Set.of());
+        Set<StudentError> real = GetErrors(texts, studentPos);
+        Set<StudentError> exp = new HashSet<>();
+        exp.add(new StudentError(4, 2, StudentErrorType.HIGH_PRIORITY_TO_LEFT));
 
-        HashMap<Integer, Set<Integer>> expRight = new HashMap<>();
-        expRight.put(1, Set.of());
-        expRight.put(2, Set.of());
-        expRight.put(3, Set.of());
-        expRight.put(4, Set.of());
-        expRight.put(5, Set.of());
-        expRight.put(6, Set.of());
-        expRight.put(7, Set.of());
+        assertEquals(exp, real);
+    }
 
-        assertEquals(expLeft, realLeft);
-        assertEquals(expRight, realRight);
+    @Test
+    public void SimpleLeftAssocTest() {
+        List<String> texts = Arrays.asList("var1", "+", "var2", "+", "var3");
+        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "2", "", "1", ""));
+
+        Set<StudentError> real = GetErrors(texts, studentPos);
+        Set<StudentError> exp = new HashSet<>();
+        exp.add(new StudentError(4, 2, StudentErrorType.LEFT_ASSOC_TO_LEFT));
+
+        assertEquals(exp, real);
+    }
+
+    @Test
+    public void SimpleRightAssocTest() {
+        List<String> texts = Arrays.asList("*", "*", "var1");
+        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("1", "2", ""));
+
+        Set<StudentError> real = GetErrors(texts, studentPos);
+        Set<StudentError> exp = new HashSet<>();
+        exp.add(new StudentError(1, 2, StudentErrorType.RIGHT_ASSOC_TO_RIGHT));
+
+        assertEquals(exp, real);
+    }
+
+    @Test
+    public void SimpleInComplexTest() {
+        List<String> texts = Arrays.asList("(", "var1", "+", "var2", ")");
+        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("1", "", "2", "", ""));
+
+        Set<StudentError> real = GetErrors(texts, studentPos);
+        Set<StudentError> exp = new HashSet<>();
+        exp.add(new StudentError(1, 3, StudentErrorType.IN_COMPLEX));
+
+        assertEquals(exp, real);
     }
 }

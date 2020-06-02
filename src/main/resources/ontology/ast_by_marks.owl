@@ -12909,7 +12909,7 @@ REFACTORING:
                                         <rdf:first>
                                             <rdf:Description>
                                                 <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#more_priority_right_by_step"/>
+                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#more_priority_left_by_step"/>
                                                 <swrl:argument1 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#a"/>
                                                 <swrl:argument2 rdf:resource="http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#b"/>
                                             </rdf:Description>
