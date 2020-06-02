@@ -1,6 +1,11 @@
 package org.swrlapi.example;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import net.joshka.junit.json.params.JsonFileSource;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.*;
 
@@ -8,6 +13,49 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.swrlapi.example.OntologyUtil.*;
 
 class StudentErrorTest {
+    Set<StudentError> GetErrors(String jsonExpression) {
+        Expression expression = new Expression(
+                new Gson().fromJson(
+                        jsonExpression,
+                        new TypeToken<List<String>>() {}.getType()));
+        return GetErrors(expression.Texts, expression.StudentPos);
+    }
+
+    class Expression {
+        List<String> Texts;
+        List<Optional<Integer>> StudentPos;
+
+        public Expression(List<String> expression) {
+            Texts = new ArrayList<>();
+            StudentPos = new ArrayList<>();
+            FillFromExpression(expression);
+        }
+
+        void FillFromExpression(List<String> expression) {
+            for (String part : expression) {
+                Term term = new Term(part);
+                Texts.add(term.Text);
+                StudentPos.add(term.StudentPos);
+            }
+        }
+
+        class Term {
+            Term(String text) {
+                String[] parts = text.split("\\$", 2);
+
+                Text = parts[0];
+                if (parts.length > 1) {
+                    StudentPos = Optional.of(Integer.parseInt(parts[1]));
+                } else {
+                    StudentPos = Optional.empty();
+                }
+            }
+
+            Optional<Integer> StudentPos;
+            String Text;
+        }
+    }
+
     Set<StudentError> GetErrors(List<String> texts, List<Optional<Integer>> studentPos) {
         Set<StudentError> resultErrors = new HashSet<>();
         OntologyHelper helper = new OntologyHelper(texts, studentPos);
@@ -42,83 +90,11 @@ class StudentErrorTest {
         });
     }
 
-    List<Optional<Integer>> parseStudentPos(List<String> studentPos) {
-        List<Optional<Integer>> result = new ArrayList<>();
-        for (String strPos : studentPos) {
-            if (strPos.isEmpty()) {
-                result.add(Optional.empty());
-            } else {
-                result.add(Optional.of(Integer.parseInt(strPos)));
-            }
-        }
-        return result;
-    }
-
-    @Test
-    public void EmptyTest() {
-        Set<StudentError> real = GetErrors(new ArrayList<>(), new ArrayList<>());
-        Set<StudentError> exp = new HashSet<>();
-
-        assertEquals(exp, real);
-    }
-
-    @Test
-    public void SimpleHighPriorityRightTest() {
-        List<String> texts = Arrays.asList("var1", "+", "var2", "*", "var3");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "1", "", "2", ""));
-
-        Set<StudentError> real = GetErrors(texts, studentPos);
-        Set<StudentError> exp = new HashSet<>();
-        exp.add(new StudentError(2, 4, StudentErrorType.HIGH_PRIORITY_TO_RIGHT));
-
-        assertEquals(exp, real);
-    }
-
-    @Test
-    public void SimpleHighPriorityLeftTest() {
-        List<String> texts = Arrays.asList("var1", "*", "var2", "+", "var3");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "2", "", "1", ""));
-
-        Set<StudentError> real = GetErrors(texts, studentPos);
-        Set<StudentError> exp = new HashSet<>();
-        exp.add(new StudentError(4, 2, StudentErrorType.HIGH_PRIORITY_TO_LEFT));
-
-        assertEquals(exp, real);
-    }
-
-    @Test
-    public void SimpleLeftAssocTest() {
-        List<String> texts = Arrays.asList("var1", "+", "var2", "+", "var3");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("", "2", "", "1", ""));
-
-        Set<StudentError> real = GetErrors(texts, studentPos);
-        Set<StudentError> exp = new HashSet<>();
-        exp.add(new StudentError(4, 2, StudentErrorType.LEFT_ASSOC_TO_LEFT));
-
-        assertEquals(exp, real);
-    }
-
-    @Test
-    public void SimpleRightAssocTest() {
-        List<String> texts = Arrays.asList("*", "*", "var1");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("1", "2", ""));
-
-        Set<StudentError> real = GetErrors(texts, studentPos);
-        Set<StudentError> exp = new HashSet<>();
-        exp.add(new StudentError(1, 2, StudentErrorType.RIGHT_ASSOC_TO_RIGHT));
-
-        assertEquals(exp, real);
-    }
-
-    @Test
-    public void SimpleInComplexTest() {
-        List<String> texts = Arrays.asList("(", "var1", "+", "var2", ")");
-        List<Optional<Integer>> studentPos = parseStudentPos(Arrays.asList("1", "", "2", "", ""));
-
-        Set<StudentError> real = GetErrors(texts, studentPos);
-        Set<StudentError> exp = new HashSet<>();
-        exp.add(new StudentError(1, 3, StudentErrorType.IN_COMPLEX));
-
+    @ParameterizedTest
+    @JsonFileSource(resources = "../../../student-error-test-data.json")
+    public void StudentErrorTest(javax.json.JsonObject object) {
+        Set<StudentError> real = GetErrors(object.get("expression").toString());
+        Set<StudentError> exp = new Gson().fromJson(object.get("errors").toString(), new TypeToken<Set<StudentError>>() {}.getType());
         assertEquals(exp, real);
     }
 }
