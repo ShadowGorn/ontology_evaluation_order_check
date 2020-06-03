@@ -52,5 +52,20 @@
         "Type": "IN_COMPLEX"
       }
     ]
+  },
+  {
+    "expression": ["var1", "*$2", "var2", "+$1", "var3", "*", "var4"],
+    "errors": [
+      {
+        "ErrorPos": 4,
+        "ReasonPos": 2,
+        "Type": "HIGH_PRIORITY_TO_LEFT"
+      },
+      {
+        "ErrorPos": 4,
+        "ReasonPos": 6,
+        "Type": "HIGH_PRIORITY_TO_RIGHT"
+      }
+    ]
   }
 ]
