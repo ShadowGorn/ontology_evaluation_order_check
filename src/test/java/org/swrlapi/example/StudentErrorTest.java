@@ -1,10 +1,8 @@
 package org.swrlapi.example;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import net.joshka.junit.json.params.JsonFileSource;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.*;
@@ -19,41 +17,6 @@ class StudentErrorTest {
                         jsonExpression,
                         new TypeToken<List<String>>() {}.getType()));
         return GetErrors(expression.Texts, expression.StudentPos);
-    }
-
-    class Expression {
-        List<String> Texts;
-        List<Optional<Integer>> StudentPos;
-
-        public Expression(List<String> expression) {
-            Texts = new ArrayList<>();
-            StudentPos = new ArrayList<>();
-            FillFromExpression(expression);
-        }
-
-        void FillFromExpression(List<String> expression) {
-            for (String part : expression) {
-                Term term = new Term(part);
-                Texts.add(term.Text);
-                StudentPos.add(term.StudentPos);
-            }
-        }
-
-        class Term {
-            Term(String text) {
-                String[] parts = text.split("\\$", 2);
-
-                Text = parts[0];
-                if (parts.length > 1) {
-                    StudentPos = Optional.of(Integer.parseInt(parts[1]));
-                } else {
-                    StudentPos = Optional.empty();
-                }
-            }
-
-            Optional<Integer> StudentPos;
-            String Text;
-        }
     }
 
     Set<StudentError> GetErrors(List<String> texts, List<Optional<Integer>> studentPos) {
