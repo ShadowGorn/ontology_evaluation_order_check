@@ -1,11 +1,15 @@
 package org.swrlapi.example;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.reasoner.Node;
 
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OntologyUtil {
     static public OntologyHelper initHelper(List<String> texts) {
@@ -16,6 +20,51 @@ public class OntologyUtil {
     static public OntologyHelper initHelper(Expression expression) {
         OntologyHelper helper = new OntologyHelper(expression);
         return helper;
+    }
+
+    static public Expression getExpressionFromJson(String jsonExpression) {
+        return new Expression(
+                new Gson().fromJson(
+                        jsonExpression,
+                        new TypeToken<List<String>>() {}.getType()));
+    }
+
+    class Relation {
+        int indexFrom;
+        List<Integer> indexesTo;
+    }
+
+    static public HashMap<Integer, Set<Integer>> getObjectPropertyRelationsByIndexFromJson(String jsonRelations, int maxIndex) {
+        HashMap<Integer, Set<Integer>> result = new HashMap<>();
+        for (int i = 1; i <= maxIndex; i++) {
+            result.put(i, new HashSet<>());
+        }
+
+        Relation[] relations = new Gson().fromJson(
+                jsonRelations,
+                Relation[].class);
+
+        for (Relation relation : relations) {
+            for (Integer indexTo : relation.indexesTo) {
+                result.get(relation.indexFrom).add(indexTo);
+            }
+        }
+
+        return result;
+    }
+
+    static public void testObjectProperty(OntologyHelper helper, String objectProperty, String jsonRelations, int maxIndex) {
+        HashMap<Integer, Set<Integer>> real = getObjectPropertyRelationsByIndex(helper, objectProperty);
+        HashMap<Integer, Set<Integer>> exp = getObjectPropertyRelationsByIndexFromJson(jsonRelations, maxIndex);
+        assertEquals(exp, real);
+    }
+
+    static public void testObjectProperty(javax.json.JsonObject object) {
+        Expression expression = getExpressionFromJson(object.get("expression").toString());
+        OntologyHelper helper = initHelper(expression);
+        String objectProperty = object.getString("objectProperty");
+        String jsonRelations = object.get("relations").toString();
+        testObjectProperty(helper, objectProperty, jsonRelations, expression.size());
     }
 
     static public HashMap<Integer, Set<Integer>> getObjectPropertyRelationsByIndex(OntologyHelper helper, String objectProperty) {

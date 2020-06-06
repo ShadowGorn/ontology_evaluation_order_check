@@ -12,11 +12,7 @@ import static org.swrlapi.example.OntologyUtil.*;
 
 class StudentErrorTest {
     Set<StudentError> GetErrors(String jsonExpression) {
-        Expression expression = new Expression(
-                new Gson().fromJson(
-                        jsonExpression,
-                        new TypeToken<List<String>>() {}.getType()));
-        return GetErrors(expression);
+        return GetErrors(getExpressionFromJson(jsonExpression));
     }
 
     Set<StudentError> GetErrors(Expression expression) {
