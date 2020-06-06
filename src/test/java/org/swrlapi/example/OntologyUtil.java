@@ -59,12 +59,16 @@ public class OntologyUtil {
         assertEquals(exp, real);
     }
 
-    static public void testObjectProperty(javax.json.JsonObject object) {
+    static public void testObjectProperty(javax.json.JsonObject object, String objectProperty) {
         Expression expression = getExpressionFromJson(object.get("expression").toString());
         OntologyHelper helper = initHelper(expression);
-        String objectProperty = object.getString("objectProperty");
         String jsonRelations = object.get("relations").toString();
         testObjectProperty(helper, objectProperty, jsonRelations, expression.size());
+    }
+
+    static public void testObjectProperty(javax.json.JsonObject object) {
+        String objectProperty = object.getString("objectProperty");
+        testObjectProperty(object, objectProperty);
     }
 
     static public HashMap<Integer, Set<Integer>> getObjectPropertyRelationsByIndex(OntologyHelper helper, String objectProperty) {
