@@ -15,29 +15,21 @@ public class OntologyHelper {
     static final String DEFAULT_FILENAME = "ontology/ast_by_marks.owl";
     static final String DEFAULT_ONTOLOGY_IRI = "http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks";
 
-    public OntologyHelper(List<String> texts) {
-        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, texts, new ArrayList<>());
+    public OntologyHelper(Expression expression) {
+        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, expression);
     }
 
-    public OntologyHelper(List<String> texts, List<Optional<Integer>> studentPos) {
-        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, texts, studentPos);
-    }
-
-    public OntologyHelper(String ontologyFilename, String ontologyIRI, List<String> texts, List<Optional<Integer>> studentPos) {
+    public OntologyHelper(String ontologyFilename, String ontologyIRI, Expression expression) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         File file = new File(classloader.getResource(ontologyFilename).getFile());
         OntologyIRI = ontologyIRI;
-
-        while(studentPos.size() < texts.size()) {
-            studentPos.add(Optional.empty());
-        }
 
         try {
             OntologyManager = OWLManager.createOWLOntologyManager();
             Ontology = OntologyManager.loadOntologyFromOntologyDocument(file);
             DataFactory = OntologyManager.getOWLDataFactory();
 
-            fillInstances(texts, studentPos);
+            fillInstances(expression);
 
             Reasoner = OpenlletReasonerFactory.getInstance().createReasoner(Ontology);
         } catch (OWLOntologyCreationException e) {
@@ -87,17 +79,16 @@ public class OntologyHelper {
         OntologyManager.addAxiom(Ontology, DataFactory.getOWLDataPropertyAssertionAxiom(dataProperty, ind, val));
     }
 
-    void fillInstances(List<String> texts, List<Optional<Integer>> studentPos) {
-        int size = texts.size();
-
-        ListIterator<String> it = texts.listIterator();
+    void fillInstances(Expression expression) {
+        ListIterator<Term> it = expression.getTerms().listIterator();
         while (it.hasNext()) {
             int index = it.nextIndex();
+            Term term = it.next();
             OWLNamedIndividual ind = addInstance( index+ 1, 0);
-            setDataProperty(getDataProperty("text"), ind, DataFactory.getOWLLiteral(it.next()));
+            setDataProperty(getDataProperty("text"), ind, DataFactory.getOWLLiteral(term.getText()));
 
             final int INF = 1000000;
-            Integer currentStudentPos = studentPos.get(index).orElse(INF);
+            Integer currentStudentPos = term.getStudentPos().orElse(INF);
             setDataProperty(getDataProperty("student_pos"), ind, DataFactory.getOWLLiteral(currentStudentPos));
 
             if (!it.hasNext()) {
@@ -106,8 +97,8 @@ public class OntologyHelper {
         }
 
         // Create blank individuals for step 1..size
-        for (int i = 1; i <= size; ++i) {
-            for (int j = 1; j <= size; ++j) {
+        for (int i = 1; i <= expression.size(); ++i) {
+            for (int j = 1; j <= expression.size(); ++j) {
                 addInstance(i, j);
             }
         }

@@ -9,7 +9,12 @@ import java.util.*;
 
 public class OntologyUtil {
     static public OntologyHelper initHelper(List<String> texts) {
-        OntologyHelper helper = new OntologyHelper(texts);
+        OntologyHelper helper = new OntologyHelper(new Expression(texts));
+        return helper;
+    }
+
+    static public OntologyHelper initHelper(Expression expression) {
+        OntologyHelper helper = new OntologyHelper(expression);
         return helper;
     }
 

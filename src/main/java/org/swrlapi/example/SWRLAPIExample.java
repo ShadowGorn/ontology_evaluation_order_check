@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class SWRLAPIExample {
     public static void main(String[] args) {
-        OntologyHelper helper = new OntologyHelper(Arrays.asList("(", "a", "+", "b", ")", "*", "--", "c"));
+        OntologyHelper helper = new OntologyHelper(new Expression(Arrays.asList("(", "a", "+", "b", ")", "*", "--", "c")));
 
         for (OWLNamedIndividual ind : helper.getSortedIndividuals(helper.getIndividuals())) {
             helper.dumpCoreDataProperties(ind);

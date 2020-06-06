@@ -16,12 +16,12 @@ class StudentErrorTest {
                 new Gson().fromJson(
                         jsonExpression,
                         new TypeToken<List<String>>() {}.getType()));
-        return GetErrors(expression.Texts, expression.StudentPos);
+        return GetErrors(expression);
     }
 
-    Set<StudentError> GetErrors(List<String> texts, List<Optional<Integer>> studentPos) {
+    Set<StudentError> GetErrors(Expression expression) {
         Set<StudentError> resultErrors = new HashSet<>();
-        OntologyHelper helper = new OntologyHelper(texts, studentPos);
+        OntologyHelper helper = initHelper(expression);
         FillErrors(
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_more_priority_left"),
