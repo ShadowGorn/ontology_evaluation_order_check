@@ -182,7 +182,7 @@ public class OntologyHelper {
                 "copy", "copy_without_marks", "eval_step", "describe_error",
                 "has_highest_priority_to_left", "has_highest_priority_to_right",
                 "real_pos", "student_pos", "is_operand", "is_function_call",
-                "min_error_step", "min_error_step_decribe"
+                "min_error_step", "min_error_step_describe"
         );
 
         for (String property : properties) {
