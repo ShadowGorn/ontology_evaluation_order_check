@@ -32,6 +32,13 @@ public class OntologyHelper {
             fillInstances(expression);
 
             Reasoner = OpenlletReasonerFactory.getInstance().createReasoner(Ontology);
+
+            Optional<OWLNamedIndividual> minStepError = findMinErrorStep();
+            if (minStepError.isPresent()) {
+                setDataProperty(getDataProperty("min_error_step"), minStepError.get(), DataFactory.getOWLLiteral(true));
+                Reasoner.refresh();
+            }
+
         } catch (OWLOntologyCreationException e) {
             System.err.println("Error creating OWL ontology: " + e.getMessage());
             System.exit(-1);
@@ -94,6 +101,13 @@ public class OntologyHelper {
             if (!it.hasNext()) {
                 setDataProperty(getDataProperty("last"), ind, DataFactory.getOWLLiteral(true));
             }
+
+            OWLNamedIndividual errInd = addInstance( index+ 1, -2);
+            setDataProperty(getDataProperty("text"), errInd, DataFactory.getOWLLiteral(term.getText()));
+            setDataProperty(getDataProperty("student_pos"), errInd, DataFactory.getOWLLiteral(currentStudentPos));
+            if (!it.hasNext()) {
+                setDataProperty(getDataProperty("last"), errInd, DataFactory.getOWLLiteral(true));
+            }
         }
 
         // Create blank individuals for step 1..size
@@ -112,6 +126,27 @@ public class OntologyHelper {
             dumpObjectProperties(ind);
             System.out.println();
         }
+    }
+
+    public Optional<OWLNamedIndividual> findMinErrorStep() {
+        final int INF = 1000000;
+        int minStep = INF;
+
+        Optional<OWLNamedIndividual> error = Optional.empty();
+        for (OWLNamedIndividual ind : getSortedIndividuals(getAllIndividuals())) {
+
+            OWLDataProperty dpError = getDataProperty("describe_error");
+
+            if (!getDataValue(ind, dpError).isEmpty()) {
+                OWLDataProperty dpStep = getDataProperty("student_pos");
+                int step = Integer.parseInt(getDataValue(ind, dpStep));
+                if (step < minStep) {
+                    minStep = step;
+                    error = Optional.of(ind);
+                }
+            }
+        }
+        return error;
     }
 
     public List<OWLNamedIndividual> getSortedIndividuals(NodeSet<OWLNamedIndividual> inds) {
@@ -144,7 +179,8 @@ public class OntologyHelper {
                 "complex_beginning", "complex_ending",
                 "copy", "copy_without_marks", "eval_step", "describe_error",
                 "has_highest_priority_to_left", "has_highest_priority_to_right",
-                "real_pos", "student_pos", "is_operand", "is_function_call"
+                "real_pos", "student_pos", "is_operand", "is_function_call",
+                "min_error_step", "min_error_step_decribe"
         );
 
         for (String property : properties) {
