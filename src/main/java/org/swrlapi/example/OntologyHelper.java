@@ -32,6 +32,7 @@ public class OntologyHelper {
             fillInstances(expression);
 
             Reasoner = OpenlletReasonerFactory.getInstance().createReasoner(Ontology);
+            Reasoner.refresh();
 
             Optional<OWLNamedIndividual> minStepError = findMinErrorStep();
             if (minStepError.isPresent()) {
@@ -133,7 +134,8 @@ public class OntologyHelper {
         int minStep = INF;
 
         Optional<OWLNamedIndividual> error = Optional.empty();
-        for (OWLNamedIndividual ind : getSortedIndividuals(getAllIndividuals())) {
+        for (Node<OWLNamedIndividual> sameInd : getAllIndividuals()) {
+            OWLNamedIndividual ind = sameInd.getRepresentativeElement();
 
             OWLDataProperty dpError = getDataProperty("describe_error");
 
