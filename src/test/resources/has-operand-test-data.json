@@ -195,5 +195,27 @@
       {"indexFrom": 2, "indexesTo": [1, 3]},
       {"indexFrom": 4, "indexesTo": [2, 5, 7, 8]}
     ]
+  },
+  {
+    "expression": ["a", "?", "b", ":", "c"],
+    "relations": [
+      {"indexFrom": 2, "indexesTo": [1, 3, 4, 5]}
+    ]
+  },
+  {
+    "expression": ["a", "?", "b", "+", "c", ":", "c"],
+    "relations": [
+      {"indexFrom": 2, "indexesTo": [1, 4, 6, 7]},
+      {"indexFrom": 4, "indexesTo": [3, 5]}
+    ]
+  },
+  {
+    "expression": ["a", "+", "b", "?", "b", "+", "c", ":", "c", "*", "d"],
+    "relations": [
+      {"indexFrom": 2, "indexesTo": [1, 3]},
+      {"indexFrom": 4, "indexesTo": [2, 6, 8, 10]},
+      {"indexFrom": 6, "indexesTo": [5, 7]},
+      {"indexFrom": 10, "indexesTo": [9, 11]}
+    ]
   }
 ]

@@ -77,5 +77,15 @@
         "Type": "HIGH_PRIORITY_TO_LEFT"
       }
     ]
+  },
+  {
+    "expression": ["var1", "+$3", "var2", "+$2", "var3", "+$1", "var4"],
+    "errors": [
+      {
+        "ErrorPos": 6,
+        "ReasonPos": 4,
+        "Type": "LEFT_ASSOC_TO_LEFT"
+      }
+    ]
   }
 ]
