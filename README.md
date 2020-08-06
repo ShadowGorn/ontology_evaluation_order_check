@@ -1,4 +1,4 @@
-## SWRLAPI based parsing c++ subset
+## SWRLAPI based parsing c language, build evaluation order DAG and fault reasons determining
 
 https://taiga.seschool.ru/project/oasychev-modelirovanie-ponimaniia-iadro/issue/17
 
