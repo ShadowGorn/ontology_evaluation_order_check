@@ -9,6 +9,6 @@ public class HasOperandTest {
     @ParameterizedTest
     @JsonFileSource(resources = "../../../has-operand-test-data.json")
     public void HasOperandTest(javax.json.JsonObject object) {
-        testObjectProperty(object, "has_operand");
+        testObjectProperty(object, "ast_edge");
     }
 }

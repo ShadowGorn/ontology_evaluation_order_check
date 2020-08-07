@@ -25,11 +25,9 @@ class BeforeTest {
     public void SimpleTest() {
         List<String> texts = Arrays.asList("(", ")");
         HashMap<Integer, Set<Integer>> realOperands = getBefore(texts);
-
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
         expOperands.put(1, Set.of());
-        expOperands.put(2, Set.of(1));
-
+        expOperands.put(2, Set.of());
         assertEquals(expOperands, realOperands);
     }
 
@@ -95,12 +93,12 @@ class BeforeTest {
         HashMap<Integer, Set<Integer>> realOperands = getBefore(texts);
 
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
-        expOperands.put(1, Set.of(2));
+        expOperands.put(1, Set.of());
         expOperands.put(2, Set.of());
         expOperands.put(3, Set.of(2));
         expOperands.put(4, Set.of());
         expOperands.put(5, Set.of(2));
-        expOperands.put(6, Set.of(2));
+        expOperands.put(6, Set.of());
 
         assertEquals(expOperands, realOperands);
     }
@@ -113,15 +111,15 @@ class BeforeTest {
         HashMap<Integer, Set<Integer>> expOperands = new HashMap<>();
         expOperands.put(1, Set.of(2, 12, 13));
         expOperands.put(2, Set.of(12, 13));
-        expOperands.put(3, Set.of(2, 12, 13));
-        expOperands.put(4, Set.of(2, 3, 5, 6, 7, 8, 9, 10, 12, 13));
+        expOperands.put(3, Set.of());
+        expOperands.put(4, Set.of(2, 3, 5, 6, 7, 8, 9, 12, 13));
         expOperands.put(5, Set.of(2, 3, 12, 13));
-        expOperands.put(6, Set.of(2, 3, 5, 12, 13));
+        expOperands.put(6, Set.of());
         expOperands.put(7, Set.of(2, 3, 5, 6, 8, 12, 13));
         expOperands.put(8, Set.of(2, 3, 5, 6, 12, 13));
         expOperands.put(9, Set.of(2, 3, 5, 6, 8, 12, 13));
-        expOperands.put(10, Set.of(2, 3, 5, 6, 12, 13));
-        expOperands.put(11, Set.of(2, 3, 12, 13));
+        expOperands.put(10, Set.of());
+        expOperands.put(11, Set.of());
         expOperands.put(12, Set.of());
         expOperands.put(13, Set.of(12));
 
