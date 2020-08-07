@@ -63,6 +63,9 @@ public class OntologyUtil {
         Expression expression = getExpressionFromJson(object.get("expression").toString());
         OntologyHelper helper = initHelper(expression);
         String jsonRelations = object.get("relations").toString();
+        if (object.containsKey("debug") && object.get("debug").toString().equals("\"true\"")) {
+            helper.dump(true);
+        }
         testObjectProperty(helper, objectProperty, jsonRelations, expression.size());
     }
 
