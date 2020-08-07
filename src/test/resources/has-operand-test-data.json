@@ -990,8 +990,7 @@
       {"indexFrom": 3, "indexesTo": [2, 4, 5, 6]},
       {"indexFrom": 1, "indexesTo": [3, 7]},
       {"indexFrom": 8, "indexesTo": [1, 9]}
-    ],
-    "debug": "true"
+    ]
   },
   {
     "expression": ["a", "?", "b", "+", "c", ":", "c"],
