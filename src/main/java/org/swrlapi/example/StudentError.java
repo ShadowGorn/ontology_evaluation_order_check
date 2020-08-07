@@ -9,6 +9,7 @@ enum StudentErrorType {
     RIGHT_ASSOC_TO_RIGHT,
     IN_COMPLEX,
     SAME_OPERATION,
+    STRICT_OPERANDS_ORDER
 }
 
 class StudentError {

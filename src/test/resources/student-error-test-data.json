@@ -44,12 +44,113 @@
     ]
   },
   {
-    "expression": ["($1", "var1", "+$2", "var2", ")"],
+    "expression": ["*$1", "&$2", "!$3", "~$4", "var1"],
     "errors": [
       {
         "ErrorPos": 1,
+        "ReasonPos": 2,
+        "Type": "RIGHT_ASSOC_TO_RIGHT"
+      },
+      {
+        "ErrorPos": 2,
+        "ReasonPos": 3,
+        "Type": "RIGHT_ASSOC_TO_RIGHT"
+      },
+      {
+        "ErrorPos": 3,
+        "ReasonPos": 4,
+        "Type": "RIGHT_ASSOC_TO_RIGHT"
+      }
+    ]
+  },
+  {
+    "expression": ["v", ",$4", "a", "*$3", "b", "?$5", "c", "*$2", "d", ":", "e", "+$1", "f"],
+    "errors": [
+      {
+        "ErrorPos": 8,
+        "ReasonPos": 4,
+        "Type": "STRICT_OPERANDS_ORDER"
+      },
+      {
+        "ErrorPos": 12,
+        "ReasonPos": 4,
+        "Type": "STRICT_OPERANDS_ORDER"
+      },
+      {
+        "ErrorPos": 2,
+        "ReasonPos": 6,
+        "Type": "HIGH_PRIORITY_TO_RIGHT"
+      }
+    ]
+  },
+  {
+    "expression": ["var1", "+$2", "var2", "||", "var3", "+$1", "var4"],
+    "errors": [
+      {
+        "ErrorPos": 6,
+        "ReasonPos": 2,
+        "Type": "STRICT_OPERANDS_ORDER"
+      }
+    ]
+  },
+  {
+    "expression": ["var1", "+$2", "var2", ",$5", "var3", "+$1", "var4", ",$4", "var5", "<<$3", "var6"],
+    "errors": [
+      {
+        "ErrorPos": 6,
+        "ReasonPos": 2,
+        "Type": "STRICT_OPERANDS_ORDER"
+      },
+      {
+        "ErrorPos": 10,
+        "ReasonPos": 4,
+        "Type": "STRICT_OPERANDS_ORDER"
+      },
+      {
+        "ErrorPos": 8,
+        "ReasonPos": 4,
+        "Type": "LEFT_ASSOC_TO_LEFT"
+      }
+    ]
+  },
+  {
+    "expression": ["var1", "+$3", "var2", "||$2", "var3", "+$1", "var4"],
+    "errors": [
+      {
+        "ErrorPos": 6,
+        "ReasonPos": 2,
+        "Type": "STRICT_OPERANDS_ORDER"
+      },
+      {
+        "ErrorPos": 4,
+        "ReasonPos": 2,
+        "Type": "HIGH_PRIORITY_TO_LEFT"
+      }
+    ]
+  },
+  {
+    "expression": ["(", "var1", "+$2", "var2", ")", "*$1", "var3"],
+    "errors": [
+      {
+        "ErrorPos": 6,
         "ReasonPos": 3,
         "Type": "IN_COMPLEX"
+      }
+    ],
+    "debug": "true"
+  },
+  {
+    "expression": ["var", "=$1", "(", "var1", "+$3", "var2", ")", "*$2", "var3"],
+    "errors": [
+      {
+        "ErrorPos": 8,
+        "ReasonPos": 5,
+        "Type": "IN_COMPLEX"
+      },
+      {
+        "ErrorPos": 2,
+        "ReasonPos": 8,
+        "Type": "HIGH_PRIORITY_TO_RIGHT"
       }
     ]
   },
@@ -84,6 +185,11 @@
       {
         "ErrorPos": 6,
         "ReasonPos": 4,
+        "Type": "LEFT_ASSOC_TO_LEFT"
+      },
+      {
+        "ErrorPos": 4,
+        "ReasonPos": 2,
         "Type": "LEFT_ASSOC_TO_LEFT"
       }
     ]

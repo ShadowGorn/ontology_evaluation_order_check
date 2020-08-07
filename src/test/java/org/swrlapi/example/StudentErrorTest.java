@@ -11,13 +11,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.swrlapi.example.OntologyUtil.*;
 
 class StudentErrorTest {
-    Set<StudentError> GetErrors(String jsonExpression) {
-        return GetErrors(getExpressionFromJson(jsonExpression));
+    Set<StudentError> GetErrors(String jsonExpression, boolean debug) {
+        return GetErrors(getExpressionFromJson(jsonExpression), debug);
     }
 
-    Set<StudentError> GetErrors(Expression expression) {
+    Set<StudentError> GetErrors(Expression expression, boolean debug) {
         Set<StudentError> resultErrors = new HashSet<>();
         OntologyHelper helper = initHelper(expression);
+        if (debug) {
+            helper.dump(false);
+        }
         FillErrors(
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_more_priority_left"),
@@ -38,6 +41,10 @@ class StudentErrorTest {
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_in_complex"),
                 StudentErrorType.IN_COMPLEX);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_strict_operands_order"),
+                StudentErrorType.STRICT_OPERANDS_ORDER);
         return resultErrors;
     }
 
@@ -52,7 +59,8 @@ class StudentErrorTest {
     @ParameterizedTest
     @JsonFileSource(resources = "../../../student-error-test-data.json")
     public void StudentErrorTest(javax.json.JsonObject object) {
-        Set<StudentError> real = GetErrors(object.get("expression").toString());
+        boolean debug = object.containsKey("debug") && object.get("debug").toString().equals("\"true\"");
+        Set<StudentError> real = GetErrors(object.get("expression").toString(), debug);
         Set<StudentError> exp = new Gson().fromJson(object.get("errors").toString(), new TypeToken<Set<StudentError>>() {}.getType());
         assertEquals(exp, real);
     }
