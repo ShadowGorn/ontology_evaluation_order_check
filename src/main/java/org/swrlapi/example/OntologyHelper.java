@@ -177,7 +177,7 @@ public class OntologyHelper {
         List<String> properties = Arrays.asList(
                 "last",
                 "init", "eval", "app",
-                "arity", "associativity", "prefix_postfix", "priority",
+                "arity", "associativity", "prefix_postfix", "precedence",
                 "complex_beginning", "complex_ending",
                 "copy", "copy_without_marks", "eval_step", "describe_error",
                 "has_highest_priority_to_left", "has_highest_priority_to_right",

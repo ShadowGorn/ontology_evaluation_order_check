@@ -18,6 +18,10 @@ class Term {
         return StudentPos;
     }
 
+    public void setStudentPos(Integer pos) {
+        StudentPos = Optional.of(pos);
+    }
+
     public String getText() {
         return Text;
     }
