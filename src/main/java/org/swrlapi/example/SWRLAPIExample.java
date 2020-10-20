@@ -68,17 +68,14 @@ public class SWRLAPIExample extends Application {
                         root.getChildren().set(ERRORS_INDEX, new FlowPane());
                         expr.get().getTerms().get(tokenPos.get()).setStudentPos(lastSetPos.get());
                         OntologyHelper helperErrors = new OntologyHelper(expr.get(), relations.get());
-                        Set<StudentError> errors = GetErrors(helperErrors, true);
+                        Set<StudentError> errors = GetErrors(helperErrors, false);
                         if (errors.isEmpty()) {
                             lastSetPos.set(lastSetPos.get() + 1);
                             tokenButton.setDisable(true);
                         } else {
                             VBox errorsPane = new VBox();
                             for (StudentError error : errors) {
-                                errorsPane.getChildren().add(new Label(
-                                        "Error: " + error.Type.toString() +
-                                                " on pos " + error.ErrorPos +
-                                                " cause pos " + error.ReasonPos));
+                                errorsPane.getChildren().add(new Label(getErrorDescription(error, helperErrors)));
                             }
                             root.getChildren().set(ERRORS_INDEX, errorsPane);
                             expr.get().getTerms().get(tokenPos.get()).setStudentPos(1000);

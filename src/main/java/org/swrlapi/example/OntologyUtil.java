@@ -172,4 +172,42 @@ public class OntologyUtil {
         return result;
     }
 
+    public static String getDataProperty(OntologyHelper helper, int index, String property) {
+        return helper.getDataValue(helper.getIndividual(0, index), helper.getDataProperty(property));
+    }
+
+    public static String getErrorDescription(StudentError error, OntologyHelper helper) {
+        String errorText = getDataProperty(helper, error.getErrorPos(), "text");
+        String reasonText = getDataProperty(helper, error.getReasonPos(), "text");
+
+        HashMap<Integer, Set<Integer>> thirdOperators = getObjectPropertyRelationsByIndex(helper, "before_third_operator");
+        Set<Integer> thirdOperatorPoss = thirdOperators.getOrDefault(error.getReasonPos(), new HashSet<>());
+        Integer thirdOperatorPos = thirdOperatorPoss.isEmpty() ? -1 : thirdOperatorPoss.iterator().next();
+        String thirdOperatorText = getDataProperty(helper, thirdOperatorPos, "text");
+
+        if (error.Type == StudentErrorType.HIGH_PRIORITY_TO_LEFT || error.Type == StudentErrorType.HIGH_PRIORITY_TO_RIGHT) {
+            return "Operator " + reasonText + " on pos " + error.getReasonPos()
+                + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
+                + " as operator with higher precedence";
+        } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT) {
+            return "Operator " + reasonText + " on pos " + error.getReasonPos()
+                    + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
+                    + " as operator with left associativity";
+        } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT) {
+            return "Operator " + reasonText + " on pos " + error.getReasonPos()
+                    + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
+                    + " as operator with right associativity";
+        } else if (error.Type == StudentErrorType.IN_COMPLEX) {
+            return "Operator " + reasonText + " on pos " + error.getReasonPos()
+                    + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
+                    + " as operator in complex operator " + thirdOperatorText + " on pos " + thirdOperatorPos;
+        } else if (error.Type == StudentErrorType.STRICT_OPERANDS_ORDER) {
+            return "Operator " + reasonText + " on pos " + error.getReasonPos()
+                    + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
+                    + " as first operand of operator" + thirdOperatorText + " on pos " + thirdOperatorPos
+                    + " with strict evaluation order operands";
+        } else {
+            return "Unknown error";
+        }
+    }
 }
