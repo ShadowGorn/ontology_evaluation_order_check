@@ -102,11 +102,10 @@ public class OntologyUtil {
         return properties;
     }
 
-    static public Set<StudentError> GetErrors(Expression expression, boolean debug) {
+    static public Set<StudentError> GetErrors(OntologyHelper helper, boolean debug) {
         Set<StudentError> resultErrors = new HashSet<>();
-        OntologyHelper helper = initHelper(expression);
         if (debug) {
-            helper.dump(false);
+            helper.dump(true);
         }
         FillErrors(
                 resultErrors,
@@ -143,13 +142,13 @@ public class OntologyUtil {
         });
     }
 
-
     static public List<org.swrlapi.example.Relation> GetRelations(OntologyHelper helper) {
         List<org.swrlapi.example.Relation> relations = new ArrayList<>();
         AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_direct"), "before_direct");
         AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_by_third_operator"), "before_by_third_operator");
         AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_third_operator"), "before_third_operator");
         AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_as_operand"), "before_as_operand");
+        AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "has_operand"), "has_operand");
         return relations;
     }
 
@@ -161,9 +160,8 @@ public class OntologyUtil {
         }
     }
 
-    static public Set<Integer> getOperandPositions(Expression expression) {
+    static public Set<Integer> getOperandPositions(OntologyHelper helper) {
         Set<Integer> result = new HashSet<>();
-        OntologyHelper helper = new OntologyHelper(expression);
 
         HashMap<Integer, String> props = getDataProperties(helper, "is_operand");
         for (Map.Entry<Integer, String> kv : props.entrySet()) {

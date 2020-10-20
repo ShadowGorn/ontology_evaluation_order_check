@@ -16,10 +16,14 @@ public class OntologyHelper {
     static final String DEFAULT_ONTOLOGY_IRI = "http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks";
 
     public OntologyHelper(Expression expression) {
-        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, expression);
+        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, expression, new ArrayList<>());
     }
 
-    public OntologyHelper(String ontologyFilename, String ontologyIRI, Expression expression) {
+    public OntologyHelper(Expression expression, List<Relation> relations) {
+        this(DEFAULT_FILENAME, DEFAULT_ONTOLOGY_IRI, expression, relations);
+    }
+
+    public OntologyHelper(String ontologyFilename, String ontologyIRI, Expression expression, List<Relation> relations) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         File file = new File(classloader.getResource(ontologyFilename).getFile());
         OntologyIRI = ontologyIRI;
@@ -29,7 +33,8 @@ public class OntologyHelper {
             Ontology = OntologyManager.loadOntologyFromOntologyDocument(file);
             DataFactory = OntologyManager.getOWLDataFactory();
 
-            fillInstances(expression);
+            fillInstances(expression, relations.isEmpty());
+            fillRelations(relations);
 
             Reasoner = OpenlletReasonerFactory.getInstance().createReasoner(Ontology);
             Reasoner.refresh();
@@ -74,6 +79,11 @@ public class OntologyHelper {
         return Reasoner.getInstances(exp);
     }
 
+    public OWLNamedIndividual getIndividual(int step, int index) {
+        IRI name = getFullIRI("op-" + String.valueOf(step) + "-" + String.valueOf(index));
+        return DataFactory.getOWLNamedIndividual(name);
+    }
+
     public OWLNamedIndividual addInstance(int index, int step) {
         IRI name = getFullIRI("op-" + String.valueOf(step) + "-" + String.valueOf(index));
         OWLNamedIndividual ind = addInstance(name);
@@ -87,7 +97,11 @@ public class OntologyHelper {
         OntologyManager.addAxiom(Ontology, DataFactory.getOWLDataPropertyAssertionAxiom(dataProperty, ind, val));
     }
 
-    void fillInstances(Expression expression) {
+    void setObjectProperty(OWLObjectProperty objectProperty, OWLNamedIndividual from, OWLNamedIndividual to) {
+        OntologyManager.addAxiom(Ontology, DataFactory.getOWLObjectPropertyAssertionAxiom(objectProperty, from, to));
+    }
+
+    void fillInstances(Expression expression, boolean createASTSteps) {
         ListIterator<Term> it = expression.getTerms().listIterator();
         while (it.hasNext()) {
             int index = it.nextIndex();
@@ -113,9 +127,18 @@ public class OntologyHelper {
 
         // Create blank individuals for step 1..size
         for (int i = 1; i <= expression.size(); ++i) {
-            for (int j = 1; j <= expression.size(); ++j) {
+            for (int j = 1; j <= (createASTSteps ? expression.size() : 1); ++j) {
                 addInstance(i, j);
             }
+        }
+    }
+
+    void fillRelations(List<Relation> relations) {
+        for (Relation relation : relations) {
+            setObjectProperty(
+                    getObjectProperty(relation.getType()),
+                    getIndividual(0, relation.getFrom()),
+                    getIndividual(0, relation.getTo()));
         }
     }
 

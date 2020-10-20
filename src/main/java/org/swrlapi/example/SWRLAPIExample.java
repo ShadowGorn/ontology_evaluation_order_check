@@ -11,8 +11,7 @@ import javafx.scene.control.TextField;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.swrlapi.example.OntologyUtil.GetErrors;
-import static org.swrlapi.example.OntologyUtil.getOperandPositions;
+import static org.swrlapi.example.OntologyUtil.*;
 
 public class SWRLAPIExample extends Application {
     public static void main(String[] args) {
@@ -37,8 +36,8 @@ public class SWRLAPIExample extends Application {
         HBox buttonsPaneStub = new HBox();
         VBox errorsPaneStub = new VBox();
         root.getChildren().addAll(inputLabel, inputPane, buttonsPaneStub, errorsPaneStub);
-        final Integer BUTTONS_INDEX = 2;
-        final Integer ERRORS_INDEX = 3;
+        final int BUTTONS_INDEX = 2;
+        final int ERRORS_INDEX = 3;
 
         AtomicReference<Expression> expr = new AtomicReference<>();
         AtomicReference<List<Relation>> relations = new AtomicReference<>();
@@ -50,7 +49,9 @@ public class SWRLAPIExample extends Application {
             lastSetPos.set(0);
             lastPosIsError.set(false);
             root.getChildren().set(BUTTONS_INDEX, new HBox());
-            Set<Integer> operandsPos = getOperandPositions(expr.get());
+            OntologyHelper helper = new OntologyHelper(expr.get());
+            relations.set(GetRelations(helper));
+            Set<Integer> operandsPos = getOperandPositions(helper);
 
             GridPane evaluationButtons = new GridPane();
             int pos = 0;
@@ -66,7 +67,8 @@ public class SWRLAPIExample extends Application {
                     tokenButton.setOnAction(fe -> {
                         root.getChildren().set(ERRORS_INDEX, new FlowPane());
                         expr.get().getTerms().get(tokenPos.get()).setStudentPos(lastSetPos.get());
-                        Set<StudentError> errors = GetErrors(expr.get(), false);
+                        OntologyHelper helperErrors = new OntologyHelper(expr.get(), relations.get());
+                        Set<StudentError> errors = GetErrors(helperErrors, true);
                         if (errors.isEmpty()) {
                             lastSetPos.set(lastSetPos.get() + 1);
                             tokenButton.setDisable(true);
