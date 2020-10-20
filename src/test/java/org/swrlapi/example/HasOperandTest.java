@@ -1,9 +1,9 @@
 package org.swrlapi.example;
 
-import static org.swrlapi.example.OntologyUtil.*;
-
 import net.joshka.junit.json.params.JsonFileSource;
 import org.junit.jupiter.params.ParameterizedTest;
+
+import static org.swrlapi.example.OntologyTestUtil.testObjectProperty;
 
 public class HasOperandTest {
     @ParameterizedTest

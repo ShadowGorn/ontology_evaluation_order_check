@@ -3,7 +3,7 @@ package org.swrlapi.example;
 import net.joshka.junit.json.params.JsonFileSource;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import static org.swrlapi.example.OntologyUtil.*;
+import static org.swrlapi.example.OntologyTestUtil.*;
 
 public class SimpleOntologyTest {
     @ParameterizedTest

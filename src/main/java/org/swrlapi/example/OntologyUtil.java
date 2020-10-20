@@ -9,8 +9,6 @@ import org.semanticweb.owlapi.reasoner.Node;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class OntologyUtil {
     static public OntologyHelper initHelper(List<String> texts) {
         OntologyHelper helper = new OntologyHelper(new Expression(texts));
@@ -51,27 +49,6 @@ public class OntologyUtil {
         }
 
         return result;
-    }
-
-    static public void testObjectProperty(OntologyHelper helper, String objectProperty, String jsonRelations, int maxIndex) {
-        HashMap<Integer, Set<Integer>> real = getObjectPropertyRelationsByIndex(helper, objectProperty);
-        HashMap<Integer, Set<Integer>> exp = getObjectPropertyRelationsByIndexFromJson(jsonRelations, maxIndex);
-        assertEquals(exp, real);
-    }
-
-    static public void testObjectProperty(javax.json.JsonObject object, String objectProperty) {
-        Expression expression = getExpressionFromJson(object.get("expression").toString());
-        OntologyHelper helper = initHelper(expression);
-        String jsonRelations = object.get("relations").toString();
-        if (object.containsKey("debug") && object.get("debug").toString().equals("\"true\"")) {
-            helper.dump(true);
-        }
-        testObjectProperty(helper, objectProperty, jsonRelations, expression.size());
-    }
-
-    static public void testObjectProperty(javax.json.JsonObject object) {
-        String objectProperty = object.getString("objectProperty");
-        testObjectProperty(object, objectProperty);
     }
 
     static public HashMap<Integer, Set<Integer>> getObjectPropertyRelationsByIndex(OntologyHelper helper, String objectProperty) {
@@ -124,4 +101,77 @@ public class OntologyUtil {
 
         return properties;
     }
+
+    static public Set<StudentError> GetErrors(Expression expression, boolean debug) {
+        Set<StudentError> resultErrors = new HashSet<>();
+        OntologyHelper helper = initHelper(expression);
+        if (debug) {
+            helper.dump(false);
+        }
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_more_priority_left"),
+                StudentErrorType.HIGH_PRIORITY_TO_LEFT);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_more_priority_right"),
+                StudentErrorType.HIGH_PRIORITY_TO_RIGHT);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_left_assoc"),
+                StudentErrorType.LEFT_ASSOC_TO_LEFT);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_right_assoc"),
+                StudentErrorType.RIGHT_ASSOC_TO_RIGHT);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_in_complex"),
+                StudentErrorType.IN_COMPLEX);
+        FillErrors(
+                resultErrors,
+                getObjectPropertyRelationsByIndex(helper, "student_error_strict_operands_order"),
+                StudentErrorType.STRICT_OPERANDS_ORDER);
+        return resultErrors;
+    }
+
+    static void FillErrors(Set<StudentError> resultErrors, HashMap<Integer, Set<Integer>> errors, StudentErrorType type) {
+        errors.forEach((error,reasons) -> {
+            for (Integer reason : reasons) {
+                resultErrors.add(new StudentError(error, reason, type));
+            }
+        });
+    }
+
+
+    static public List<org.swrlapi.example.Relation> GetRelations(OntologyHelper helper) {
+        List<org.swrlapi.example.Relation> relations = new ArrayList<>();
+        AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_direct"), "before_direct");
+        AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_by_third_operator"), "before_by_third_operator");
+        AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_third_operator"), "before_third_operator");
+        AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_as_operand"), "before_as_operand");
+        return relations;
+    }
+
+    static void AddToRelations(List<org.swrlapi.example.Relation> relations, HashMap<Integer, Set<Integer>> props, String type) {
+        for (Map.Entry<Integer, Set<Integer>> kv : props.entrySet()) {
+            for (Integer to : kv.getValue()) {
+                relations.add(new org.swrlapi.example.Relation(kv.getKey(), to, type));
+            }
+        }
+    }
+
+    static public Set<Integer> getOperandPositions(Expression expression) {
+        Set<Integer> result = new HashSet<>();
+        OntologyHelper helper = new OntologyHelper(expression);
+
+        HashMap<Integer, String> props = getDataProperties(helper, "is_operand");
+        for (Map.Entry<Integer, String> kv : props.entrySet()) {
+            if (!kv.getValue().isEmpty()) {
+                result.add(kv.getKey() - 1);
+            }
+        }
+        return result;
+    }
+
 }

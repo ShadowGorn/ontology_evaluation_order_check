@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.swrlapi.example.OntologyUtil.getObjectPropertyRelationsByIndex;
-import static org.swrlapi.example.OntologyUtil.initHelper;
+import static org.swrlapi.example.OntologyUtil.*;
 
 class BeforeTest {
     HashMap<Integer, Set<Integer>> getBefore(List<String> texts) {
