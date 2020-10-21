@@ -12,7 +12,7 @@ import static org.swrlapi.example.OntologyUtil.*;
 
 class StudentErrorTest {
     Set<StudentError> GetErrors(String jsonExpression, boolean debug) {
-        return OntologyUtil.GetErrors(getExpressionFromJson(jsonExpression), debug);
+        return OntologyTestUtil.GetErrors(getExpressionFromJson(jsonExpression), debug);
     }
 
     @ParameterizedTest
