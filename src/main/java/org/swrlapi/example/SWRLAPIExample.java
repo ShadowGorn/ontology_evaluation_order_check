@@ -1,9 +1,14 @@
 package org.swrlapi.example;
 
 import javafx.application.Application;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -23,10 +28,12 @@ public class SWRLAPIExample extends Application {
         stage.setTitle("Evaluation order faults description");
 
         VBox root = new VBox();
-        Scene scene = new Scene(root,300,300);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root,700,200);
         stage.setScene(scene);
 
         HBox inputPane = new HBox();
+        inputPane.setAlignment(Pos.CENTER);
 
         Label inputLabel = new Label("Input expression, split tokens with a space");
         TextField input = new TextField();
@@ -54,6 +61,7 @@ public class SWRLAPIExample extends Application {
             Set<Integer> operandsPos = getOperandPositions(helper);
 
             GridPane evaluationButtons = new GridPane();
+            evaluationButtons.setAlignment(Pos.CENTER);
             int pos = 0;
             for (String token : input.getText().split(" ")) {
                 Button tokenButton = new Button(token);
@@ -72,8 +80,12 @@ public class SWRLAPIExample extends Application {
                         if (errors.isEmpty()) {
                             lastSetPos.set(lastSetPos.get() + 1);
                             tokenButton.setDisable(true);
+                            tokenButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+                            tokenButton.setText(tokenButton.getText() + " / " + lastSetPos.get());
+
                         } else {
                             VBox errorsPane = new VBox();
+                            errorsPane.setAlignment(Pos.CENTER);
                             for (StudentError error : errors) {
                                 errorsPane.getChildren().add(new Label(getErrorDescription(error, helperErrors)));
                             }
@@ -82,7 +94,10 @@ public class SWRLAPIExample extends Application {
                         }
                     });
                 }
-                evaluationButtons.add(new Label(String.valueOf(pos + 1)), pos, 0);
+                Label posLabel = new Label(String.valueOf(pos + 1));
+                posLabel.setTextAlignment(TextAlignment.CENTER);
+                GridPane.setHalignment(posLabel, HPos.CENTER);
+                evaluationButtons.add(posLabel, pos, 0);
                 evaluationButtons.add(tokenButton, pos, 1);
                 pos++;
             }
