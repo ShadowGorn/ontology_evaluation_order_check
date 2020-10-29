@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
@@ -28,8 +29,9 @@ public class SWRLAPIExample extends Application {
         stage.setTitle("Evaluation order faults description");
 
         VBox root = new VBox();
+        root.setStyle("-fx-font: 24 arial;");
         root.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(root,700,200);
+        Scene scene = new Scene(root,1100,500);
         stage.setScene(scene);
 
         HBox inputPane = new HBox();
@@ -49,15 +51,17 @@ public class SWRLAPIExample extends Application {
         AtomicReference<Expression> expr = new AtomicReference<>();
         AtomicReference<List<Relation>> relations = new AtomicReference<>();
         AtomicReference<Integer> lastSetPos = new AtomicReference<>();
+        AtomicReference<Set<Integer>> functionCallPos = new AtomicReference<>();
         AtomicReference<Boolean> lastPosIsError = new AtomicReference<>();
 
         prepareButton.setOnAction(e -> {
             expr.set(new Expression(Arrays.asList(input.getText().split(" "))));
-            lastSetPos.set(0);
+            lastSetPos.set(1);
             lastPosIsError.set(false);
             root.getChildren().set(BUTTONS_INDEX, new HBox());
             OntologyHelper helper = new OntologyHelper(expr.get());
             relations.set(GetRelations(helper));
+            functionCallPos.set(getFunctionCallPositions(helper));
             Set<Integer> operandsPos = getOperandPositions(helper);
 
             GridPane evaluationButtons = new GridPane();
@@ -67,9 +71,10 @@ public class SWRLAPIExample extends Application {
                 Button tokenButton = new Button(token);
                 AtomicReference<Integer> tokenPos = new AtomicReference<>();
                 tokenPos.set(pos);
-                expr.get().getTerms().get(tokenPos.get()).setStudentPos(1000);
+                boolean isParenthesis = token.equals("(") && !functionCallPos.get().contains(pos);
+                expr.get().getTerms().get(tokenPos.get()).setStudentPos(isParenthesis ? 0 : 1000);
 
-                if (operandsPos.contains(pos)) {
+                if (operandsPos.contains(pos) || isParenthesis) {
                     tokenButton.setDisable(true);
                 } else {
                     tokenButton.setOnAction(fe -> {
@@ -78,16 +83,21 @@ public class SWRLAPIExample extends Application {
                         OntologyHelper helperErrors = new OntologyHelper(expr.get(), relations.get());
                         Set<StudentError> errors = GetErrors(helperErrors, false);
                         if (errors.isEmpty()) {
-                            lastSetPos.set(lastSetPos.get() + 1);
                             tokenButton.setDisable(true);
                             tokenButton.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
                             tokenButton.setText(tokenButton.getText() + " / " + lastSetPos.get());
+                            lastSetPos.set(lastSetPos.get() + 1);
 
                         } else {
                             VBox errorsPane = new VBox();
                             errorsPane.setAlignment(Pos.CENTER);
+                            int errorPos = 1;
                             for (StudentError error : errors) {
-                                errorsPane.getChildren().add(new Label(getErrorDescription(error, helperErrors)));
+                                String text = getErrorDescription(error, helperErrors);
+                                text = "\n" + errorPos + ") " + Character.toUpperCase(text.charAt(0)) + text.substring(1);
+                                Label errorLabel = new Label(text);
+                                errorsPane.getChildren().add(errorLabel);
+                                errorPos++;
                             }
                             root.getChildren().set(ERRORS_INDEX, errorsPane);
                             expr.get().getTerms().get(tokenPos.get()).setStudentPos(1000);

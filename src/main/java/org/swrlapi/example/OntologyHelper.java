@@ -202,7 +202,7 @@ public class OntologyHelper {
                 "init", "eval", "app",
                 "arity", "associativity", "prefix_postfix", "precedence",
                 "complex_beginning", "complex_ending",
-                "copy", "copy_without_marks", "eval_step", "describe_error",
+                "copy", "copy_without_marks", "eval_step",
                 "has_highest_priority_to_left", "has_highest_priority_to_right",
                 "real_pos", "student_pos", "is_operand", "is_function_call",
                 "min_error_step", "min_error_step_describe"
@@ -234,11 +234,12 @@ public class OntologyHelper {
     public void dumpObjectProperties(OWLNamedIndividual ind) {
         List<String> properties = Arrays.asList(
                 "all_app_to_left", "all_app_to_right", "all_eval_to_right",
-                "before", "complex_boundaries", "find_left_operand", "find_right_operand",
+                "before", "before_all_operands", "before_direct", "complex_boundaries", "find_left_operand", "find_right_operand",
                 "has_operand", "high_priority", "in_complex", "more_priority_left_by_step",
                 "more_priority_right_by_step", "next_index", "next_step", "not_index", "operation_time",
                 "prev_index", "prev_operand", "prev_operation", "same_step", "0_step",
-                "student_error_more_priority_left", "student_error_more_priority_right"
+                "student_error_more_priority_left", "student_error_more_priority_right",
+                "describe_error"
         );
 
         for (String property : properties) {

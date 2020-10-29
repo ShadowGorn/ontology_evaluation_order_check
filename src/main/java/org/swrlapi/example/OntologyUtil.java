@@ -169,11 +169,41 @@ public class OntologyUtil {
                 result.add(kv.getKey() - 1);
             }
         }
+
+        HashMap<Integer, Set<Integer>> parts = getObjectPropertyRelationsByIndex(helper, "has_complex_operator_part");
+        for (Map.Entry<Integer, Set<Integer>> kv : parts.entrySet()) {
+            for (Integer part : kv.getValue()) {
+                result.add(part - 1);
+            }
+        }
+
+        return result;
+    }
+
+    static public Set<Integer> getFunctionCallPositions(OntologyHelper helper) {
+        Set<Integer> result = new HashSet<>();
+        HashMap<Integer, String> props = getDataProperties(helper, "is_function_call");
+        for (Map.Entry<Integer, String> kv : props.entrySet()) {
+            if (kv.getValue().equals("true")) {
+                result.add(kv.getKey() - 1);
+            }
+        }
         return result;
     }
 
     public static String getDataProperty(OntologyHelper helper, int index, String property) {
         return helper.getDataValue(helper.getIndividual(0, index), helper.getDataProperty(property));
+    }
+
+    public static String getOperatorTextDescription(String errorText) {
+        if (errorText.equals("(")) {
+            return "parenthesis ";
+        } else if (errorText.equals("[")) {
+            return "brackets ";
+        } else if (errorText.contains("(")) {
+            return "function call ";
+        }
+        return "operator ";
     }
 
     public static String getErrorDescription(StudentError error, OntologyHelper helper) {
@@ -185,29 +215,37 @@ public class OntologyUtil {
         Integer thirdOperatorPos = thirdOperatorPoss.isEmpty() ? -1 : thirdOperatorPoss.iterator().next();
         String thirdOperatorText = getDataProperty(helper, thirdOperatorPos, "text");
 
+        int reasonPos = error.getReasonPos();
+        int errorPos = error.getErrorPos();
+
+        String what = getOperatorTextDescription(reasonText) + reasonText + " on pos " + reasonPos
+                + " should be evaluated before " + getOperatorTextDescription(errorText) + errorText + " on pos " + errorPos;
+        String reason = "";
+
         if (error.Type == StudentErrorType.HIGH_PRIORITY_TO_LEFT || error.Type == StudentErrorType.HIGH_PRIORITY_TO_RIGHT) {
-            return "Operator " + reasonText + " on pos " + error.getReasonPos()
-                + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
-                + " as operator with higher precedence";
+            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has higher precedence";
+        } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT && errorText.equals(reasonText)) {
+            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has left associativity and is evaluated from left to right";
         } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT) {
-            return "Operator " + reasonText + " on pos " + error.getReasonPos()
-                    + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
-                    + " as operator with left associativity";
+            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has the same precedence and left associativity";
+        } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT && errorText.equals(reasonText)) {
+            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has right associativity and is evaluated from right to left";
         } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT) {
-            return "Operator " + reasonText + " on pos " + error.getReasonPos()
-                    + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
-                    + " as operator with right associativity";
-        } else if (error.Type == StudentErrorType.IN_COMPLEX) {
-            return "Operator " + reasonText + " on pos " + error.getReasonPos()
-                    + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
-                    + " as operator in complex operator " + thirdOperatorText + " on pos " + thirdOperatorPos;
+            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has the same precedence and right associativity";
+        } else if (error.Type == StudentErrorType.IN_COMPLEX && errorText.equals("(")) {
+            reason = " because function arguments are evaluated before function call​";
+        } else if (error.Type == StudentErrorType.IN_COMPLEX && errorText.equals("[")) {
+            reason = " because expression in brackets is evaluated before brackets";
+        } else if (error.Type == StudentErrorType.IN_COMPLEX && thirdOperatorText.equals("(")) {
+            reason = " because expression in parenthesis is evaluated before operators​ outside of them";
+        } else if (error.Type == StudentErrorType.IN_COMPLEX && thirdOperatorText.equals("[")) {
+            reason = " because expression in brackets is evaluated before operator outside of them​​";
         } else if (error.Type == StudentErrorType.STRICT_OPERANDS_ORDER) {
-            return "Operator " + reasonText + " on pos " + error.getReasonPos()
-                    + " evaluated before operator " + errorText + " on pos " + error.getErrorPos()
-                    + " as first operand of operator" + thirdOperatorText + " on pos " + thirdOperatorPos
-                    + " with strict evaluation order operands";
+            reason = " because the left operand of the " + getOperatorTextDescription(thirdOperatorText) + thirdOperatorText + " on pos " + thirdOperatorPos + " must be evaluated before its right operand​";
         } else {
-            return "Unknown error";
+            reason = " because unknown error";
         }
+
+        return what + "\n" + reason;
     }
 }
