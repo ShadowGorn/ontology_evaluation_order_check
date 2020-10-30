@@ -137,7 +137,6 @@
         "Type": "IN_COMPLEX"
       }
     ],
-    "debug": "true"
   },
   {
     "expression": ["var", "=$1", "(", "var1", "+$3", "var2", ")", "*$2", "var3"],
