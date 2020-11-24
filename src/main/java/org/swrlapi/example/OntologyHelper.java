@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 
 public class OntologyHelper {
@@ -25,12 +26,12 @@ public class OntologyHelper {
 
     public OntologyHelper(String ontologyFilename, String ontologyIRI, Expression expression, List<Relation> relations) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classloader.getResource(ontologyFilename).getFile());
+        InputStream inputStream = classloader.getResourceAsStream(ontologyFilename);
         OntologyIRI = ontologyIRI;
 
         try {
             OntologyManager = OWLManager.createOWLOntologyManager();
-            Ontology = OntologyManager.loadOntologyFromOntologyDocument(file);
+            Ontology = OntologyManager.loadOntologyFromOntologyDocument(inputStream);
             DataFactory = OntologyManager.getOWLDataFactory();
 
             fillInstances(expression, relations.isEmpty());
