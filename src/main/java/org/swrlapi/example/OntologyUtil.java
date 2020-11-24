@@ -197,13 +197,13 @@ public class OntologyUtil {
 
     public static String getOperatorTextDescription(String errorText) {
         if (errorText.equals("(")) {
-            return "parenthesis ";
+            return "скобки ";
         } else if (errorText.equals("[")) {
-            return "brackets ";
+            return "квадратные скобки ";
         } else if (errorText.contains("(")) {
-            return "function call ";
+            return "вызов функции ";
         }
-        return "operator ";
+        return "операция ";
     }
 
     public static String getErrorDescription(StudentError error, OntologyHelper helper) {
@@ -218,32 +218,32 @@ public class OntologyUtil {
         int reasonPos = error.getReasonPos();
         int errorPos = error.getErrorPos();
 
-        String what = getOperatorTextDescription(reasonText) + reasonText + " on pos " + reasonPos
-                + " should be evaluated before " + getOperatorTextDescription(errorText) + errorText + " on pos " + errorPos;
+        String what = getOperatorTextDescription(reasonText) + reasonText + " в позиции " + reasonPos
+                + " должна выполниться раньше, чем " + getOperatorTextDescription(errorText) + errorText + " в позиции " + errorPos + ",";
         String reason = "";
 
         if (error.Type == StudentErrorType.HIGH_PRIORITY_TO_LEFT || error.Type == StudentErrorType.HIGH_PRIORITY_TO_RIGHT) {
-            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has higher precedence";
+            reason = "потому что " + getOperatorTextDescription(reasonText) + reasonText + " имеет более высокий приоритет";
         } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT && errorText.equals(reasonText)) {
-            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has left associativity and is evaluated from left to right";
+            reason = "потому что " + getOperatorTextDescription(reasonText) + reasonText + " имеет левую ассоциативность и вычисляется слева направо";
         } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT) {
-            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has the same precedence and left associativity";
+            reason = "потому что " + getOperatorTextDescription(reasonText) + reasonText + " имеет одинаковый приоритет и левую ассоциативность";
         } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT && errorText.equals(reasonText)) {
-            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has right associativity and is evaluated from right to left";
+            reason = "потому что " + getOperatorTextDescription(reasonText) + reasonText + " имеет правую ассоциативность и вычисляется слева направо";
         } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT) {
-            reason = " because " + getOperatorTextDescription(reasonText) + reasonText + " has the same precedence and right associativity";
+            reason = "потому что " + getOperatorTextDescription(reasonText) + reasonText + " имеет одинаковый приоритет и правую ассоциативность";
         } else if (error.Type == StudentErrorType.IN_COMPLEX && errorText.equals("(")) {
-            reason = " because function arguments are evaluated before function call​";
+            reason = "потому что аргументы функции вычисляются раньше вызова функции​";
         } else if (error.Type == StudentErrorType.IN_COMPLEX && errorText.equals("[")) {
-            reason = " because expression in brackets is evaluated before brackets";
+            reason = "потому что операция в квадратных скобках вычисляется раньше квадратных скобок";
         } else if (error.Type == StudentErrorType.IN_COMPLEX && thirdOperatorText.equals("(")) {
-            reason = " because expression in parenthesis is evaluated before operators​ outside of them";
+            reason = "потому что операция в скобках вычисляется раньше операций вне скобок";
         } else if (error.Type == StudentErrorType.IN_COMPLEX && thirdOperatorText.equals("[")) {
-            reason = " because expression in brackets is evaluated before operator outside of them​​";
+            reason = "потому что операция в квадратных скобках вычисляется раньше операций вне квадратных скобок";
         } else if (error.Type == StudentErrorType.STRICT_OPERANDS_ORDER) {
-            reason = " because the left operand of the " + getOperatorTextDescription(thirdOperatorText) + thirdOperatorText + " on pos " + thirdOperatorPos + " must be evaluated before its right operand​";
+            reason = "потому что левый операнд операции " + thirdOperatorText + " в позиции " + thirdOperatorPos + " должен быть вычислен раньше правого операнда";
         } else {
-            reason = " because unknown error";
+            reason = "но ошибка неизвестна";
         }
 
         return what + "\n" + reason;

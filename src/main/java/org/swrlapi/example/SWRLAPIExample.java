@@ -25,7 +25,7 @@ public class SWRLAPIExample extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setTitle("Evaluation order faults description");
+        stage.setTitle("Описание ошибок порядка выполнения в выражении");
 
         VBox root = new VBox();
         root.setStyle("-fx-font: 24 arial;");
@@ -36,9 +36,9 @@ public class SWRLAPIExample extends Application {
         HBox inputPane = new HBox();
         inputPane.setAlignment(Pos.CENTER);
 
-        Label inputLabel = new Label("Input expression, split tokens with a space");
+        Label inputLabel = new Label("Введите выражение, разделяя все части пробелами");
         TextField input = new TextField();
-        Button prepareButton = new Button("Prepare");
+        Button prepareButton = new Button("Подготовить");
         inputPane.getChildren().addAll(input, prepareButton);
 
         HBox buttonsPaneStub = new HBox();
