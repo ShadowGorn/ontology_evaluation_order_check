@@ -277,27 +277,27 @@ public class OntologyUtil {
         String reason = "";
 
         if (error.Type == StudentErrorType.HIGH_PRIORITY_TO_LEFT || error.Type == StudentErrorType.HIGH_PRIORITY_TO_RIGHT) {
-            reason = " because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has higher precedence";
+            reason = "because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has higher precedence";
         } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT && errorText.equals(reasonText)) {
-            reason = " because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has left associativity and is evaluated from left to right";
+            reason = "because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has left associativity and is evaluated from left to right";
         } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT) {
-            reason = " because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has the same precedence and left associativity";
+            reason = "because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has the same precedence and left associativity";
         } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT && errorText.equals(reasonText)) {
-            reason = " because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has right associativity and is evaluated from right to left";
+            reason = "because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has right associativity and is evaluated from right to left";
         } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT) {
-            reason = " because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has the same precedence and right associativity";
+            reason = "because " + getOperatorTextDescriptionEng(reasonText) + reasonText + " has the same precedence and right associativity";
         } else if (error.Type == StudentErrorType.IN_COMPLEX && errorText.equals("(")) {
-            reason = " because function arguments are evaluated before function call​";
+            reason = "because function arguments are evaluated before function call​";
         } else if (error.Type == StudentErrorType.IN_COMPLEX && errorText.equals("[")) {
-            reason = " because expression in brackets is evaluated before brackets";
+            reason = "because expression in brackets is evaluated before brackets";
         } else if (error.Type == StudentErrorType.IN_COMPLEX && thirdOperatorText.equals("(")) {
-            reason = " because expression in parenthesis is evaluated before operators​ outside of them";
+            reason = "because expression in parenthesis is evaluated before operators​ outside of them";
         } else if (error.Type == StudentErrorType.IN_COMPLEX && thirdOperatorText.equals("[")) {
-            reason = " because expression in brackets is evaluated before operator outside of them​​";
+            reason = "because expression in brackets is evaluated before operator outside of them​​";
         } else if (error.Type == StudentErrorType.STRICT_OPERANDS_ORDER) {
-            reason = " because the left operand of the " + getOperatorTextDescriptionEng(thirdOperatorText) + thirdOperatorText + " on pos " + thirdOperatorPos + " must be evaluated before its right operand​";
+            reason = "because the left operand of the " + getOperatorTextDescriptionEng(thirdOperatorText) + thirdOperatorText + " on pos " + thirdOperatorPos + " must be evaluated before its right operand​";
         } else {
-            reason = " because unknown error";
+            reason = "because unknown error";
         }
 
         return what + "\n" + reason;
