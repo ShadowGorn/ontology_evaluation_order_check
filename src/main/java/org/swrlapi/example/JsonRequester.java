@@ -19,6 +19,7 @@ class MessageToken {
 class Message {
     List<MessageToken> expression;
     List<String> errors;
+    String lang;
 }
 
 public class JsonRequester {
@@ -76,7 +77,7 @@ public class JsonRequester {
         Set<StudentError> errors = GetErrors(helperErrors, false);
         message.errors = new ArrayList<>();
         for (StudentError error : errors) {
-            String text = getErrorDescription(error, helperErrors).replace('\n', ',');
+            String text = getErrorDescription(error, helperErrors, message.lang).replace('\n', ',');
             message.errors.add(text);
             message.expression.get(error.getErrorPos() - 1).status = "wrong";
         }

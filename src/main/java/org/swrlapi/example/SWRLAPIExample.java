@@ -26,6 +26,7 @@ public class SWRLAPIExample extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Evaluation order faults description");
+        String lang = "en";
 
         VBox root = new VBox();
         root.setStyle("-fx-font: 24 arial;");
@@ -92,7 +93,7 @@ public class SWRLAPIExample extends Application {
                             errorsPane.setAlignment(Pos.CENTER);
                             int errorPos = 1;
                             for (StudentError error : errors) {
-                                String text = getErrorDescription(error, helperErrors);
+                                String text = getErrorDescription(error, helperErrors, lang);
                                 text = "\n" + errorPos + ") " + Character.toUpperCase(text.charAt(0)) + text.substring(1);
                                 Label errorLabel = new Label(text);
                                 errorsPane.getChildren().add(errorLabel);

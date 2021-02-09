@@ -13,8 +13,8 @@ To build and run this project you must have the following items installed:
 Build it with Maven:
     mvn clean install
 
-On build completion, your local Maven repository will contain generated ```swrlapi-example-${version}.jar```
-and ```swrlapi-example-${version}-jar-with-dependencies.jar``` files.
+On build completion, your local Maven repository will contain generated ```ontology_cpp_parsing-${version}.jar```
+and ```ontology_cpp_parsing-${version}-jar-with-dependencies.jar``` files.
 The ```./target``` directory will also contain these JARs.
 
 You can then run the application as follows:
