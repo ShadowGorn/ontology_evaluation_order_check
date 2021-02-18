@@ -18,8 +18,9 @@ class MessageToken {
 
 class Message {
     List<MessageToken> expression;
-    List<String> errors;
+    List<OntologyUtil.Error> errors;
     String lang;
+    String task_lang;
 }
 
 public class JsonRequester {
@@ -77,7 +78,7 @@ public class JsonRequester {
         Set<StudentError> errors = GetErrors(helperErrors, false);
         message.errors = new ArrayList<>();
         for (StudentError error : errors) {
-            String text = getErrorDescription(error, helperErrors, message.lang).replace('\n', ' ');
+            OntologyUtil.Error text = getErrorDescription(error, helperErrors, message.lang);
             message.errors.add(text);
             message.expression.get(error.getErrorPos() - 1).status = "wrong";
         }

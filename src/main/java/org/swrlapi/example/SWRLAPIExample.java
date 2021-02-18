@@ -93,7 +93,10 @@ public class SWRLAPIExample extends Application {
                             errorsPane.setAlignment(Pos.CENTER);
                             int errorPos = 1;
                             for (StudentError error : errors) {
-                                String text = getErrorDescription(error, helperErrors, lang);
+                                String text = "";
+                                for (ErrorPart p : getErrorDescription(error, helperErrors, lang).parts) {
+                                    text += p.text;
+                                }
                                 text = "\n" + errorPos + ") " + Character.toUpperCase(text.charAt(0)) + text.substring(1);
                                 Label errorLabel = new Label(text);
                                 errorsPane.getChildren().add(errorLabel);
