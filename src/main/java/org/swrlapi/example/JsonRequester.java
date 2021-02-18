@@ -33,16 +33,13 @@ public class JsonRequester {
 
         List<String> expression = new ArrayList<>();
         String cacheKey = "";
-        Integer maxSetPos = null;
         int pos = 0;
         for (MessageToken token : message.expression) {
-            token.status = null;
+            if (token.status != null && token.status.equals("wrong")) {
+                token.status = null;
+            }
             if (token.check_order == null) {
                 token.check_order = 1000;
-            } else if (token.check_order != 0 && token.check_order != 1000) {
-                if (maxSetPos == null || token.check_order > maxSetPos) {
-                    maxSetPos = pos;
-                }
             }
             if (token.text == null) {
                 token.text = "";
@@ -83,16 +80,11 @@ public class JsonRequester {
             message.expression.get(error.getErrorPos() - 1).status = "wrong";
         }
 
-        if (maxSetPos != null) {
-            if (message.expression.get(maxSetPos).status == null) {
-                message.expression.get(maxSetPos).status = "correct";
-            }
-        }
-
         if (errors.isEmpty()) {
             for (MessageToken token : message.expression) {
                 if (token.check_order != 1000) {
                     token.enabled = false;
+                    token.status = "correct";
                 }
             }
         }
