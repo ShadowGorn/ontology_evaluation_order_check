@@ -426,13 +426,13 @@ public class OntologyUtil {
 
         Error result = new Error();
         result.add(new ErrorPart(
-                getOperatorTextDescriptionRu(reasonText) + reasonText + " on pos " + reasonPos,
+                getOperatorTextDescriptionEng(reasonText) + reasonText + " on pos " + reasonPos,
                 "operator",
                 reasonPos)
         ).add(new ErrorPart(
                 "should be evaluated before"
         )).add(new ErrorPart(
-                getOperatorTextDescriptionRu(errorText) + errorText + " on pos " + errorPos + ",",
+                getOperatorTextDescriptionEng(errorText) + errorText + " on pos " + errorPos + ",",
                 "operator",
                 errorPos
         )).add(new ErrorPart(
@@ -440,7 +440,7 @@ public class OntologyUtil {
         ));
         if (error.Type == StudentErrorType.HIGH_PRIORITY_TO_LEFT || error.Type == StudentErrorType.HIGH_PRIORITY_TO_RIGHT) {
             result.add(new ErrorPart(
-                    getOperatorTextDescriptionRu(reasonText) + reasonText,
+                    getOperatorTextDescriptionEng(reasonText) + reasonText,
                     "operator",
                     reasonPos
             )).add(new ErrorPart(
@@ -451,7 +451,7 @@ public class OntologyUtil {
             ));
         } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT && errorText.equals(reasonText)) {
             result.add(new ErrorPart(
-                    getOperatorTextDescriptionRu(reasonText) + reasonText,
+                    getOperatorTextDescriptionEng(reasonText) + reasonText,
                     "operator",
                     reasonPos
             )).add(new ErrorPart(
@@ -464,7 +464,7 @@ public class OntologyUtil {
             ));
         } else if (error.Type == StudentErrorType.LEFT_ASSOC_TO_LEFT) {
             result.add(new ErrorPart(
-                    getOperatorTextDescriptionRu(reasonText) + reasonText,
+                    getOperatorTextDescriptionEng(reasonText) + reasonText,
                     "operator",
                     reasonPos
             )).add(new ErrorPart(
@@ -480,7 +480,7 @@ public class OntologyUtil {
             ));
         } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT && errorText.equals(reasonText)) {
             result.add(new ErrorPart(
-                    getOperatorTextDescriptionRu(reasonText) + reasonText,
+                    getOperatorTextDescriptionEng(reasonText) + reasonText,
                     "operator",
                     reasonPos
             )).add(new ErrorPart(
@@ -493,7 +493,7 @@ public class OntologyUtil {
             ));
         } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT) {
             result.add(new ErrorPart(
-                    getOperatorTextDescriptionRu(reasonText) + reasonText,
+                    getOperatorTextDescriptionEng(reasonText) + reasonText,
                     "operator",
                     reasonPos
             )).add(new ErrorPart(
