@@ -34,6 +34,9 @@ public class JsonRequester {
         List<String> expression = new ArrayList<>();
         String cacheKey = "";
         int pos = 0;
+        if(message.expression == null) {
+            message.expression = new ArrayList<>();
+        }
         for (MessageToken token : message.expression) {
             if (token.status != null && token.status.equals("wrong")) {
                 token.status = null;
