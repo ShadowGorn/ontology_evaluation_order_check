@@ -318,7 +318,7 @@ public class OntologyUtil {
                     "ассоциативность",
                     "term"
             )).add(new ErrorPart(
-                    "и вычисляется слева направо"
+                    "и вычисляется справа налево"
             ));
         } else if (error.Type == StudentErrorType.RIGHT_ASSOC_TO_RIGHT) {
             result.add(new ErrorPart(
