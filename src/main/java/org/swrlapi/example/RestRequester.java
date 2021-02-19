@@ -26,12 +26,11 @@ public class RestRequester {
             Headers headers = new Headers();
             headers.set("Content-Type", "application/json");
             exchange.getResponseHeaders().putAll(headers);
-            exchange.sendResponseHeaders(200, response.length());;
+            exchange.sendResponseHeaders(200, 0);;
 
             OutputStream os = exchange.getResponseBody();
             os.write(response.getBytes());
             os.flush();
-            os.close();
             exchange.close();
         }));
 

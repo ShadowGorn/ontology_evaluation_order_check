@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.swrlapi.example.OntologyUtil.*;
 
@@ -24,7 +25,7 @@ class Message {
 }
 
 public class JsonRequester {
-    static HashMap<String, List<org.swrlapi.example.Relation>> relationsCache = new HashMap<>();
+    static ConcurrentHashMap<String, List<Relation>> relationsCache = new ConcurrentHashMap<>();
 
     public String response(String request) {
         Message message;
