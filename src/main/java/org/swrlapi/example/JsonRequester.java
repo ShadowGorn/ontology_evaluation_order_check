@@ -27,13 +27,22 @@ public class JsonRequester {
     static HashMap<String, List<org.swrlapi.example.Relation>> relationsCache = new HashMap<>();
 
     public String response(String request) {
-        Message message = new Gson().fromJson(
-                request,
-                Message.class);
+        Message message;
+
+        try {
+            message = new Gson().fromJson(
+                    request,
+                    Message.class);
+        } catch (java.lang.Exception xcp) {
+            message = new Message();
+        }
 
         List<String> expression = new ArrayList<>();
         String cacheKey = "";
         int pos = 0;
+        if(message == null) {
+            message = new Message();
+        }
         if(message.expression == null) {
             message.expression = new ArrayList<>();
         }
