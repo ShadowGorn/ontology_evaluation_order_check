@@ -3,6 +3,7 @@ package org.swrlapi.example;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpServer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -14,7 +15,14 @@ public class RestRequester {
         HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
 
         server.createContext("/api/check", (exchange -> {
-            String response = requester.response(exchange.getRequestBody().toString());
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = exchange.getRequestBody().read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            String request = result.toString("UTF-8");
+            String response = requester.response(request);
             Headers headers = new Headers();
             headers.set("Content-Type", "application/json");
             exchange.getResponseHeaders().putAll(headers);
