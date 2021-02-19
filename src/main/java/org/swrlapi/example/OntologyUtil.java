@@ -149,6 +149,8 @@ public class OntologyUtil {
         AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_third_operator"), "before_third_operator");
         AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "before_as_operand"), "before_as_operand");
         AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "has_operand"), "has_operand");
+        AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "not_selectable"), "not_selectable");
+        AddToRelations(relations, getObjectPropertyRelationsByIndex(helper, "good_token"), "good_token");
         return relations;
     }
 

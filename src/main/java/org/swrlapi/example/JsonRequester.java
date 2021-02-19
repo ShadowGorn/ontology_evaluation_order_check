@@ -73,12 +73,10 @@ public class JsonRequester {
         if (!relationsCache.containsKey(cacheKey)) {
             OntologyHelper helper = new OntologyHelper(expr);
             relationsCache.put(cacheKey, GetRelations(helper));
-            Set<Integer> operandsPos = getOperandPositions(helper);
             Set<Integer> tokenGood = getGoodPositions(helper);
 
             pos = 0;
             for (MessageToken token : message.expression) {
-                token.enabled = !operandsPos.contains(pos);
                 pos = pos + 1;
                 if(!tokenGood.contains(pos - 1)) {
                     if (message.lang.equals("ru")) {
@@ -116,6 +114,15 @@ public class JsonRequester {
         }
 
         OntologyHelper helperErrors = new OntologyHelper(expr, relationsCache.get(cacheKey));
+
+        pos = 0;
+        Set<Integer> operandsPos = getOperandPositions(helperErrors);
+        for (MessageToken token : message.expression) {
+            token.enabled = !operandsPos.contains(pos);
+            expr.getTerms().get(pos).setStudentPos(token.check_order);
+            pos = pos + 1;
+        }
+
         Set<StudentError> errors = GetErrors(helperErrors, false);
         for (StudentError error : errors) {
             OntologyUtil.Error text = getErrorDescription(error, helperErrors, message.lang);
