@@ -45,7 +45,7 @@ public class JsonRequester {
                 token.text = "";
             }
 
-            String part = token.text + "$" + token.check_order;
+            String part = token.text;
             expression.add(part);
             cacheKey += part + " ";
             pos = pos + 1;
@@ -56,19 +56,19 @@ public class JsonRequester {
         if (!relationsCache.containsKey(cacheKey)) {
             OntologyHelper helper = new OntologyHelper(expr);
             relationsCache.put(cacheKey, GetRelations(helper));
-            Set<Integer> functionCallPos = getFunctionCallPositions(helper);
             Set<Integer> operandsPos = getOperandPositions(helper);
 
             pos = 0;
             for (MessageToken token : message.expression) {
-                boolean isParenthesis = token.text.equals("(") && !functionCallPos.contains(pos);
-                if (token.check_order == 1000 && isParenthesis) {
-                    expr.getTerms().get(pos).setStudentPos(0);
-                    token.check_order = 0;
-                }
-                token.enabled = !(operandsPos.contains(pos) || isParenthesis);
+                token.enabled = !operandsPos.contains(pos);
                 pos = pos + 1;
             }
+        }
+
+        pos = 0;
+        for (MessageToken token : message.expression) {
+            expr.getTerms().get(pos).setStudentPos(token.check_order);
+            pos = pos + 1;
         }
 
         OntologyHelper helperErrors = new OntologyHelper(expr, relationsCache.get(cacheKey));

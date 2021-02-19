@@ -163,17 +163,10 @@ public class OntologyUtil {
     static public Set<Integer> getOperandPositions(OntologyHelper helper) {
         Set<Integer> result = new HashSet<>();
 
-        HashMap<Integer, String> props = getDataProperties(helper, "is_operand");
+        HashMap<Integer, String> props = getDataProperties(helper, "not_selectable");
         for (Map.Entry<Integer, String> kv : props.entrySet()) {
             if (!kv.getValue().isEmpty()) {
                 result.add(kv.getKey() - 1);
-            }
-        }
-
-        HashMap<Integer, Set<Integer>> parts = getObjectPropertyRelationsByIndex(helper, "has_complex_operator_part");
-        for (Map.Entry<Integer, Set<Integer>> kv : parts.entrySet()) {
-            for (Integer part : kv.getValue()) {
-                result.add(part - 1);
             }
         }
 

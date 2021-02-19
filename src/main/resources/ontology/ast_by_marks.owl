@@ -339,6 +339,10 @@ before_third_operator(a, ||)""" .
       rdfs:comment "last - пометка о том, что это последний элемент" .
 
 
+###  http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#not_selectable
+:not_selectable rdf:type owl:DatatypeProperty .
+
+
 ###  http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#precedence
 :precedence rdf:type owl:DatatypeProperty ;
             rdfs:comment "priority - приоритет операции (больше - позже выполнится) https://en.cppreference.com/w/cpp/language/operator_precedence" .
@@ -779,6 +783,28 @@ before_third_operator(a, ||)""" .
                            swrl:propertyPredicate :ast_edge ;
                            swrl:argument1 :a ;
                            swrl:argument2 :b
+                         ] ;
+               rdf:rest rdf:nil
+             ]
+ ] .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "not_selectable_complex_part"^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                           swrl:propertyPredicate :has_complex_operator_part ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 :b
+                         ] ;
+               rdf:rest rdf:nil
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :not_selectable ;
+                           swrl:argument1 :b ;
+                           swrl:argument2 "true"^^xsd:boolean
                          ] ;
                rdf:rest rdf:nil
              ]
@@ -1325,7 +1351,14 @@ before_third_operator(a, ||)""" .
                                                             swrl:argument1 :b ;
                                                             swrl:argument2 "true"^^xsd:boolean
                                                           ] ;
-                                                rdf:rest rdf:nil
+                                                rdf:rest [ rdf:type swrl:AtomList ;
+                                                           rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                                                                       swrl:propertyPredicate <http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#0_step> ;
+                                                                       swrl:argument1 :a ;
+                                                                       swrl:argument2 :a0
+                                                                     ] ;
+                                                           rdf:rest rdf:nil
+                                                         ]
                                               ]
                                    ]
                         ]
@@ -1336,7 +1369,14 @@ before_third_operator(a, ||)""" .
                            swrl:argument1 :a ;
                            swrl:argument2 "true"^^xsd:boolean
                          ] ;
-               rdf:rest rdf:nil
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate :not_selectable ;
+                                      swrl:argument1 :a0 ;
+                                      swrl:argument2 "true"^^xsd:boolean
+                                    ] ;
+                          rdf:rest rdf:nil
+                        ]
              ]
  ] .
 
@@ -1433,56 +1473,6 @@ before_third_operator(a, ||)""" .
                            swrl:propertyPredicate :has_highest_priority_to_left ;
                            swrl:argument1 :a ;
                            swrl:argument2 "true"^^xsd:boolean
-                         ] ;
-               rdf:rest rdf:nil
-             ]
- ] .
-
-[ swrla:isRuleEnabled "true"^^xsd:boolean ;
-   rdfs:comment ""^^xsd:string ;
-   rdfs:label "in_complex_step"^^xsd:string ;
-   rdf:type swrl:Imp ;
-   swrl:body [ rdf:type swrl:AtomList ;
-               rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
-                           swrl:propertyPredicate :next_index ;
-                           swrl:argument1 :a ;
-                           swrl:argument2 :b
-                         ] ;
-               rdf:rest [ rdf:type swrl:AtomList ;
-                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                      swrl:propertyPredicate :step ;
-                                      swrl:argument1 :a ;
-                                      swrl:argument2 0
-                                    ] ;
-                          rdf:rest [ rdf:type swrl:AtomList ;
-                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                 swrl:propertyPredicate :complex_beginning ;
-                                                 swrl:argument1 :a ;
-                                                 swrl:argument2 "false"^^xsd:boolean
-                                               ] ;
-                                     rdf:rest [ rdf:type swrl:AtomList ;
-                                                rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
-                                                            swrl:propertyPredicate :in_complex ;
-                                                            swrl:argument1 :a ;
-                                                            swrl:argument2 :c
-                                                          ] ;
-                                                rdf:rest [ rdf:type swrl:AtomList ;
-                                                           rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                                       swrl:propertyPredicate :complex_ending ;
-                                                                       swrl:argument1 :b ;
-                                                                       swrl:argument2 "false"^^xsd:boolean
-                                                                     ] ;
-                                                           rdf:rest rdf:nil
-                                                         ]
-                                              ]
-                                   ]
-                        ]
-             ] ;
-   swrl:head [ rdf:type swrl:AtomList ;
-               rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
-                           swrl:propertyPredicate :in_complex ;
-                           swrl:argument1 :b ;
-                           swrl:argument2 :c
                          ] ;
                rdf:rest rdf:nil
              ]
@@ -1646,6 +1636,56 @@ before_third_operator(a, ||)""" .
                            swrl:propertyPredicate :copy ;
                            swrl:argument1 :other ;
                            swrl:argument2 :other_next
+                         ] ;
+               rdf:rest rdf:nil
+             ]
+ ] .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "in_complex_step"^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                           swrl:propertyPredicate :next_index ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 :b
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate :step ;
+                                      swrl:argument1 :a ;
+                                      swrl:argument2 0
+                                    ] ;
+                          rdf:rest [ rdf:type swrl:AtomList ;
+                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                 swrl:propertyPredicate :complex_beginning ;
+                                                 swrl:argument1 :a ;
+                                                 swrl:argument2 "false"^^xsd:boolean
+                                               ] ;
+                                     rdf:rest [ rdf:type swrl:AtomList ;
+                                                rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                                                            swrl:propertyPredicate :in_complex ;
+                                                            swrl:argument1 :a ;
+                                                            swrl:argument2 :c
+                                                          ] ;
+                                                rdf:rest [ rdf:type swrl:AtomList ;
+                                                           rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                                       swrl:propertyPredicate :complex_ending ;
+                                                                       swrl:argument1 :b ;
+                                                                       swrl:argument2 "false"^^xsd:boolean
+                                                                     ] ;
+                                                           rdf:rest rdf:nil
+                                                         ]
+                                              ]
+                                   ]
+                        ]
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                           swrl:propertyPredicate :in_complex ;
+                           swrl:argument1 :b ;
+                           swrl:argument2 :c
                          ] ;
                rdf:rest rdf:nil
              ]
@@ -2653,6 +2693,91 @@ before_third_operator(a, ||)""" .
 
 [ swrla:isRuleEnabled "true"^^xsd:boolean ;
    rdfs:comment ""^^xsd:string ;
+   rdfs:label "operator("^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :text ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 "("^^xsd:string
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate :step ;
+                                      swrl:argument1 :a ;
+                                      swrl:argument2 1
+                                    ] ;
+                          rdf:rest [ rdf:type swrl:AtomList ;
+                                     rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                                                 swrl:propertyPredicate :prev_operation ;
+                                                 swrl:argument1 :a ;
+                                                 swrl:argument2 :b
+                                               ] ;
+                                     rdf:rest [ rdf:type swrl:AtomList ;
+                                                rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                                                            swrl:propertyPredicate <http://www.semanticweb.org/shadowgorn/ontologies/2020/2/ast_by_marks#0_step> ;
+                                                            swrl:argument1 :a ;
+                                                            swrl:argument2 :a0
+                                                          ] ;
+                                                rdf:rest rdf:nil
+                                              ]
+                                   ]
+                        ]
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :associativity ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 "L"^^xsd:string
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate :precedence ;
+                                      swrl:argument1 :a ;
+                                      swrl:argument2 0
+                                    ] ;
+                          rdf:rest [ rdf:type swrl:AtomList ;
+                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                 swrl:propertyPredicate :arity ;
+                                                 swrl:argument1 :a ;
+                                                 swrl:argument2 "complex"^^xsd:string
+                                               ] ;
+                                     rdf:rest [ rdf:type swrl:AtomList ;
+                                                rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                            swrl:propertyPredicate :init ;
+                                                            swrl:argument1 :a ;
+                                                            swrl:argument2 "true"^^xsd:boolean
+                                                          ] ;
+                                                rdf:rest [ rdf:type swrl:AtomList ;
+                                                           rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                                       swrl:propertyPredicate :complex_beginning ;
+                                                                       swrl:argument1 :a ;
+                                                                       swrl:argument2 "true"^^xsd:boolean
+                                                                     ] ;
+                                                           rdf:rest [ rdf:type swrl:AtomList ;
+                                                                      rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                                                  swrl:propertyPredicate :is_function_call ;
+                                                                                  swrl:argument1 :a ;
+                                                                                  swrl:argument2 "false"^^xsd:boolean
+                                                                                ] ;
+                                                                      rdf:rest [ rdf:type swrl:AtomList ;
+                                                                                 rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                                                             swrl:propertyPredicate :not_selectable ;
+                                                                                             swrl:argument1 :a0 ;
+                                                                                             swrl:argument2 "true"^^xsd:boolean
+                                                                                           ] ;
+                                                                                 rdf:rest rdf:nil
+                                                                               ]
+                                                                    ]
+                                                         ]
+                                              ]
+                                   ]
+                        ]
+             ]
+ ] .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
    rdfs:label "operator&"^^xsd:string ;
    rdf:type swrl:Imp ;
    swrl:body [ rdf:type swrl:AtomList ;
@@ -2708,77 +2833,6 @@ before_third_operator(a, ||)""" .
                                                                        swrl:argument2 "R"^^xsd:string
                                                                      ] ;
                                                            rdf:rest rdf:nil
-                                                         ]
-                                              ]
-                                   ]
-                        ]
-             ]
- ] .
-
-[ swrla:isRuleEnabled "true"^^xsd:boolean ;
-   rdfs:comment ""^^xsd:string ;
-   rdfs:label "operator("^^xsd:string ;
-   rdf:type swrl:Imp ;
-   swrl:body [ rdf:type swrl:AtomList ;
-               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                           swrl:propertyPredicate :text ;
-                           swrl:argument1 :a ;
-                           swrl:argument2 "("^^xsd:string
-                         ] ;
-               rdf:rest [ rdf:type swrl:AtomList ;
-                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                      swrl:propertyPredicate :step ;
-                                      swrl:argument1 :a ;
-                                      swrl:argument2 1
-                                    ] ;
-                          rdf:rest [ rdf:type swrl:AtomList ;
-                                     rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
-                                                 swrl:propertyPredicate :prev_operation ;
-                                                 swrl:argument1 :a ;
-                                                 swrl:argument2 :b
-                                               ] ;
-                                     rdf:rest rdf:nil
-                                   ]
-                        ]
-             ] ;
-   swrl:head [ rdf:type swrl:AtomList ;
-               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                           swrl:propertyPredicate :associativity ;
-                           swrl:argument1 :a ;
-                           swrl:argument2 "L"^^xsd:string
-                         ] ;
-               rdf:rest [ rdf:type swrl:AtomList ;
-                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                      swrl:propertyPredicate :precedence ;
-                                      swrl:argument1 :a ;
-                                      swrl:argument2 0
-                                    ] ;
-                          rdf:rest [ rdf:type swrl:AtomList ;
-                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                 swrl:propertyPredicate :arity ;
-                                                 swrl:argument1 :a ;
-                                                 swrl:argument2 "complex"^^xsd:string
-                                               ] ;
-                                     rdf:rest [ rdf:type swrl:AtomList ;
-                                                rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                            swrl:propertyPredicate :init ;
-                                                            swrl:argument1 :a ;
-                                                            swrl:argument2 "true"^^xsd:boolean
-                                                          ] ;
-                                                rdf:rest [ rdf:type swrl:AtomList ;
-                                                           rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                                       swrl:propertyPredicate :complex_beginning ;
-                                                                       swrl:argument1 :a ;
-                                                                       swrl:argument2 "true"^^xsd:boolean
-                                                                     ] ;
-                                                           rdf:rest [ rdf:type swrl:AtomList ;
-                                                                      rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                                                  swrl:propertyPredicate :is_function_call ;
-                                                                                  swrl:argument1 :a ;
-                                                                                  swrl:argument2 "false"^^xsd:boolean
-                                                                                ] ;
-                                                                      rdf:rest rdf:nil
-                                                                    ]
                                                          ]
                                               ]
                                    ]
@@ -3978,6 +4032,28 @@ before_third_operator(a, ||)""" .
 
 [ swrla:isRuleEnabled "true"^^xsd:boolean ;
    rdfs:comment ""^^xsd:string ;
+   rdfs:label "not_selectable"^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :is_operand ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 "true"^^xsd:boolean
+                         ] ;
+               rdf:rest rdf:nil
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :not_selectable ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 "true"^^xsd:boolean
+                         ] ;
+               rdf:rest rdf:nil
+             ]
+ ] .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
    rdfs:label "same_step"^^xsd:string ;
    rdf:type swrl:Imp ;
    swrl:body [ rdf:type swrl:AtomList ;
@@ -4635,56 +4711,6 @@ before_third_operator(a, ||)""" .
 
 [ swrla:isRuleEnabled "true"^^xsd:boolean ;
    rdfs:comment ""^^xsd:string ;
-   rdfs:label "operator&="^^xsd:string ;
-   rdf:type swrl:Imp ;
-   swrl:body [ rdf:type swrl:AtomList ;
-               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                           swrl:propertyPredicate :text ;
-                           swrl:argument1 :a ;
-                           swrl:argument2 "&="^^xsd:string
-                         ] ;
-               rdf:rest [ rdf:type swrl:AtomList ;
-                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                      swrl:propertyPredicate :step ;
-                                      swrl:argument1 :a ;
-                                      swrl:argument2 1
-                                    ] ;
-                          rdf:rest rdf:nil
-                        ]
-             ] ;
-   swrl:head [ rdf:type swrl:AtomList ;
-               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                           swrl:propertyPredicate :precedence ;
-                           swrl:argument1 :a ;
-                           swrl:argument2 16
-                         ] ;
-               rdf:rest [ rdf:type swrl:AtomList ;
-                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                      swrl:propertyPredicate :arity ;
-                                      swrl:argument1 :a ;
-                                      swrl:argument2 "binary"^^xsd:string
-                                    ] ;
-                          rdf:rest [ rdf:type swrl:AtomList ;
-                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                 swrl:propertyPredicate :init ;
-                                                 swrl:argument1 :a ;
-                                                 swrl:argument2 "true"^^xsd:boolean
-                                               ] ;
-                                     rdf:rest [ rdf:type swrl:AtomList ;
-                                                rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                            swrl:propertyPredicate :associativity ;
-                                                            swrl:argument1 :a ;
-                                                            swrl:argument2 "R"^^xsd:string
-                                                          ] ;
-                                                rdf:rest rdf:nil
-                                              ]
-                                   ]
-                        ]
-             ]
- ] .
-
-[ swrla:isRuleEnabled "true"^^xsd:boolean ;
-   rdfs:comment ""^^xsd:string ;
    rdfs:label "eval_complex_operation_copy_other_left"^^xsd:string ;
    rdf:type swrl:Imp ;
    swrl:body [ rdf:type swrl:AtomList ;
@@ -4829,6 +4855,56 @@ before_third_operator(a, ||)""" .
                            swrl:argument2 :other_next
                          ] ;
                rdf:rest rdf:nil
+             ]
+ ] .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "operator&="^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :text ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 "&="^^xsd:string
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate :step ;
+                                      swrl:argument1 :a ;
+                                      swrl:argument2 1
+                                    ] ;
+                          rdf:rest rdf:nil
+                        ]
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :precedence ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 16
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate :arity ;
+                                      swrl:argument1 :a ;
+                                      swrl:argument2 "binary"^^xsd:string
+                                    ] ;
+                          rdf:rest [ rdf:type swrl:AtomList ;
+                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                 swrl:propertyPredicate :init ;
+                                                 swrl:argument1 :a ;
+                                                 swrl:argument2 "true"^^xsd:boolean
+                                               ] ;
+                                     rdf:rest [ rdf:type swrl:AtomList ;
+                                                rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                            swrl:propertyPredicate :associativity ;
+                                                            swrl:argument1 :a ;
+                                                            swrl:argument2 "R"^^xsd:string
+                                                          ] ;
+                                                rdf:rest rdf:nil
+                                              ]
+                                   ]
+                        ]
              ]
  ] .
 
@@ -5784,56 +5860,6 @@ before_third_operator(a, ||)""" .
 
 [ swrla:isRuleEnabled "true"^^xsd:boolean ;
    rdfs:comment ""^^xsd:string ;
-   rdfs:label "operator>>"^^xsd:string ;
-   rdf:type swrl:Imp ;
-   swrl:body [ rdf:type swrl:AtomList ;
-               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                           swrl:propertyPredicate :step ;
-                           swrl:argument1 :a ;
-                           swrl:argument2 1
-                         ] ;
-               rdf:rest [ rdf:type swrl:AtomList ;
-                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                      swrl:propertyPredicate :text ;
-                                      swrl:argument1 :a ;
-                                      swrl:argument2 ">>"^^xsd:string
-                                    ] ;
-                          rdf:rest rdf:nil
-                        ]
-             ] ;
-   swrl:head [ rdf:type swrl:AtomList ;
-               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                           swrl:propertyPredicate :associativity ;
-                           swrl:argument1 :a ;
-                           swrl:argument2 "L"^^xsd:string
-                         ] ;
-               rdf:rest [ rdf:type swrl:AtomList ;
-                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                      swrl:propertyPredicate :arity ;
-                                      swrl:argument1 :a ;
-                                      swrl:argument2 "binary"^^xsd:string
-                                    ] ;
-                          rdf:rest [ rdf:type swrl:AtomList ;
-                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                 swrl:propertyPredicate :init ;
-                                                 swrl:argument1 :a ;
-                                                 swrl:argument2 "true"^^xsd:boolean
-                                               ] ;
-                                     rdf:rest [ rdf:type swrl:AtomList ;
-                                                rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
-                                                            swrl:propertyPredicate :precedence ;
-                                                            swrl:argument1 :a ;
-                                                            swrl:argument2 7
-                                                          ] ;
-                                                rdf:rest rdf:nil
-                                              ]
-                                   ]
-                        ]
-             ]
- ] .
-
-[ swrla:isRuleEnabled "true"^^xsd:boolean ;
-   rdfs:comment ""^^xsd:string ;
    rdfs:label "find_left_operand_init"^^xsd:string ;
    rdf:type swrl:Imp ;
    swrl:body [ rdf:type swrl:AtomList ;
@@ -5879,6 +5905,56 @@ before_third_operator(a, ||)""" .
                            swrl:argument2 :c
                          ] ;
                rdf:rest rdf:nil
+             ]
+ ] .
+
+[ swrla:isRuleEnabled "true"^^xsd:boolean ;
+   rdfs:comment ""^^xsd:string ;
+   rdfs:label "operator>>"^^xsd:string ;
+   rdf:type swrl:Imp ;
+   swrl:body [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :step ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 1
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate :text ;
+                                      swrl:argument1 :a ;
+                                      swrl:argument2 ">>"^^xsd:string
+                                    ] ;
+                          rdf:rest rdf:nil
+                        ]
+             ] ;
+   swrl:head [ rdf:type swrl:AtomList ;
+               rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                           swrl:propertyPredicate :associativity ;
+                           swrl:argument1 :a ;
+                           swrl:argument2 "L"^^xsd:string
+                         ] ;
+               rdf:rest [ rdf:type swrl:AtomList ;
+                          rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                      swrl:propertyPredicate :arity ;
+                                      swrl:argument1 :a ;
+                                      swrl:argument2 "binary"^^xsd:string
+                                    ] ;
+                          rdf:rest [ rdf:type swrl:AtomList ;
+                                     rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                 swrl:propertyPredicate :init ;
+                                                 swrl:argument1 :a ;
+                                                 swrl:argument2 "true"^^xsd:boolean
+                                               ] ;
+                                     rdf:rest [ rdf:type swrl:AtomList ;
+                                                rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                                            swrl:propertyPredicate :precedence ;
+                                                            swrl:argument1 :a ;
+                                                            swrl:argument2 7
+                                                          ] ;
+                                                rdf:rest rdf:nil
+                                              ]
+                                   ]
+                        ]
              ]
  ] .
 
