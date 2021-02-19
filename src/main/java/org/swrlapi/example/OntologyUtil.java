@@ -173,6 +173,19 @@ public class OntologyUtil {
         return result;
     }
 
+    static public Set<Integer> getGoodPositions(OntologyHelper helper) {
+        Set<Integer> result = new HashSet<>();
+
+        HashMap<Integer, String> props = getDataProperties(helper, "good_token");
+        for (Map.Entry<Integer, String> kv : props.entrySet()) {
+            if (!kv.getValue().isEmpty()) {
+                result.add(kv.getKey() - 1);
+            }
+        }
+
+        return result;
+    }
+
     static public Set<Integer> getFunctionCallPositions(OntologyHelper helper) {
         Set<Integer> result = new HashSet<>();
         HashMap<Integer, String> props = getDataProperties(helper, "is_function_call");

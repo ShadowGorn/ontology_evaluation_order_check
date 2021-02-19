@@ -46,6 +46,11 @@ public class JsonRequester {
         if(message.expression == null) {
             message.expression = new ArrayList<>();
         }
+        if (message.lang == null) {
+            message.lang = "en";
+        }
+        message.errors = new ArrayList<>();
+
         for (MessageToken token : message.expression) {
             if (token.status != null && token.status.equals("wrong")) {
                 token.status = null;
@@ -69,11 +74,38 @@ public class JsonRequester {
             OntologyHelper helper = new OntologyHelper(expr);
             relationsCache.put(cacheKey, GetRelations(helper));
             Set<Integer> operandsPos = getOperandPositions(helper);
+            Set<Integer> tokenGood = getGoodPositions(helper);
 
             pos = 0;
             for (MessageToken token : message.expression) {
                 token.enabled = !operandsPos.contains(pos);
                 pos = pos + 1;
+                if(!tokenGood.contains(pos - 1)) {
+                    if (message.lang.equals("ru")) {
+                        OntologyUtil.Error result = new OntologyUtil.Error();
+                        result.add(new ErrorPart(
+                                "Токен на позиции " + (pos),
+                                "operator",
+                                pos
+                        )).add(new ErrorPart(
+                               "не распознан, возможно не все части разделены пробелами или оператор не поддержан"
+                        ));
+                        message.expression.get(pos - 1).status = "wrong";
+                        message.errors.add(result);
+                    } else {
+                        OntologyUtil.Error result = new OntologyUtil.Error();
+                        result.add(new ErrorPart(
+                                "Token on pos " + (pos),
+                                "operator",
+                                pos
+                        )).add(new ErrorPart(
+                                "is not correct, try to separate all parts with spaces or operator is not supported"
+                        ));
+                        message.expression.get(pos - 1).status = "wrong";
+                        message.errors.add(result);
+                    }
+
+                }
             }
         }
 
@@ -85,7 +117,6 @@ public class JsonRequester {
 
         OntologyHelper helperErrors = new OntologyHelper(expr, relationsCache.get(cacheKey));
         Set<StudentError> errors = GetErrors(helperErrors, false);
-        message.errors = new ArrayList<>();
         for (StudentError error : errors) {
             OntologyUtil.Error text = getErrorDescription(error, helperErrors, message.lang);
             message.errors.add(text);
@@ -94,7 +125,7 @@ public class JsonRequester {
 
         if (errors.isEmpty()) {
             for (MessageToken token : message.expression) {
-                if (token.check_order != 1000) {
+                if (token.check_order != 1000 && token.check_order != 0) {
                     token.enabled = false;
                     token.status = "correct";
                 }
