@@ -3,7 +3,7 @@ package org.swrlapi.example;
 import java.util.ArrayList;
 import java.util.List;
 
-class Expression {
+public class Expression {
     List<Term> Terms;
 
     public Expression(List<String> expression) {
@@ -17,7 +17,15 @@ class Expression {
         return Terms;
     }
 
-    int size() {
+    public List<String> getTokens() {
+        List<String> tokens = new ArrayList<>();
+        for (Term t : Terms) {
+            tokens.add(t.Text);
+        }
+        return tokens;
+    }
+
+    public int size() {
         return Terms.size();
     }
 

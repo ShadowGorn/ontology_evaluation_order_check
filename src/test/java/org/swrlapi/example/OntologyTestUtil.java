@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import java.util.HashMap;
 import java.util.Set;
 
-import static org.swrlapi.example.OntologyUtil.initHelper;
-
 public class OntologyTestUtil {
 
     static public void testObjectProperty(OntologyHelper helper, String objectProperty, String jsonRelations, int maxIndex) {
@@ -17,11 +15,8 @@ public class OntologyTestUtil {
 
     static public void testObjectProperty(javax.json.JsonObject object, String objectProperty) {
         Expression expression = OntologyUtil.getExpressionFromJson(object.get("expression").toString());
-        OntologyHelper helper = initHelper(expression);
+        OntologyHelper helper = new OntologyHelper(expression, "C++");
         String jsonRelations = object.get("relations").toString();
-        if (object.containsKey("debug") && object.get("debug").toString().equals("\"true\"")) {
-            helper.dump(true);
-        }
         testObjectProperty(helper, objectProperty, jsonRelations, expression.size());
     }
 
@@ -31,7 +26,7 @@ public class OntologyTestUtil {
     }
 
     static public Set<StudentError> GetErrors(Expression expression, boolean debug) {
-        OntologyHelper helper = initHelper(expression);
+        OntologyHelper helper = new OntologyHelper(expression, "C++");
         return OntologyUtil.GetErrors(helper, debug);
     }
 }

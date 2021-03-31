@@ -59,7 +59,7 @@ public class SWRLAPIExample extends Application {
             lastSetPos.set(1);
             lastPosIsError.set(false);
             root.getChildren().set(BUTTONS_INDEX, new HBox());
-            OntologyHelper helper = new OntologyHelper(expr.get());
+            OntologyHelper helper = new OntologyHelper(expr.get(), "C++");
             relations.set(GetRelations(helper));
             functionCallPos.set(getFunctionCallPositions(helper));
             Set<Integer> operandsPos = getOperandPositions(helper);
@@ -80,7 +80,7 @@ public class SWRLAPIExample extends Application {
                     tokenButton.setOnAction(fe -> {
                         root.getChildren().set(ERRORS_INDEX, new FlowPane());
                         expr.get().getTerms().get(tokenPos.get()).setStudentPos(lastSetPos.get());
-                        OntologyHelper helperErrors = new OntologyHelper(expr.get(), relations.get());
+                        OntologyHelper helperErrors = new OntologyHelper(expr.get(), "C++");
                         Set<StudentError> errors = GetErrors(helperErrors, false);
                         if (errors.isEmpty()) {
                             tokenButton.setDisable(true);

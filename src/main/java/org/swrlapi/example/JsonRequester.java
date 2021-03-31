@@ -69,64 +69,65 @@ public class JsonRequester {
             pos = pos + 1;
         }
 
-        Expression expr = new Expression(expression);
-
-        if (!relationsCache.containsKey(cacheKey)) {
-            OntologyHelper helper = new OntologyHelper(expr);
-            relationsCache.put(cacheKey, GetRelations(helper));
-            Set<Integer> tokenGood = getGoodPositions(helper);
-
-            pos = 0;
-            for (MessageToken token : message.expression) {
-                pos = pos + 1;
-                if(!tokenGood.contains(pos - 1)) {
-                    if (message.lang.equals("ru")) {
-                        OntologyUtil.Error result = new OntologyUtil.Error();
-                        result.add(new ErrorPart(
-                                "Токен на позиции " + (pos),
-                                "operator",
-                                pos
-                        )).add(new ErrorPart(
-                               "не распознан, возможно не все части разделены пробелами или оператор не поддержан"
-                        ));
-                        message.expression.get(pos - 1).status = "wrong";
-                        message.errors.add(result);
-                    } else {
-                        OntologyUtil.Error result = new OntologyUtil.Error();
-                        result.add(new ErrorPart(
-                                "Token on pos " + (pos),
-                                "operator",
-                                pos
-                        )).add(new ErrorPart(
-                                "is not correct, try to separate all parts with spaces or operator is not supported"
-                        ));
-                        message.expression.get(pos - 1).status = "wrong";
-                        message.errors.add(result);
-                    }
-
-                }
-            }
+        String programmingLanguage;
+        if (message.task_lang != null && message.task_lang.equals("cpp")) {
+            programmingLanguage = "C++";
+        } else {
+            programmingLanguage = "Python";
         }
 
+        Expression expr = new Expression(expression);
         pos = 0;
         for (MessageToken token : message.expression) {
             expr.getTerms().get(pos).setStudentPos(token.check_order);
             pos = pos + 1;
         }
 
-        OntologyHelper helperErrors = new OntologyHelper(expr, relationsCache.get(cacheKey));
+        OntologyHelper helper = new OntologyHelper(expr, programmingLanguage);
+        Set<Integer> tokenGood = getGoodPositions(helper);
 
         pos = 0;
-        Set<Integer> operandsPos = getOperandPositions(helperErrors);
+        for (MessageToken token : message.expression) {
+            pos = pos + 1;
+            if (!tokenGood.contains(pos - 1)) {
+                if (message.lang.equals("ru")) {
+                    OntologyUtil.Error result = new OntologyUtil.Error();
+                    result.add(new ErrorPart(
+                            "Токен на позиции " + (pos),
+                            "operator",
+                            pos
+                    )).add(new ErrorPart(
+                            "не распознан, возможно не все части разделены пробелами или оператор не поддержан"
+                    ));
+                    message.expression.get(pos - 1).status = "wrong";
+                    message.errors.add(result);
+                } else {
+                    OntologyUtil.Error result = new OntologyUtil.Error();
+                    result.add(new ErrorPart(
+                            "Token on pos " + (pos),
+                            "operator",
+                            pos
+                    )).add(new ErrorPart(
+                            "is not correct, try to separate all parts with spaces or operator is not supported"
+                    ));
+                    message.expression.get(pos - 1).status = "wrong";
+                    message.errors.add(result);
+                }
+
+            }
+        }
+
+        pos = 0;
+        Set<Integer> operandsPos = getOperandPositions(helper);
         for (MessageToken token : message.expression) {
             token.enabled = !operandsPos.contains(pos);
             expr.getTerms().get(pos).setStudentPos(token.check_order);
             pos = pos + 1;
         }
 
-        Set<StudentError> errors = GetErrors(helperErrors, false);
+        Set<StudentError> errors = GetErrors(helper, false);
         for (StudentError error : errors) {
-            OntologyUtil.Error text = getErrorDescription(error, helperErrors, message.lang);
+            OntologyUtil.Error text = getErrorDescription(error, helper, message.lang);
             message.errors.add(text);
             message.expression.get(error.getErrorPos() - 1).status = "wrong";
         }

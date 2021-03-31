@@ -2,7 +2,7 @@ package org.swrlapi.example;
 
 import java.util.Optional;
 
-class Term {
+public class Term {
     Term(String text) {
         String[] parts = text.split("\\$", 2);
 
