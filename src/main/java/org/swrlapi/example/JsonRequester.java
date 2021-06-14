@@ -25,8 +25,6 @@ class Message {
 }
 
 public class JsonRequester {
-    static ConcurrentHashMap<String, List<Relation>> relationsCache = new ConcurrentHashMap<>();
-
     public String response(String request) {
         Message message;
 
@@ -39,7 +37,6 @@ public class JsonRequester {
         }
 
         List<String> expression = new ArrayList<>();
-        String cacheKey = "";
         int pos = 0;
         if(message == null) {
             message = new Message();
@@ -49,6 +46,9 @@ public class JsonRequester {
         }
         if (message.lang == null) {
             message.lang = "en";
+        }
+        if (message.task_lang == null) {
+            message.task_lang = "cpp";
         }
         message.errors = new ArrayList<>();
 
@@ -65,7 +65,6 @@ public class JsonRequester {
 
             String part = token.text;
             expression.add(part);
-            cacheKey += part + " ";
             pos = pos + 1;
         }
 
