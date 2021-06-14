@@ -236,7 +236,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         for (Term t : expr.getTerms()) {
             pos++;
             answers.add(createAnswerObject(question, t.getText(), "", "op__0__" + pos.toString(), true));
-            if (t.getStudentPos().isPresent()) {
+            if (t.getStudentPos().isPresent() && t.getStudentPos().get() < 1000) {
                 answerOrderToAnswerPos.put(t.getStudentPos().get(), pos);
             }
         }
