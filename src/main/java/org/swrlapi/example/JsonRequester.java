@@ -25,6 +25,7 @@ class Message {
 }
 
 public class JsonRequester {
+    // {"expression":[{"text":"a"},{"text":"["},{"text":"i"},{"text":"+"},{"text":"1"},{"text":"]"},{"text":"["},{"text":"j"},{"text":"]"}],"errors":[],"lang":"en", "task_lang":"cpp"}
     public String response(String request) {
         Message message;
 
