@@ -104,7 +104,7 @@ public class JsonRequester {
                 } else {
                     OntologyUtil.Error result = new OntologyUtil.Error();
                     result.add(new ErrorPart(
-                            "Token on pos " + (pos),
+                            "Token at pos " + (pos),
                             "operator",
                             pos
                     )).add(new ErrorPart(

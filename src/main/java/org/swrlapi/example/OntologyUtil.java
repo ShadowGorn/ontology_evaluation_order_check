@@ -384,13 +384,13 @@ public class OntologyUtil {
 
         Error result = new Error();
         result.add(new ErrorPart(
-                getOperatorTextDescriptionEng(reasonText) + reasonText + " on pos " + reasonPos,
+                getOperatorTextDescriptionEng(reasonText) + reasonText + " at pos " + reasonPos,
                 "operator",
                 reasonPos)
         ).add(new ErrorPart(
                 "should be evaluated before"
         )).add(new ErrorPart(
-                getOperatorTextDescriptionEng(errorText) + errorText + " on pos " + errorPos + ",",
+                getOperatorTextDescriptionEng(errorText) + errorText + " at pos " + errorPos + ",",
                 "operator",
                 errorPos
         )).add(new ErrorPart(
@@ -517,7 +517,7 @@ public class OntologyUtil {
                     "operator",
                     reasonPos
             )).add(new ErrorPart(
-                    "of the " + getOperatorTextDescriptionEng(thirdOperatorText) + thirdOperatorText + " on pos " + thirdOperatorPos,
+                    "of the " + getOperatorTextDescriptionEng(thirdOperatorText) + thirdOperatorText + " at pos " + thirdOperatorPos,
                     "operator",
                     thirdOperatorPos
             )).add(new ErrorPart(

@@ -780,8 +780,8 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         String reasonPos = nameToPos.get(base.getObject());
         String errorPos = nameToPos.get(base.getSubject());
 
-        String what = getOperatorTextDescription(reasonText) + reasonText + " on pos " + reasonPos
-                + " should be evaluated before " + getOperatorTextDescription(errorText) + errorText + " on pos " + errorPos;
+        String what = getOperatorTextDescription(reasonText) + reasonText + " at pos " + reasonPos
+                + " should be evaluated before " + getOperatorTextDescription(errorText) + errorText + " at pos " + errorPos;
         String reason = "";
 
         String errorType = mistake.getLawName();
@@ -806,7 +806,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
 //        } else if (error.Type == StudentErrorType.IN_COMPLEX && thirdOperatorText.equals("[")) {
 //            reason = " because expression in brackets is evaluated before operator outside of them​​";
 //        } else if (error.Type == StudentErrorType.STRICT_OPERANDS_ORDER) {
-//            reason = " because the left operand of the " + getOperatorTextDescription(thirdOperatorText) + thirdOperatorText + " on pos " + thirdOperatorPos + " must be evaluated before its right operand​";
+//            reason = " because the left operand of the " + getOperatorTextDescription(thirdOperatorText) + thirdOperatorText + " at pos " + thirdOperatorPos + " must be evaluated before its right operand​";
         } else {
             reason = " because unknown error";
         }
