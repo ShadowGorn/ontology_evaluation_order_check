@@ -1748,7 +1748,7 @@
       },
       {
         "name": "eval_function_name",
-        "formulation": "next_step(?function_name, ?function_name_next) ^ next_index(?b, ?c) ^ has_highest_precedence_to_right(?a, true) ^ all_eval_to_right(?a, ?b) ^ find_left_operand(?a, ?function_name) ^ same_step(?a, ?function_name) ^ arity(?a, \"complex\") ^ init(?a, true) ^ has_highest_precedence_to_left(?a, true) ^ is_function_call(?a, true) ^ same_step(?a, ?c) ^ complex_boundaries(?a, ?c) -> copy_without_marks(?function_name, ?function_name_next) ^ app(?function_name_next, true)",
+        "formulation": "next_step(?function_name, ?function_name_next) ^ next_index(?b, ?c) ^ has_highest_precedence_to_right(?a, true) ^ all_eval_to_right(?a, ?b) ^ find_left_operand(?a, ?function_name) ^ same_step(?a, ?function_name) ^ arity(?a, \"complex\") ^ init(?a, true) ^ has_highest_precedence_to_left(?a, true) ^ is_function_call(?a, true) ^ same_step(?a, ?c) ^ complex_boundaries(?a, ?c) -> copy_without_marks(?function_name, ?function_name_next) ^ app(?function_name_next, true) ^ has_operand(?a, ?function_name)",
         "backend": "SWRL"
       },
       {
@@ -1793,7 +1793,7 @@
       },
       {
         "name": "eval_function_name",
-        "formulation": "(?function_name my:next_step ?function_name_next), (?b my:next_index ?c), (?a my:has_highest_precedence_to_right \"true\"^^xsd:boolean), (?a my:all_eval_to_right ?b), (?a my:find_left_operand ?function_name), (?a my:same_step ?function_name), (?a my:arity \"complex\"), (?a my:init \"true\"^^xsd:boolean), (?a my:has_highest_precedence_to_left \"true\"^^xsd:boolean), (?a my:is_function_call \"true\"^^xsd:boolean), (?a my:same_step ?c), (?a my:complex_boundaries ?c) -> (?function_name my:copy_without_marks ?function_name_next), (?function_name_next my:app \"true\"^^xsd:boolean)",
+        "formulation": "(?function_name my:next_step ?function_name_next), (?b my:next_index ?c), (?a my:has_highest_precedence_to_right \"true\"^^xsd:boolean), (?a my:all_eval_to_right ?b), (?a my:find_left_operand ?function_name), (?a my:same_step ?function_name), (?a my:arity \"complex\"), (?a my:init \"true\"^^xsd:boolean), (?a my:has_highest_precedence_to_left \"true\"^^xsd:boolean), (?a my:is_function_call \"true\"^^xsd:boolean), (?a my:same_step ?c), (?a my:complex_boundaries ?c) -> (?function_name my:copy_without_marks ?function_name_next), (?function_name_next my:app \"true\"^^xsd:boolean), (?a my:has_operand ?function_name).",
         "backend": "Jena"
       },
       {

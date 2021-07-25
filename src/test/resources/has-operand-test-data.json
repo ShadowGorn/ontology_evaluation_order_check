@@ -1013,5 +1013,14 @@
     "relations": [
       {"indexFrom": 1, "indexesTo": [2, 3]}
     ]
+  },
+  {
+    "expression": ["var1", "[", "i", "+", "1", "]", "[", "j", "*", "1", "]"],
+    "relations": [
+      {"indexFrom": 2, "indexesTo": [1, 4, 6]},
+      {"indexFrom": 4, "indexesTo": [3, 5]},
+      {"indexFrom": 7, "indexesTo": [2, 9, 11]},
+      {"indexFrom": 9, "indexesTo": [8, 10]}
+    ]
   }
 ]
