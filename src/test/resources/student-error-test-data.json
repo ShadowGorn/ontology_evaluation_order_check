@@ -136,7 +136,17 @@
         "ReasonPos": 3,
         "Type": "IN_COMPLEX"
       }
-    ],
+    ]
+  },
+  {
+    "expression": ["a", "[$1", "var1", "+$2", "var2", "]"],
+    "errors": [
+      {
+        "ErrorPos": 2,
+        "ReasonPos": 4,
+        "Type": "IN_COMPLEX"
+      }
+    ]
   },
   {
     "expression": ["var", "=$1", "(", "var1", "+$3", "var2", ")", "*$2", "var3"],
