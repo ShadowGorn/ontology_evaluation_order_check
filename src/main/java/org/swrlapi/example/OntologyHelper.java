@@ -34,7 +34,7 @@ public class OntologyHelper {
                 new ArrayList<>(domain.getQuestionPositiveLaws(question.getQuestionDomainType(), getTags(programmingLanguage))),
                 question.getStatementFacts(),
                 domain.getSolutionVerbs(question.getQuestionDomainType(), question.getStatementFacts()));
-        assertFalse(solution.isEmpty());
+        assertFalse(expression.size() > 1 && solution.isEmpty());
         List<BackendFactEntity> violations = backend.judge(
                 new ArrayList<>(domain.getQuestionNegativeLaws(question.getQuestionDomainType(), getTags(programmingLanguage))),
                 question.getStatementFacts(),

@@ -144,7 +144,7 @@ public class JenaBackend extends Backend {
         if (fact.getObjectType().equals("owl:NamedIndividual")) {
             ObjectProperty p = model.createObjectProperty(baseIRIPrefix + prop);
             model.add(ind, p, model.getIndividual(baseIRIPrefix + obj));
-        } else if (fact.getObjectType().equals("xsd:int")) {
+        } else if (fact.getObjectType().equals("xsd:int") || fact.getObjectType().equals("xsd:integer")) {
             DatatypeProperty p = model.createDatatypeProperty(baseIRIPrefix + prop);
             model.addLiteral(ind, p, Integer.parseInt(obj));
         } else if (fact.getObjectType().equals("xsd:string")) {

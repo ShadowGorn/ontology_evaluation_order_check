@@ -410,7 +410,9 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
                     "is_operand",
                     "law_name",
                     "good_token",
-                    "not_selectable"
+                    "not_selectable",
+                    "complex_beginning",
+                    "eval_step"
             ));
         } else if (questionDomainType.equals(DEFINE_TYPE_QUESTION_TYPE)) {
             return new ArrayList<>(Arrays.asList(

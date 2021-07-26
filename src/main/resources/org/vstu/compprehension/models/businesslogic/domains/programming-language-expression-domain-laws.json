@@ -2305,13 +2305,18 @@
         "backend": "OWL"
       },
       {
+        "name": "eval_step",
+        "formulation": "owl:DatatypeProperty",
+        "backend": "OWL"
+      },
+      {
         "name": "describe_error",
         "formulation": "student_pos_less(?b, ?a) ^ before_direct(?a, ?b) -> describe_error(?a, ?b)",
         "backend": "SWRL"
       },
       {
         "name": "describe_error",
-        "formulation": "(?b my:student_pos_less ?a), (?a my:before_direct ?b) -> (?a my:describe_error ?b).",
+        "formulation": "(?b my:student_pos_less ?a), (?a my:before_direct ?b), (?a my:eval_step ?a_step) -> (?a my:describe_error ?b).",
         "backend": "Jena"
       },
       {
