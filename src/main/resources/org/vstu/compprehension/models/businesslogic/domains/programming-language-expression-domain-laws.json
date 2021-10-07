@@ -288,6 +288,11 @@
         "backend": "OWL"
       },
       {
+        "name": "in_complex",
+        "formulation": "owl:ObjectProperty",
+        "backend": "OWL"
+      },
+      {
         "name": "good_token",
         "formulation": "(?a my:is_operand \"true\"^^xsd:boolean) -> (?a my:good_token \"true\"^^xsd:boolean).",
         "backend": "Jena"
@@ -307,6 +312,12 @@
         "formulation": "(?a my:text \".\"), (?a my:before_direct ?b), (?b my:text \"(\") -> (?b my:not_selectable \"true\"^^xsd:boolean).",
         "backend": "Jena"
       },
+      {
+        "name": "not_selectable",
+        "formulation": "(?a my:text \",\"), (?a my:in_complex ?b), (?b my:is_function_call \"true\"^^xsd:boolean) -> (?a my:not_selectable \"true\"^^xsd:boolean).",
+        "backend": "Jena"
+      },
+
       {
         "name": "not_selectable",
         "formulation": "(?a my:arity \"complex\"), (?a my:is_function_call \"false\"^^xsd:boolean) -> (?a my:not_selectable \"true\"^^xsd:boolean).",
