@@ -268,7 +268,22 @@
         "backend": "OWL"
       },
       {
+        "name": "is_function_call",
+        "formulation": "owl:DatatypeProperty",
+        "backend": "OWL"
+      },
+      {
+        "name": "text",
+        "formulation": "owl:DatatypeProperty",
+        "backend": "OWL"
+      },
+      {
         "name": "has_complex_operator_part",
+        "formulation": "owl:ObjectProperty",
+        "backend": "OWL"
+      },
+      {
+        "name": "before_direct",
         "formulation": "owl:ObjectProperty",
         "backend": "OWL"
       },
@@ -285,6 +300,11 @@
       {
         "name": "not_selectable",
         "formulation": "(?a my:is_operand \"true\"^^xsd:boolean) -> (?a my:not_selectable \"true\"^^xsd:boolean).",
+        "backend": "Jena"
+      },
+      {
+        "name": "not_selectable",
+        "formulation": "(?a my:text \".\"), (?a my:before_direct ?b), (?b my:text \"(\") -> (?b my:not_selectable \"true\"^^xsd:boolean).",
         "backend": "Jena"
       },
       {
