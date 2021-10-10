@@ -487,6 +487,16 @@ public class OntologyUtil {
                     "operator",
                     errorPos
             ));
+        } else if (error.Type == StudentErrorType.IN_COMPLEX && errorText.equals("?")) {
+            result.add(new ErrorPart(
+                    "ternary operands",
+                    "term"
+            )).add(new ErrorPart(
+                    "are evaluated before"
+            )).add(new ErrorPart(
+                    "ternary",
+                    "term"
+            ));
         } else if (error.Type == StudentErrorType.IN_COMPLEX && thirdOperatorText.equals("(")) {
             result.add(new ErrorPart(
                     "expression in parenthesis",
