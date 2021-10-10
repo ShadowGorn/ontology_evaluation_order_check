@@ -50,37 +50,47 @@ public class OntologyUtil {
     }
 
     static public Set<StudentError> GetErrors(OntologyHelper helper, boolean debug) {
+        Set<Integer> operandPositions = getOperandPositions(helper);
         Set<StudentError> resultErrors = new HashSet<>();
         FillErrors(
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_more_precedence_left"),
-                StudentErrorType.HIGH_PRIORITY_TO_LEFT);
+                StudentErrorType.HIGH_PRIORITY_TO_LEFT,
+                operandPositions);
         FillErrors(
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_more_precedence_right"),
-                StudentErrorType.HIGH_PRIORITY_TO_RIGHT);
+                StudentErrorType.HIGH_PRIORITY_TO_RIGHT,
+                operandPositions);
         FillErrors(
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_left_assoc"),
-                StudentErrorType.LEFT_ASSOC_TO_LEFT);
+                StudentErrorType.LEFT_ASSOC_TO_LEFT,
+                operandPositions);
         FillErrors(
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_right_assoc"),
-                StudentErrorType.RIGHT_ASSOC_TO_RIGHT);
+                StudentErrorType.RIGHT_ASSOC_TO_RIGHT,
+                operandPositions);
         FillErrors(
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_in_complex"),
-                StudentErrorType.IN_COMPLEX);
+                StudentErrorType.IN_COMPLEX,
+                operandPositions);
         FillErrors(
                 resultErrors,
                 getObjectPropertyRelationsByIndex(helper, "student_error_strict_operands_order"),
-                StudentErrorType.STRICT_OPERANDS_ORDER);
+                StudentErrorType.STRICT_OPERANDS_ORDER,
+                operandPositions);
         return resultErrors;
     }
 
-    static void FillErrors(Set<StudentError> resultErrors, HashMap<Integer, Set<Integer>> errors, StudentErrorType type) {
+    static void FillErrors(Set<StudentError> resultErrors, HashMap<Integer, Set<Integer>> errors, StudentErrorType type, Set<Integer> operands) {
         errors.forEach((error,reasons) -> {
             for (Integer reason : reasons) {
+                if (operands.contains(reason - 1) || operands.contains(error - 1)) {
+                    continue;
+                }
                 resultErrors.add(new StudentError(error, reason, type));
             }
         });
