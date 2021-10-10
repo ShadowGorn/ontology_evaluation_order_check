@@ -309,7 +309,7 @@
       },
       {
         "name": "not_selectable",
-        "formulation": "(?a my:text \".\"), (?a my:before_direct ?b), (?b my:text \"(\") -> (?b my:not_selectable \"true\"^^xsd:boolean).",
+        "formulation": "(?a my:text \".\"), (?a my:before_direct ?b), (?b my:text \"(\") -> (?a my:not_selectable \"true\"^^xsd:boolean).",
         "backend": "Jena"
       },
       {
