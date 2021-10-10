@@ -378,6 +378,9 @@ public class OntologyUtil {
         Set<Integer> thirdOperatorPoss = thirdOperators.getOrDefault(error.getReasonPos(), new HashSet<>());
         Integer thirdOperatorPos = thirdOperatorPoss.isEmpty() ? -1 : thirdOperatorPoss.iterator().next();
         String thirdOperatorText = getDataProperty(helper, thirdOperatorPos, "text");
+        if (thirdOperatorText == null) {
+            thirdOperatorText = "";
+        }
 
         int reasonPos = error.getReasonPos();
         int errorPos = error.getErrorPos();
