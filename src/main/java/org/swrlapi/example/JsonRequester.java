@@ -72,8 +72,10 @@ public class JsonRequester {
         }
 
         String programmingLanguage;
-        if (message.task_lang != null && message.task_lang.equals("cpp")) {
+        if (message.task_lang.equals("cpp")) {
             programmingLanguage = "C++";
+        } else if (message.task_lang.equals("cs")) {
+            programmingLanguage = "C#";
         } else {
             programmingLanguage = "Python";
         }
