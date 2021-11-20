@@ -341,15 +341,12 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         int index = 0;
         for (String token : expression) {
             index++;
-            for (int step = 0; step <= expression.size(); ++step) {
-                String name = getName(step, index);
-                facts.add(new BackendFactEntity(name, "rdf:type", "owl:NamedIndividual"));
-                facts.add(new BackendFactEntity("owl:NamedIndividual", name, "index", "xsd:int", String.valueOf(index)));
-                facts.add(new BackendFactEntity("owl:NamedIndividual", name, "step", "xsd:int", String.valueOf(step)));
-            }
+            String name = getName(0, index);
+            facts.add(new BackendFactEntity(name, "rdf:type", "owl:NamedIndividual"));
+            facts.add(new BackendFactEntity("owl:NamedIndividual", name, "index", "xsd:int", String.valueOf(index)));
             facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, index), "text", "xsd:string", token));
         }
-        facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, index), "last", "xsd:boolean", "true"));
+        facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, index), "last_index", "xsd:boolean", "true"));
         return facts;
     }
 
@@ -399,20 +396,32 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         if (questionDomainType.equals(EVALUATION_ORDER_QUESTION_TYPE)) {
             return new ArrayList<>(Arrays.asList(
                     "has_operand",
+                    "before",
                     "before_direct",
                     "before_by_third_operator",
                     "before_third_operator",
                     "before_as_operand",
                     "is_operator_with_strict_operands_order",
+                    "high_precedence",
                     "high_precedence_diff_precedence",
                     "high_precedence_left_assoc",
                     "high_precedence_right_assoc",
                     "is_operand",
                     "law_name",
-                    "good_token",
-                    "not_selectable",
+                    "text",
+                    "index",
+                    "precedence",
+                    "associativity",
+                    "in_complex",
                     "complex_beginning",
-                    "eval_step"
+                    "is_function_call",
+                    "student_error_in_complex_base",
+                    "student_error_more_precedence_base",
+                    "student_error_right_assoc_base",
+                    "student_error_strict_operands_order_base",
+                    "student_error_left_assoc_base",
+                    "good_token",
+                    "not_selectable"
             ));
         } else if (questionDomainType.equals(DEFINE_TYPE_QUESTION_TYPE)) {
             return new ArrayList<>(Arrays.asList(
@@ -426,8 +435,6 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         if (questionDomainType.equals(EVALUATION_ORDER_QUESTION_TYPE)) {
             return new ArrayList<>(Arrays.asList(
                     "student_error_more_precedence",
-                    "student_error_more_precedence_left",
-                    "student_error_more_precedence_right",
                     "student_error_left_assoc",
                     "student_error_right_assoc",
                     "student_error_in_complex",
@@ -437,11 +444,13 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
                     "student_error_right_assoc_base",
                     "student_error_in_complex_base",
                     "student_error_strict_operands_order_base",
+                    "before_third_operator",
                     "text",
                     "index",
                     "before_direct",
                     "student_pos_number",
-                    "is_operand"
+                    "is_operand",
+                    "is_function_call"
             ));
         } else if (questionDomainType.equals(DEFINE_TYPE_QUESTION_TYPE)) {
             return new ArrayList<>(Arrays.asList(
