@@ -435,6 +435,8 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         if (questionDomainType.equals(EVALUATION_ORDER_QUESTION_TYPE)) {
             return new ArrayList<>(Arrays.asList(
                     "student_error_more_precedence",
+                    "student_error_more_precedence_left",
+                    "student_error_more_precedence_right",
                     "student_error_left_assoc",
                     "student_error_right_assoc",
                     "student_error_in_complex",

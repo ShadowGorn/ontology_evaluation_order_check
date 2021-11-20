@@ -1281,6 +1281,11 @@
         "backend": "OWL"
       },
       {
+        "name": "index",
+        "formulation": "owl:DatatypeProperty",
+        "backend": "OWL"
+      },
+      {
         "name": "precedence",
         "formulation": "owl:DatatypeProperty",
         "backend": "OWL"
@@ -1343,6 +1348,16 @@
       {
         "name": "student_error_more_precedence",
         "formulation": "(?b my:student_error_more_precedence_base ?a), (?a my:describe_error ?b) -> (?b my:student_error_more_precedence ?a).",
+        "backend": "Jena"
+      },
+      {
+        "name": "student_error_more_precedence_left",
+        "formulation": "(?a my:student_error_more_precedence ?b), (?a my:index ?a_index), (?b my:index ?b_index), lessThan(?b_index, ?a_index) -> (?a my:student_error_more_precedence_left ?b).",
+        "backend": "Jena"
+      },
+      {
+        "name": "student_error_more_precedence_right",
+        "formulation": "(?a my:student_error_more_precedence ?b), (?a my:index ?a_index), (?b my:index ?b_index), lessThan(?a_index, ?b_index) -> (?a my:student_error_more_precedence_right ?b).",
         "backend": "Jena"
       },
       {

@@ -88,7 +88,7 @@ class PelletBackendTest {
         JenaBackend backend = new JenaBackend();
         List<Law> laws = new ArrayList<>();
         for (PositiveLaw law : domain.getPositiveLaws()) {
-            if (!law.getName().contains("python")) {
+            if (!law.getName().contains("python") && !law.getName().contains("c#")) {
                 laws.add(law);
             }
         }
@@ -113,11 +113,5 @@ class PelletBackendTest {
     @JsonFileSource(resources = "../../../../../../has-operand-test-data.json")
     public void HasOperandTest(javax.json.JsonObject object) {
         checkObjectProperty(object, "ast_edge");
-    }
-
-    @ParameterizedTest
-    @JsonFileSource(resources = "../../../../../../simple-ontology-test-data.json")
-    public void SimpleOntologyTest(javax.json.JsonObject object) {
-        checkObjectProperty(object);
     }
 }
