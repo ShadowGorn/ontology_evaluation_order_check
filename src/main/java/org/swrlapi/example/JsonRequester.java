@@ -187,6 +187,13 @@ public class JsonRequester {
             pos = 0;
             for (AnswerObjectEntity answer : helper.getQuestion().getAnswerObjects()) {
                 if (answer.getDomainInfo().equals(correctAnswer.answer.getDomainInfo())) {
+                    for (MessageToken token : message.expression) {
+                        if (token.check_order != 1000 && token.check_order != 0) {
+                            token.enabled = false;
+                            token.status = "correct";
+                        }
+                    }
+
                     message.expression.get(pos).enabled = false;
                     message.expression.get(pos).status = "suggested";
                     message.expression.get(pos).check_order = last_check_order + 1;
@@ -194,13 +201,6 @@ public class JsonRequester {
                     OntologyUtil.Error error = new OntologyUtil.Error();
                     OntologyUtil.ErrorPart errorPart = new ErrorPart(correctAnswer.explanation.getText());
                     message.errors.add(error.add(errorPart));
-
-                    for (MessageToken token : message.expression) {
-                        if (token.check_order != 1000 && token.check_order != 0) {
-                            token.enabled = false;
-                            token.status = "correct";
-                        }
-                    }
 
                     return new Gson().toJson(message);
                 }
