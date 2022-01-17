@@ -45,10 +45,10 @@ public class JsonRequester {
 
         List<String> expression = new ArrayList<>();
         int pos = 0;
-        if(message == null) {
+        if (message == null) {
             message = new Message();
         }
-        if(message.expression == null) {
+        if (message.expression == null) {
             message.expression = new ArrayList<>();
         }
         if (message.lang == null) {
@@ -61,6 +61,36 @@ public class JsonRequester {
             message.action = "find_errors";
         }
         message.errors = new ArrayList<>();
+
+        if (message.action.equals("supported_languages")){
+            MessageToken token = new MessageToken();
+            token.text = "en";
+            message.expression.add(token);
+            token = new MessageToken();
+            token.text = "ru";
+            message.expression.add(token);
+            return new Gson().toJson(message);
+        }else if (message.action.equals("supported_task_languages")) {
+            MessageToken token = new MessageToken();
+            token.text = "cpp";
+            message.expression.add(token);
+            token = new MessageToken();
+            token.text = "cs";
+            message.expression.add(token);
+            token = new MessageToken();
+            token.text = "python";
+            message.expression.add(token);
+            return new Gson().toJson(message);
+        }
+
+        String programmingLanguage;
+        if (message.task_lang.equals("cpp")) {
+            programmingLanguage = "C++";
+        } else if (message.task_lang.equals("cs")) {
+            programmingLanguage = "C#";
+        } else {
+            programmingLanguage = "Python";
+        }
 
         for (MessageToken token : message.expression) {
             if (token.status != null && token.status.equals("wrong")) {
@@ -76,15 +106,6 @@ public class JsonRequester {
             String part = token.text;
             expression.add(part);
             pos = pos + 1;
-        }
-
-        String programmingLanguage;
-        if (message.task_lang.equals("cpp")) {
-            programmingLanguage = "C++";
-        } else if (message.task_lang.equals("cs")) {
-            programmingLanguage = "C#";
-        } else {
-            programmingLanguage = "Python";
         }
 
         int last_check_order = 0;
