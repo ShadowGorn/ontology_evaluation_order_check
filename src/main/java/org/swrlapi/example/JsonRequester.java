@@ -184,6 +184,9 @@ public class JsonRequester {
             return new Gson().toJson(message);
         } else if (message.action.equals("next_step")) {
             Domain.CorrectAnswer correctAnswer = new ProgrammingLanguageExpressionDomain().getAnyNextCorrectAnswer(helper.getQuestion(), message.lang);
+            if (correctAnswer == null) {
+                return new Gson().toJson(message);
+            }
             pos = 0;
             for (AnswerObjectEntity answer : helper.getQuestion().getAnswerObjects()) {
                 if (answer.getDomainInfo().equals(correctAnswer.answer.getDomainInfo())) {
