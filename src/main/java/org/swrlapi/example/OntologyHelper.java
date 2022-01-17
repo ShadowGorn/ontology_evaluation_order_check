@@ -75,4 +75,8 @@ public class OntologyHelper {
         }
         return result;
     }
+
+    public Ordering getQuestion() {
+        return question;
+    }
 }

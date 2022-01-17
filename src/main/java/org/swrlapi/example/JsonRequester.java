@@ -1,6 +1,9 @@
 package org.swrlapi.example;
 
 import com.google.gson.Gson;
+import org.vstu.compprehension.models.businesslogic.domains.Domain;
+import org.vstu.compprehension.models.businesslogic.domains.ProgrammingLanguageExpressionDomain;
+import org.vstu.compprehension.models.entities.AnswerObjectEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +25,7 @@ class Message {
     List<OntologyUtil.Error> errors;
     String lang;
     String task_lang;
+    String action;
 }
 
 public class JsonRequester {
@@ -53,6 +57,9 @@ public class JsonRequester {
         if (message.task_lang == null) {
             message.task_lang = "cpp";
         }
+        if (message.action == null) {
+            message.action = "find_errors";
+        }
         message.errors = new ArrayList<>();
 
         for (MessageToken token : message.expression) {
@@ -78,6 +85,13 @@ public class JsonRequester {
             programmingLanguage = "C#";
         } else {
             programmingLanguage = "Python";
+        }
+
+        int last_check_order = 0;
+        for (MessageToken token : message.expression) {
+            if (token.check_order != 1000) {
+                last_check_order = Math.max(last_check_order, token.check_order);
+            }
         }
 
         Expression expr = new Expression(expression);
@@ -129,19 +143,35 @@ public class JsonRequester {
             pos = pos + 1;
         }
 
-        Set<StudentError> errors = GetErrors(helper, false);
-        for (StudentError error : errors) {
-            OntologyUtil.Error text = getErrorDescription(error, helper, message.lang);
-            message.errors.add(text);
-            message.expression.get(error.getErrorPos() - 1).status = "wrong";
-        }
+        if (message.action.equals("find_errors")) {
+            Set<StudentError> errors = GetErrors(helper, false);
+            for (StudentError error : errors) {
+                OntologyUtil.Error text = getErrorDescription(error, helper, message.lang);
+                message.errors.add(text);
+                message.expression.get(error.getErrorPos() - 1).status = "wrong";
+            }
 
-        if (errors.isEmpty()) {
-            for (MessageToken token : message.expression) {
-                if (token.check_order != 1000 && token.check_order != 0) {
-                    token.enabled = false;
-                    token.status = "correct";
+            if (errors.isEmpty()) {
+                for (MessageToken token : message.expression) {
+                    if (token.check_order != 1000 && token.check_order != 0) {
+                        token.enabled = false;
+                        token.status = "correct";
+                    }
                 }
+            }
+
+            return new Gson().toJson(message);
+        } else if (message.action.equals("next_step")) {
+            Domain.CorrectAnswer correctAnswer = new ProgrammingLanguageExpressionDomain().getAnyNextCorrectAnswer(helper.getQuestion());
+            pos = 0;
+            for (AnswerObjectEntity answer : helper.getQuestion().getAnswerObjects()) {
+                if (answer.getDomainInfo().equals(correctAnswer.answer.getDomainInfo())) {
+                    message.expression.get(pos).enabled = false;
+                    message.expression.get(pos).status = "suggested";
+                    message.expression.get(pos).check_order = last_check_order + 1;
+                    return new Gson().toJson(message);
+                }
+                pos++;
             }
         }
 
