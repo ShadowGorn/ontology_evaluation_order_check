@@ -3277,6 +3277,11 @@
         "backend": "OWL"
       },
       {
+        "name": "second_token",
+        "formulation": "owl:ObjectProperty",
+        "backend": "OWL"
+      },
+      {
         "name": "in_complex",
         "formulation": "owl:ObjectProperty",
         "backend": "OWL"
@@ -3298,11 +3303,6 @@
       },
       {
         "name": "not_selectable",
-        "formulation": "(?a my:text \".\"), (?a my:before_direct ?b), (?b my:text \"(\") -> (?a my:not_selectable \"true\"^^xsd:boolean).",
-        "backend": "Jena"
-      },
-      {
-        "name": "not_selectable",
         "formulation": "(?a my:text \",\"), (?a my:in_complex ?b), (?b my:is_function_call \"true\"^^xsd:boolean) -> (?a my:not_selectable \"true\"^^xsd:boolean).",
         "backend": "Jena"
       },
@@ -3313,7 +3313,7 @@
       },
       {
         "name": "not_selectable",
-        "formulation": "(?a my:has_complex_operator_part ?b) -> (?b my:not_selectable \"true\"^^xsd:boolean).",
+        "formulation": "(?a my:second_token ?b) -> (?b my:not_selectable \"true\"^^xsd:boolean).",
         "backend": "Jena"
       }
     ],
