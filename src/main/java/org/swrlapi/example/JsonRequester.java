@@ -194,6 +194,14 @@ public class JsonRequester {
                     OntologyUtil.Error error = new OntologyUtil.Error();
                     OntologyUtil.ErrorPart errorPart = new ErrorPart(correctAnswer.explanation.getText());
                     message.errors.add(error.add(errorPart));
+
+                    for (MessageToken token : message.expression) {
+                        if (token.check_order != 1000 && token.check_order != 0) {
+                            token.enabled = false;
+                            token.status = "correct";
+                        }
+                    }
+
                     return new Gson().toJson(message);
                 }
                 pos++;
