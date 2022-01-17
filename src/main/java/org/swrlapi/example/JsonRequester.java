@@ -183,13 +183,17 @@ public class JsonRequester {
 
             return new Gson().toJson(message);
         } else if (message.action.equals("next_step")) {
-            Domain.CorrectAnswer correctAnswer = new ProgrammingLanguageExpressionDomain().getAnyNextCorrectAnswer(helper.getQuestion());
+            Domain.CorrectAnswer correctAnswer = new ProgrammingLanguageExpressionDomain().getAnyNextCorrectAnswer(helper.getQuestion(), message.lang);
             pos = 0;
             for (AnswerObjectEntity answer : helper.getQuestion().getAnswerObjects()) {
                 if (answer.getDomainInfo().equals(correctAnswer.answer.getDomainInfo())) {
                     message.expression.get(pos).enabled = false;
                     message.expression.get(pos).status = "suggested";
                     message.expression.get(pos).check_order = last_check_order + 1;
+
+                    OntologyUtil.Error error = new OntologyUtil.Error();
+                    OntologyUtil.ErrorPart errorPart = new ErrorPart(correctAnswer.explanation.getText());
+                    message.errors.add(error.add(errorPart));
                     return new Gson().toJson(message);
                 }
                 pos++;

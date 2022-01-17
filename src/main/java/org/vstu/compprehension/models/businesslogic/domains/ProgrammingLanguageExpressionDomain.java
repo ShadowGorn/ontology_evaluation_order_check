@@ -3,7 +3,7 @@ package org.vstu.compprehension.models.businesslogic.domains;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
-import org.antlr.runtime.Token;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.Assertions;
 import org.swrlapi.example.Term;
 import org.vstu.compprehension.models.businesslogic.*;
@@ -15,6 +15,7 @@ import org.vstu.compprehension.models.entities.QuestionOptions.MatchingQuestionO
 import org.vstu.compprehension.models.entities.QuestionOptions.OrderQuestionOptionsEntity;
 import org.vstu.compprehension.models.entities.QuestionOptions.QuestionOptionsEntity;
 import org.vstu.compprehension.utils.HyperText;
+import org.apache.commons.collections4.MultiValuedMap;
 
 import org.swrlapi.example.Expression;
 import java.io.InputStream;
@@ -33,11 +34,18 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
     static final String LAWS_CONFIG_PATH = "org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-laws.json";
     static final String QUESTIONS_CONFIG_PATH = "org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-questions.json";
 
+    ResourceBundle localeRu;
+    ResourceBundle localeEng;
+
     public ProgrammingLanguageExpressionDomain() {
         name = "ProgrammingLanguageExpressionDomain";
 
         fillConcepts();
         readLaws(this.getClass().getClassLoader().getResourceAsStream(LAWS_CONFIG_PATH));
+
+        localeRu = ResourceBundle.getBundle("org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-messages", new Locale("ru"));
+        localeEng = ResourceBundle.getBundle("org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-messages", new Locale("en"));
+
     }
 
     private void fillConcepts() {
@@ -612,12 +620,237 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         return result;
     }
 
-    HyperText getCorrectExplanation(String lawName) {
-        return new HyperText(lawName);
-    }
-
     @Override
     public CorrectAnswer getAnyNextCorrectAnswer(Question q) {
+        return null;
+    }
+
+    String getMessage(String x, String lang) {
+        if (lang.equals("ru")) {
+            return localeRu.getString(x);
+        } else {
+            return localeEng.getString(x);
+        }
+    }
+
+    HyperText getCorrectExplanation(Question q, AnswerObjectEntity answer, String lang) {
+        HashMap<String, String> indexes = new HashMap<>();
+        HashMap<String, String> texts = new HashMap<>();
+        HashMap<String, String> isStrict = new HashMap<>();
+        MultiValuedMap<String, String> before = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> beforeIndirectReversed = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> beforeHighPriority = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> beforeLeftAssoc = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> beforeRightAssoc = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> beforeByThirdOperator = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> beforeThirdOperator = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> beforeAsOperand = new HashSetValuedHashMap<>();
+
+        for (BackendFactEntity fact : q.getSolutionFacts()) {
+            if (fact.getVerb().equals("before_direct")) {
+                before.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("before")) {
+                beforeIndirectReversed.put(fact.getObject(), fact.getSubject());
+            } else if (fact.getVerb().equals("before_by_third_operator")) {
+                beforeByThirdOperator.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("before_third_operator")) {
+                beforeThirdOperator.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("high_precedence_diff_precedence")) {
+                beforeHighPriority.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("high_precedence_left_assoc")) {
+                beforeLeftAssoc.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("high_precedence_right_assoc")) {
+                beforeRightAssoc.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("before_as_operand")) {
+                beforeAsOperand.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("index")) {
+                indexes.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("text")) {
+                texts.put(fact.getSubject(), fact.getObject());
+            }  else if (fact.getVerb().equals("is_operator_with_strict_operands_order")) {
+                isStrict.put(fact.getSubject(), fact.getObject());
+            }
+        }
+
+        AnswerObjectEntity last = null;
+        ArrayList<AnswerObjectEntity> explain = new ArrayList<>();
+        TreeMap<Integer, String> posToExplanation = new TreeMap<>();
+
+        int answerPos = Integer.parseInt(indexes.get(answer.getDomainInfo()));
+        String answerText = texts.get(answer.getDomainInfo());
+        String answerTemplate = new StringJoiner(" ").add(answerText).add(getMessage("expr_domain.AT_POS", lang)).add(String.valueOf(answerPos)).toString();
+        posToExplanation.put(-1, new StringJoiner(" ").add(getMessage("expr_domain.OPERATOR", lang)).add(answerTemplate).add(getMessage("expr_domain.EVALUATES", lang)).toString());
+
+        for (AnswerObjectEntity answerObjectEntity : q.getAnswerObjects()) {
+            if (beforeByThirdOperator.containsKey(answerObjectEntity.getDomainInfo())) {
+                for (String leftPart : beforeIndirectReversed.get(answerObjectEntity.getDomainInfo())) {
+                    for (String rightPart : beforeByThirdOperator.get(answerObjectEntity.getDomainInfo())) {
+                        beforeByThirdOperator.put(leftPart, rightPart);
+                    }
+                    for (String rightPart : beforeThirdOperator.get(answerObjectEntity.getDomainInfo())) {
+                        beforeThirdOperator.put(leftPart, rightPart);
+                    }
+                }
+            }
+        }
+
+        for (AnswerObjectEntity answerObjectEntity : q.getAnswerObjects()) {
+            if (answer == answerObjectEntity && last != null) {
+                explain.add(last);
+            } else if (answer == last) {
+                explain.add(answerObjectEntity);
+            } else if (beforeByThirdOperator.containsMapping(answer.getDomainInfo(), answerObjectEntity.getDomainInfo())) {
+                for (String thirdOperator : beforeThirdOperator.get(answer.getDomainInfo())) {
+                    // explain highest in right half of strict
+                    if (before.containsMapping(answerObjectEntity.getDomainInfo(), thirdOperator)) {
+                        int pos = Integer.parseInt(indexes.get(answerObjectEntity.getDomainInfo()));
+                        String text = texts.get(answerObjectEntity.getDomainInfo());
+                        String template = new StringJoiner(" ").add(text).add(getMessage("expr_domain.AT_POS", lang)).add(String.valueOf(pos)).toString();
+
+                        int thirdPos = Integer.parseInt(indexes.get(thirdOperator));
+                        String thirdText = texts.get(thirdOperator);
+                        String thirdTemplate = new StringJoiner(" ").add(thirdText).add(getMessage("expr_domain.AT_POS", lang)).add(String.valueOf(thirdPos)).toString();
+
+                        if (isStrict.containsKey(thirdOperator)) {
+                            posToExplanation.put(pos, new StringJoiner(" ")
+                                    .add(getMessage("expr_domain.BEFORE_OPERATOR", lang))
+                                    .add(template)
+                                    .add(":")
+                                    .add(getMessage("expr_domain.OPERATOR", lang))
+                                    .add(answerTemplate)
+                                    .add(getMessage("expr_domain.LEFT_SUBOPERATOR", lang))
+                                    .add(thirdTemplate)
+                                    .add(getMessage("expr_domain.WHILE_OPERATOR", lang))
+                                    .add(template)
+                                    .add(getMessage("expr_domain.TO_LEFT_OPERAND", lang) + ",")
+                                    .add(getMessage("expr_domain.AND_LEFT_OPERAND", lang))
+                                    .add(thirdText)
+                                    .add(getMessage("expr_domain.EVALUATES_BEFORE_RIGHT", lang))
+                                    .toString());
+                        }
+                    }
+                }
+            } else if (beforeByThirdOperator.containsMapping(answerObjectEntity.getDomainInfo(), answer.getDomainInfo())) {
+                for (String thirdOperator : beforeThirdOperator.get(answerObjectEntity.getDomainInfo())) {
+                    // explain highest in left half of strict
+                    if (before.containsMapping(answerObjectEntity.getDomainInfo(), thirdOperator)) {
+                        int pos = Integer.parseInt(indexes.get(answerObjectEntity.getDomainInfo()));
+                        String text = texts.get(answerObjectEntity.getDomainInfo());
+                        String template = new StringJoiner(" ").add(text).add(getMessage("expr_domain.AT_POS", lang)).add(String.valueOf(pos)).toString();
+
+                        int thirdPos = Integer.parseInt(indexes.get(thirdOperator));
+                        String thirdText = texts.get(thirdOperator);
+                        String thirdTemplate = new StringJoiner(" ").add(thirdText).add(getMessage("expr_domain.AT_POS", lang)).add(String.valueOf(thirdPos)).toString();
+
+                        if (isStrict.containsKey(thirdOperator)) {
+                            posToExplanation.put(pos, new StringJoiner(" ")
+                                    .add(getMessage("expr_domain.AFTER_OPERATOR", lang))
+                                    .add(template)
+                                    .add(":")
+                                    .add(getMessage("expr_domain.OPERATOR", lang))
+                                    .add(answerTemplate)
+                                    .add(getMessage("expr_domain.RIGHT_SUBOPERATOR", lang))
+                                    .add(thirdTemplate)
+                                    .add(getMessage("expr_domain.WHILE_OPERATOR", lang))
+                                    .add(template)
+                                    .add(getMessage("expr_domain.TO_LEFT_OPERAND", lang) + ",")
+                                    .add(getMessage("expr_domain.AND_LEFT_OPERAND", lang))
+                                    .add(thirdText)
+                                    .add(getMessage("expr_domain.EVALUATES_BEFORE_RIGHT", lang))
+                                    .toString());
+                        } else if (thirdText.equals("(")) {
+                            posToExplanation.put(pos, new StringJoiner(" ")
+                                    .add(getMessage("expr_domain.AFTER_OPERATOR", lang))
+                                    .add(template)
+                                    .add(":")
+                                    .add(getMessage("expr_domain.OPERATOR", lang))
+                                    .add(template)
+                                    .add(getMessage("expr_domain.ENCLOSED_PARENTHESIS", lang))
+                                    .add(String.valueOf(thirdPos))
+                                    .add(getMessage("expr_domain.INSIDE_PARENTHESIS_FIRST", lang))
+                                    .toString());
+                        }
+                    }
+                }
+            }
+            last = answerObjectEntity;
+        }
+
+        for (AnswerObjectEntity reason : explain) {
+            int pos = Integer.parseInt(indexes.get(reason.getDomainInfo()));
+            String text = texts.get(reason.getDomainInfo());
+            String template = new StringJoiner(" ").add(text).add(getMessage("expr_domain.AT_POS", lang)).add(String.valueOf(pos)).toString();
+
+            if (beforeHighPriority.containsMapping(answer.getDomainInfo(), reason.getDomainInfo())) {
+                posToExplanation.put(pos, new StringJoiner(" ")
+                        .add(getMessage("expr_domain.BEFORE_OPERATOR", lang))
+                        .add(template)
+                        .add(":")
+                        .add(getMessage("expr_domain.OPERATOR", lang))
+                        .add(answerText)
+                        .add(getMessage("expr_domain.HAS_HIGHER_PRECEDENCE", lang))
+                        .add(getMessage("expr_domain.THAN_OPERATOR", lang))
+                        .add(text)
+                        .toString());
+            } else if (beforeHighPriority.containsMapping(reason.getDomainInfo(), answer.getDomainInfo())) {
+                posToExplanation.put(pos, new StringJoiner(" ")
+                        .add(getMessage("expr_domain.AFTER_OPERATOR", lang))
+                        .add(template)
+                        .add(":")
+                        .add(getMessage("expr_domain.OPERATOR", lang))
+                        .add(answerText)
+                        .add(getMessage("expr_domain.HAS_LOWER_PRECEDENCE", lang))
+                        .add(getMessage("expr_domain.THAN_OPERATOR", lang))
+                        .add(text)
+                        .toString());
+            } else if (beforeLeftAssoc.containsMapping(answer.getDomainInfo(), reason.getDomainInfo())) {
+                posToExplanation.put(pos, new StringJoiner(" ")
+                        .add(getMessage("expr_domain.BEFORE_OPERATOR", lang))
+                        .add(template)
+                        .add(":")
+                        .add(getMessage("expr_domain.OPERATOR", lang))
+                        .add(answerText)
+                        .add(getMessage("expr_domain.LEFT_ASSOC_DESC", lang))
+                        .toString());
+            } else if (beforeLeftAssoc.containsMapping(reason.getDomainInfo(), answer.getDomainInfo())) {
+                posToExplanation.put(pos, new StringJoiner(" ")
+                        .add(getMessage("expr_domain.AFTER_OPERATOR", lang))
+                        .add(template)
+                        .add(":")
+                        .add(getMessage("expr_domain.OPERATOR", lang))
+                        .add(answerText)
+                        .add(getMessage("expr_domain.LEFT_ASSOC_DESC", lang))
+                        .toString());
+            } else if (beforeRightAssoc.containsMapping(answer.getDomainInfo(), reason.getDomainInfo())) {
+                posToExplanation.put(pos, new StringJoiner(" ")
+                        .add(getMessage("expr_domain.BEFORE_OPERATOR", lang))
+                        .add(template)
+                        .add(":")
+                        .add(getMessage("expr_domain.OPERATOR", lang))
+                        .add(answerText)
+                        .add(getMessage("expr_domain.RIGHT_ASSOC_DESC", lang))
+                        .toString());
+            } else if (beforeRightAssoc.containsMapping(reason.getDomainInfo(), answer.getDomainInfo())) {
+                posToExplanation.put(pos, new StringJoiner(" ")
+                        .add(getMessage("expr_domain.AFTER_OPERATOR", lang))
+                        .add(template)
+                        .add(":")
+                        .add(getMessage("expr_domain.OPERATOR", lang))
+                        .add(answerText)
+                        .add(getMessage("expr_domain.RIGHT_ASSOC_DESC", lang))
+                        .toString());
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (Map.Entry<Integer, String> kv : posToExplanation.entrySet()) {
+            result.append(kv.getValue()).append("\n");
+        }
+
+        return new HyperText(result.toString());
+    }
+
+    public CorrectAnswer getAnyNextCorrectAnswer(Question q, String lang) {
         List<CorrectAnswerImpl> correctAnswerImpls = getCorrectAnswers(q.getSolutionFacts());
 
         for (AnswerObjectEntity answer : q.getAnswerObjects()) {
@@ -626,7 +859,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
                     CorrectAnswer correctAnswer = new CorrectAnswer();
                     correctAnswer.answer = answer;
                     correctAnswer.lawName = answerImpl.lawName;
-                    correctAnswer.explanation = getCorrectExplanation(answerImpl.lawName);
+                    correctAnswer.explanation = getCorrectExplanation(q, answer, lang);
                     return correctAnswer;
                 }
             }
