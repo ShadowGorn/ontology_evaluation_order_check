@@ -645,6 +645,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         MultiValuedMap<String, String> beforeByThirdOperator = new HashSetValuedHashMap<>();
         MultiValuedMap<String, String> beforeThirdOperator = new HashSetValuedHashMap<>();
         MultiValuedMap<String, String> beforeAsOperand = new HashSetValuedHashMap<>();
+        HashMap<String, String> notSelectable = new HashMap<>();
 
         for (BackendFactEntity fact : q.getSolutionFacts()) {
             if (fact.getVerb().equals("before_direct")) {
@@ -669,6 +670,9 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
                 texts.put(fact.getSubject(), fact.getObject());
             }  else if (fact.getVerb().equals("is_operator_with_strict_operands_order")) {
                 isStrict.put(fact.getSubject(), fact.getObject());
+            }  else if (fact.getVerb().equals("not_selectable")) {
+                notSelectable.put(fact.getSubject(), fact.getObject());
+
             }
         }
 
@@ -695,6 +699,9 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         }
 
         for (AnswerObjectEntity answerObjectEntity : q.getAnswerObjects()) {
+            if (notSelectable.containsKey(answerObjectEntity.getDomainInfo())) {
+                continue;
+            }
             if (answer == answerObjectEntity && last != null) {
                 explain.add(last);
             } else if (answer == last) {
