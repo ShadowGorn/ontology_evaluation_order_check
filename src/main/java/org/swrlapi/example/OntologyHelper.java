@@ -1,20 +1,25 @@
 package org.swrlapi.example;
 
 import org.vstu.compprehension.models.businesslogic.Ordering;
+import org.vstu.compprehension.models.businesslogic.Question;
 import org.vstu.compprehension.models.businesslogic.Tag;
 import org.vstu.compprehension.models.businesslogic.backend.JenaBackend;
+import org.vstu.compprehension.models.businesslogic.domains.Domain;
 import org.vstu.compprehension.models.businesslogic.domains.ProgrammingLanguageExpressionDomain;
+import org.vstu.compprehension.models.entities.AnswerObjectEntity;
 import org.vstu.compprehension.models.entities.BackendFactEntity;
-import org.vstu.compprehension.models.entities.ExerciseAttemptEntity;
+import org.vstu.compprehension.models.entities.ViolationEntity;
 import org.vstu.compprehension.utils.DomainAdapter;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.swrlapi.example.OntologyUtil.GetErrors;
 
 public class OntologyHelper {
     ProgrammingLanguageExpressionDomain domain = (ProgrammingLanguageExpressionDomain)DomainAdapter.getDomain("ProgrammingLanguageExpressionDomain");
-    Ordering question;
+    Question question;
+    Domain.InterpretSentenceResult res;
     JenaBackend backend = new JenaBackend();
 
     List<Tag> getTags(String programmingLanguage) {
@@ -27,8 +32,27 @@ public class OntologyHelper {
         return result;
     }
 
-    public OntologyHelper(Expression expression, String programmingLanguage) {
-        question = (Ordering)domain.makeQuestion(expression);
+    public OntologyHelper(Expression expression, String programmingLanguage, String lang, String lawName) {
+        makeQuestion(expression, programmingLanguage);
+        ViolationEntity violation = new ViolationEntity();
+        if (lawName == null) {
+            for (ViolationEntity testViolation : res.violations) {
+                if (needSupplementaryQuestion(testViolation)) {
+                    violation = testViolation;
+                    break;
+                }
+            }
+            if (violation.getLawName() == null) {
+                violation = res.violations.get(0);
+            }
+        } else {
+            violation.setLawName(lawName);
+        }
+        question = domain.makeSupplementaryQuestion(question, violation, lang);
+    }
+
+    private void makeQuestion(Expression expression, String programmingLanguage) {
+        question = domain.makeQuestion(expression);
 
         List<BackendFactEntity> solution = backend.solve(
                 new ArrayList<>(domain.getQuestionPositiveLaws(question.getQuestionDomainType(), getTags(programmingLanguage))),
@@ -41,12 +65,43 @@ public class OntologyHelper {
                 solution,
                 domain.responseToFacts(
                         question.getQuestionDomainType(),
-                        question.getResponses(),
+                        ((Ordering)question).getResponses(),
                         question.getAnswerObjects()),
                 domain.getViolationVerbs(question.getQuestionDomainType(), question.getStatementFacts())
         );
         solution.addAll(violations);
+        res = domain.interpretSentence(violations);
         question.getQuestionData().setSolutionFacts(solution);
+
+        HashSet<String> notAnswers = new HashSet<>();
+        for (BackendFactEntity fact : question.getSolutionFacts()) {
+            if (fact.getVerb().equals("not_selectable") && fact.getSubject().startsWith("op__0__")) {
+                notAnswers.add(fact.getSubject());
+            }
+        }
+        ArrayList<AnswerObjectEntity> newAnswers = new ArrayList<>();
+        for (AnswerObjectEntity answer : question.getAnswerObjects()) {
+            if (!notAnswers.contains(answer.getDomainInfo())) {
+                newAnswers.add(answer);
+            }
+        }
+        question.setAnswerObjects(newAnswers);
+    }
+
+    public OntologyHelper(Expression expression, String programmingLanguage) {
+        makeQuestion(expression, programmingLanguage);
+    }
+
+    public Domain.InterpretSentenceResult judgeSupplementaryQuestion(AnswerObjectEntity answer) {
+        return domain.judgeSupplementaryQuestion(question, answer);
+    }
+
+    public boolean needSupplementaryQuestion(ViolationEntity violation) {
+        return domain.needSupplementaryQuestion(violation);
+    }
+
+    public Domain.InterpretSentenceResult judgeQuestion() {
+        return res;
     }
 
     public HashMap<Integer, String> getDataProperties(String prop) {
@@ -76,7 +131,7 @@ public class OntologyHelper {
         return result;
     }
 
-    public Ordering getQuestion() {
+    public Question getQuestion() {
         return question;
     }
 }

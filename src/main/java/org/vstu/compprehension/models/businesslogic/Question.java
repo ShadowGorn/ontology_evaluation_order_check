@@ -1,101 +1,95 @@
 package org.vstu.compprehension.models.businesslogic;
 
-import org.vstu.compprehension.models.businesslogic.backend.QuestionBack;
-import org.vstu.compprehension.models.businesslogic.frontend.QuestionFront;
-import org.vstu.compprehension.models.entities.AnswerObjectEntity;
-import org.vstu.compprehension.models.entities.BackendFactEntity;
+import org.vstu.compprehension.models.businesslogic.domains.Domain;
+import org.vstu.compprehension.models.entities.*;
 import org.vstu.compprehension.models.entities.EnumData.QuestionType;
-import org.vstu.compprehension.models.entities.QuestionEntity;
-import org.vstu.compprehension.models.entities.ResponseEntity;
 import org.vstu.compprehension.utils.HyperText;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public abstract class Question implements QuestionFront, QuestionBack {
-    
+public abstract class Question {
+
     protected QuestionEntity questionData;
 
     protected List<ResponseEntity> studentResponses = new ArrayList<>();
 
     protected List<String> concepts;
+    protected List<String> negativeLaws;
     protected HashSet<String> tags;
-    
-    protected boolean isFinalResponse = false;
-    
-    public Question(QuestionEntity questionData) {
+    protected Domain domain;
+
+    public Question(QuestionEntity questionData, Domain domain) {
         this.questionData = questionData;
+        this.domain = domain;
+        concepts = new ArrayList<>();
+        negativeLaws = new ArrayList<>();
+        tags = new HashSet<>();
     }
 
-    @Override
+    public Domain getDomain() {
+        return this.domain;
+    }
+
     public int answerObjectsCount() {
-        
+
         return questionData.getAnswerObjects().size();
     }
 
-    @Override
     public void addAnswerObject(AnswerObjectEntity newObject) {
-        
+
         questionData.getAnswerObjects().add(newObject);
     }
 
-    @Override
     public void setAnswerObjects(List<AnswerObjectEntity> objects) {
 
         questionData.setAnswerObjects(objects);
     }
 
-    @Override
     public void addResponse(ResponseEntity r) {
-        
+
         studentResponses.add(r);
     }
 
-    @Override
     public void addFullResponse(List<ResponseEntity> responses) {
 
         studentResponses = responses;
-        isFinalResponse = true;
     }
 
-    public void FinalResponse(boolean isFinalResponse) {
+    public List<ResponseEntity> getResponses() {
+        return studentResponses;
+    }
 
-        this.isFinalResponse = isFinalResponse;
-        
-    }
-    
-    public boolean isFinalResponse() {
-        
-        return isFinalResponse;
-    }
-    
-    @Override
     public List<AnswerObjectEntity> getAnswerObjects() {
-        
+
         return questionData.getAnswerObjects();
     }
 
-    @Override
     public HyperText getQuestionText() {
-        
+
         return new HyperText(questionData.getQuestionText());
     }
 
-    @Override
-    public AnswerObjectEntity getAnswerObject(int index) {
-        
-        return questionData.getAnswerObjects().get(index);
+    public String getQuestionName() {
+
+        return questionData.getQuestionName();
     }
 
-    @Override
+    public AnswerObjectEntity getAnswerObject(int answerId) {
+        return questionData.getAnswerObjects().stream()
+                .filter(a -> a.getAnswerId() == answerId)
+                .findFirst()
+                .orElse(null);
+    }
+
     public QuestionType getQuestionType() {
-        
+
         return questionData.getQuestionType();
     }
-    
+
     public QuestionEntity getQuestionData() {
-        
+
         return questionData;
     }
 
@@ -113,18 +107,46 @@ public abstract class Question implements QuestionFront, QuestionBack {
     public HashSet<String> getTags() {
         return tags;
     }
+    /**
+     * Don't use it for normal questions, only for templates
+     * @return
+     */
+    public List<String> getNegativeLaws() {
+        if (negativeLaws == null) {
+            negativeLaws = new ArrayList<>();
+        }
+        return negativeLaws;
+    }
 
-    @Override
+    /**
+     * Сформировать из ответов (которые были ранее добавлены к вопросу)
+     * студента факты в универсальной форме
+     * @return - факты в универсальной форме
+     */
+    public abstract List<BackendFactEntity> responseToFacts(List<ResponseEntity> responses);
+
+    /**
+     * Сформировать из ответов (которые были ранее добавлены к вопросу)
+     * студента факты в удобном для указанного backend-а виде
+     * @param backendId - id backend-а для которого будут сформированы
+     *                  факты
+     * @return - факты в том формате, в котором их поймет backend
+     */
+    public abstract List<BackendFactEntity> responseToFacts(long backendId);
+
     public List<BackendFactEntity> getStatementFacts() {
         return questionData.getStatementFacts();
     }
 
-    @Override
     public List<BackendFactEntity> getSolutionFacts() {
         return questionData.getSolutionFacts();
     }
 
     public String getQuestionDomainType() {
         return questionData.getQuestionDomainType();
+    }
+
+    public boolean isSupplementary() {
+        return this.questionData != null && this.questionData.getQuestionDomainType().contains("Supplementary");
     }
 }

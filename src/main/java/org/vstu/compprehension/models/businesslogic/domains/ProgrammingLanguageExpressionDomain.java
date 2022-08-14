@@ -3,7 +3,10 @@ package org.vstu.compprehension.models.businesslogic.domains;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import lombok.val;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.apache.commons.text.StringSubstitutor;
+import org.apache.jena.riot.Lang;
 import org.junit.jupiter.api.Assertions;
 import org.swrlapi.example.Term;
 import org.vstu.compprehension.models.businesslogic.*;
@@ -11,15 +14,14 @@ import org.vstu.compprehension.models.entities.*;
 import org.vstu.compprehension.models.entities.EnumData.FeedbackType;
 import org.vstu.compprehension.models.entities.EnumData.Language;
 import org.vstu.compprehension.models.entities.EnumData.QuestionType;
-import org.vstu.compprehension.models.entities.QuestionOptions.MatchingQuestionOptionsEntity;
-import org.vstu.compprehension.models.entities.QuestionOptions.OrderQuestionOptionsEntity;
-import org.vstu.compprehension.models.entities.QuestionOptions.QuestionOptionsEntity;
+import org.vstu.compprehension.models.entities.QuestionOptions.*;
 import org.vstu.compprehension.utils.HyperText;
 import org.apache.commons.collections4.MultiValuedMap;
 
 import org.swrlapi.example.Expression;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +35,8 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
     static final String DEFINE_TYPE_QUESTION_TYPE = "DefineType";
     static final String LAWS_CONFIG_PATH = "org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-laws.json";
     static final String QUESTIONS_CONFIG_PATH = "org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-questions.json";
+    static final String SUPPLEMENTARY_CONFIG_PATH = "org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-supplementary-strategy.json";
+
 
     ResourceBundle localeRu;
     ResourceBundle localeEng;
@@ -42,10 +46,10 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
 
         fillConcepts();
         readLaws(this.getClass().getClassLoader().getResourceAsStream(LAWS_CONFIG_PATH));
+        readSupplementaryConfig(this.getClass().getClassLoader().getResourceAsStream(SUPPLEMENTARY_CONFIG_PATH));
 
         localeRu = ResourceBundle.getBundle("org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-messages", new Locale("ru"));
         localeEng = ResourceBundle.getBundle("org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-messages", new Locale("en"));
-
     }
 
     private void fillConcepts() {
@@ -105,6 +109,42 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         Concept concept = new Concept(name);
         concepts.add(concept);
         return concept;
+    }
+
+    public static class SupplementaryAnswerTransition {
+        public String check;
+        public String question;
+        public String detailed_law;
+        public boolean correct;
+    }
+
+    public static class SupplementaryAnswerConfig {
+        public String name;
+        public List<SupplementaryAnswerTransition> transitions;
+    }
+
+    class SupplementaryConfig {
+        String name;
+        List<SupplementaryAnswerConfig> answers;
+    }
+
+    private HashMap<String, HashMap<String, List<SupplementaryAnswerTransition>>> supplementaryConfig;
+    public  HashMap<String, HashMap<String, List<SupplementaryAnswerTransition>>> getSupplementaryConfig() {
+        return supplementaryConfig;
+    }
+    private void readSupplementaryConfig(InputStream inputStream) {
+        supplementaryConfig = new HashMap<>();
+
+        SupplementaryConfig[] configs = new Gson().fromJson(
+                new InputStreamReader(inputStream, StandardCharsets.UTF_8),
+                SupplementaryConfig[].class);
+
+        for (SupplementaryConfig config : configs) {
+            supplementaryConfig.put(config.name, new HashMap<>());
+            for (SupplementaryAnswerConfig answer : config.answers) {
+                supplementaryConfig.get(config.name).put(answer.name, answer.transitions);
+            }
+        }
     }
 
     private void readLaws(InputStream inputStream) {
@@ -171,11 +211,11 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         return QUESTIONS;
     }
 
-    Question makeQuestionCopy(Question q, ExerciseAttemptEntity exerciseAttemptEntity) {
+    Question makeQuestionCopy(Question q, ExerciseAttemptEntity exerciseAttemptEntity, Language userLang) {
         QuestionOptionsEntity orderQuestionOptions = OrderQuestionOptionsEntity.builder()
                 .requireContext(true)
                 .showTrace(false)
-                .multipleSelectionEnabled(true)
+                .multipleSelectionEnabled(false)
                 .orderNumberOptions(new OrderQuestionOptionsEntity.OrderNumberOptions("/", OrderQuestionOptionsEntity.OrderNumberPosition.SUFFIX, null))
                 .build();
 
@@ -184,7 +224,11 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
                 .displayMode(MatchingQuestionOptionsEntity.DisplayMode.COMBOBOX)
                 .build();
 
-        QuestionOptionsEntity multiChoiceQuestionOptions = QuestionOptionsEntity.builder()
+        QuestionOptionsEntity multiChoiceQuestionOptions = MultiChoiceOptionsEntity.builder()
+                .requireContext(false)
+                .build();
+
+        QuestionOptionsEntity singleChoiceQuestionOptions = SingleChoiceOptionsEntity.builder()
                 .requireContext(false)
                 .build();
 
@@ -192,9 +236,16 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         List<AnswerObjectEntity> answerObjectEntities = new ArrayList<>();
         for (AnswerObjectEntity answerObjectEntity : q.getAnswerObjects()) {
             AnswerObjectEntity newAnswerObjectEntity = new AnswerObjectEntity();
+            newAnswerObjectEntity.setAnswerId(answerObjectEntity.getAnswerId());
             newAnswerObjectEntity.setConcept(answerObjectEntity.getConcept());
             newAnswerObjectEntity.setDomainInfo(answerObjectEntity.getDomainInfo());
-            newAnswerObjectEntity.setHyperText(answerObjectEntity.getHyperText());
+
+            String text = getMessage(answerObjectEntity.getHyperText(), langStr(userLang));
+            if (text.equals("")) {
+                text = answerObjectEntity.getHyperText();
+            }
+
+            newAnswerObjectEntity.setHyperText(text);
             newAnswerObjectEntity.setQuestion(entity);
             newAnswerObjectEntity.setRightCol(answerObjectEntity.isRightCol());
             newAnswerObjectEntity.setResponsesLeft(new ArrayList<>());
@@ -202,31 +253,53 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
             answerObjectEntities.add(newAnswerObjectEntity);
         }
         entity.setAnswerObjects(answerObjectEntities);
-        entity.setAreAnswersRequireContext(true);
         entity.setExerciseAttempt(exerciseAttemptEntity);
         entity.setQuestionDomainType(q.getQuestionDomainType());
 
-        List<String> tokens = new ArrayList<>();
-        for (BackendFactEntity fact : q.getStatementFacts()) {
-            tokens.add(fact.getObject());
+        //TODO: remove this hack supporting old format
+        if (!q.getStatementFacts().isEmpty() && (q.getStatementFacts().get(0).getVerb() == null)) {
+            entity.setStatementFacts(getBackendFactss(q.getStatementFacts()));
+        } else {
+            entity.setStatementFacts(q.getStatementFacts());
+            entity.setSolutionFacts(q.getStatementFacts());
         }
-        entity.setStatementFacts(getBackendFacts(tokens));
         entity.setQuestionType(q.getQuestionType());
+        entity.setQuestionName(q.getQuestionName());
 
+        String text = getMessage(q.getQuestionText().getText(), langStr(userLang));
+        if (text.equals("")) {
+            text = q.getQuestionText().getText();
+        }
 
         switch (q.getQuestionType()) {
             case ORDER:
-                entity.setQuestionText(ExpressionToHtml(q.getQuestionText().getText()));
+                val baseQuestionText = getMessage("expr_domain.BASE_QUESTION_TEXT", langStr(userLang));
+                //TODO: remove this hack supporting old format
+                if (!q.getStatementFacts().isEmpty() && (q.getStatementFacts().get(0).getVerb() == null)) {
+                    entity.setQuestionText(baseQuestionText + ExpressionToHtml(""));
+                } else {
+                    entity.setQuestionText(baseQuestionText + text
+                            .replace("end evaluation", getMessage("expr_domain.END_EVALUATION", langStr(userLang)))
+                            .replace("student_end_evaluation", getMessage("expr_domain.STUDENT_END_EVALUATION", langStr(userLang))));
+                }
                 entity.setOptions(orderQuestionOptions);
-                return new Ordering(entity);
+                Question question = new Ordering(entity, this);
+                // patch the newly created question with the concepts from the "template"
+                question.getConcepts().addAll(q.getConcepts());
+                // ^ shouldn't this be done in a more straightforward way..?
+                return question;
             case MATCHING:
-                entity.setQuestionText(QuestionTextToHtml(q.getQuestionText().getText()));
+                entity.setQuestionText(QuestionTextToHtml(text));
                 entity.setOptions(matchingQuestionOptions);
-                return new Matching(entity);
+                return new Matching(entity, this);
             case MULTI_CHOICE:
-                entity.setQuestionText(QuestionTextToHtml(q.getQuestionText().getText()));
+                entity.setQuestionText(QuestionTextToHtml(text));
                 entity.setOptions(multiChoiceQuestionOptions);
-                return new MultiChoice(entity);
+                return new MultiChoice(entity, this);
+            case SINGLE_CHOICE:
+                entity.setQuestionText(text);
+                entity.setOptions(singleChoiceQuestionOptions);
+                return new SingleChoice(entity, this);
             default:
                 throw new UnsupportedOperationException("Unknown type in ProgrammingLanguageExpressionDomain::makeQuestion: " + q.getQuestionType());
         }
@@ -250,7 +323,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         }
         question.setAnswerObjects(answers);
         question.setStatementFacts(getBackendFacts(expr.getTokens()));
-        Ordering ordering = new Ordering(question);
+        Ordering ordering = new Ordering(question, this);
         for (Map.Entry<Integer, Integer> a : answerOrderToAnswerPos.entrySet()) {
             ResponseEntity response = new ResponseEntity();
             response.setLeftAnswerObject(question.getAnswerObjects().get(a.getValue() - 1));
@@ -266,18 +339,36 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         for (Concept concept : questionRequest.getTargetConcepts()) {
             conceptNames.add(concept.getName());
         }
-        HashSet<String> allowedConceptNames = new HashSet<>();
-        for (Concept concept : questionRequest.getAllowedConcepts()) {
-            allowedConceptNames.add(concept.getName());
-        }
         HashSet<String> deniedConceptNames = new HashSet<>();
         for (Concept concept : questionRequest.getDeniedConcepts()) {
             deniedConceptNames.add(concept.getName());
         }
+        deniedConceptNames.add("supplementary");
 
-        Question res = findQuestion(tags, conceptNames, allowedConceptNames, deniedConceptNames, new HashSet<>());
+        HashSet<String> lawNames = new HashSet<>();
+        if (questionRequest.getTargetLaws() != null) {
+            for (Law law : questionRequest.getTargetLaws()) {
+                lawNames.add(law.getName());
+            }
+        }
+
+        HashSet<String> deniedLawNames = new HashSet<>();
+        if (questionRequest.getDeniedLaws() != null) {
+            for (Law law : questionRequest.getDeniedLaws()) {
+                deniedLawNames.add(law.getName());
+            }
+        }
+
+        HashSet<String> deniedQuestions = new HashSet<>();
+        if (questionRequest.getExerciseAttempt() != null &&
+                questionRequest.getExerciseAttempt().getQuestions() != null &&
+                questionRequest.getExerciseAttempt().getQuestions().size() > 0) {
+            deniedQuestions.add(questionRequest.getExerciseAttempt().getQuestions().get(questionRequest.getExerciseAttempt().getQuestions().size() - 1).getQuestionName());
+        }
+
+        Question res = findQuestion(tags, conceptNames, deniedConceptNames, lawNames, deniedLawNames, deniedQuestions);
         if (res != null) {
-            return makeQuestionCopy(res, questionRequest.getExerciseAttempt());
+            return makeQuestionCopy(res, questionRequest.getExerciseAttempt(), userLanguage);
         }
 
         // make a SingleChoice question ...
@@ -292,7 +383,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
                 createAnswerObject(question, "right", "right_associativity", "right", true),
                 createAnswerObject(question, "no associativity", "absent_associativity", "no associativity", true)
         )));
-        return new SingleChoice(question);
+        return new SingleChoice(question, this);
     }
 
     private AnswerObjectEntity createAnswerObject(QuestionEntity question, String text, String concept, String domainInfo, boolean isLeft) {
@@ -355,6 +446,27 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
             facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, index), "text", "xsd:string", token));
         }
         facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, index), "last_index", "xsd:boolean", "true"));
+        return facts;
+    }
+
+    public List<BackendFactEntity> getBackendFactss(List<BackendFactEntity> expression) {
+        List<BackendFactEntity> facts = new ArrayList<>();
+        int index = 0;
+        for (BackendFactEntity token : expression) {
+            index++;
+            String name = getName(0, index);
+            facts.add(new BackendFactEntity(name, "rdf:type", "owl:NamedIndividual"));
+            facts.add(new BackendFactEntity("owl:NamedIndividual", name, "index", "xsd:int", String.valueOf(index)));
+            facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, index), "text", "xsd:string", token.getObject()));
+            if (token.getVerb() != null) {
+                facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, index), token.getVerb(), token.getSubjectType(), token.getSubject()));
+            }
+            if (token.getObjectType() != null) { // Hack to insert boolean result
+                facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, index), "has_value", "xsd:boolean", token.getObjectType()));
+            }
+        }
+        facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, 1), "first", "xsd:boolean", "true"));
+        facts.add(new BackendFactEntity("owl:NamedIndividual", getName(0, expression.size()), "last_index", "xsd:boolean", "true"));
         return facts;
     }
 
@@ -625,6 +737,13 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         return null;
     }
 
+    String langStr(Language language) {
+        if (language.equals(Language.RUSSIAN)) {
+            return "ru";
+        }
+        return "eng";
+    }
+
     String getMessage(String x, String lang) {
         if (lang.equals("ru")) {
             return localeRu.getString(x);
@@ -850,8 +969,21 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         }
 
         StringBuilder result = new StringBuilder();
+        List<String> concats = new ArrayList<>(List.of(" because ", " while "));
+        for (int i = 2; i < posToExplanation.size() - 1; ++i) {
+            concats.add(", ");
+        }
+        concats.add(" and ");
+        int concats_pos = 0;
         for (Map.Entry<Integer, String> kv : posToExplanation.entrySet()) {
-            result.append(kv.getValue()).append("\n");
+            String part = kv.getValue();
+            if (part.contains(" : ")) {
+                if (lang.equals("en")) {
+                    part = part.replace(" : ", concats.get(concats_pos));
+                    concats_pos++;
+                }
+            }
+            result.append(part).append("\n");
         }
 
         return new HyperText(result.toString());
@@ -880,69 +1012,374 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
     }
 
     @Override
-    public Question makeSupplementaryQuestion(InterpretSentenceResult interpretSentenceResult, ExerciseAttemptEntity exerciseAttemptEntity) {
-        assertFalse(interpretSentenceResult.mistakes.isEmpty());
-        HashSet<String> targetConcepts = new HashSet<>();
-        targetConcepts.add(interpretSentenceResult.mistakes.get(0).getLawName());
-
-        Question res = findQuestion(getTags(exerciseAttemptEntity), targetConcepts, new HashSet<>(), new HashSet<>(), new HashSet<>());
-        if (res != null) {
-            return makeQuestionCopy(res, exerciseAttemptEntity);
+    public boolean needSupplementaryQuestion(ViolationEntity violation) {
+        if (violation.getLawName().equals("error_base_student_error_in_complex") ||
+                violation.getLawName().equals("error_base_student_error_strict_operands_order") ||
+                violation.getLawName().equals("error_base_student_error_unevaluated_operand") ||
+                violation.getLawName().equals("error_base_student_error_early_finish")) {
+            return false;
         }
+        return true;
+    }
+
+    @Override
+    public Question makeSupplementaryQuestion(Question question, ViolationEntity violation, String userLang) {
+        if (!needSupplementaryQuestion(violation)) {
+            return null;
+        }
+
+        HashSet<String> targetConcepts = new HashSet<>();
+        String failedLaw = violation.getLawName().startsWith("error_base") ? "first_OrderOperatorsSupplementary" : violation.getLawName();
+        targetConcepts.add(failedLaw);
+        targetConcepts.add("supplementary");
+
+        if (!supplementaryConfig.containsKey(failedLaw)) {
+            return null;
+        }
+
+        Language language;
+        if (Objects.equals(userLang, "ru")) {
+            language = Language.RUSSIAN;
+        } else {
+            language = Language.ENGLISH;
+        }
+
+        Question res = findQuestion(new ArrayList<>(), targetConcepts, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
+        if (res != null) {
+            Question copy = makeQuestionCopy(res, null, language);
+            return fillSupplementaryAnswerObjects(question, failedLaw, copy, userLang);
+        }
+
         return null;
+    }
+
+    Question fillSupplementaryAnswerObjects(Question originalQuestion, String failedLaw, Question supplementaryQuestion, String lang) {
+        Map<String, List<String>> before = new HashMap<>();
+        MultiValuedMap<String, String> beforeIndirect = new HashSetValuedHashMap<>();
+        Map<String, String> texts = new HashMap<>();
+        Map<String, String> indexes = new HashMap<>();
+        MultiValuedMap<String, String> highPrecedence = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> samePrecedenceLeftAssoc = new HashSetValuedHashMap<>();
+        MultiValuedMap<String, String> samePrecedenceRightAssoc = new HashSetValuedHashMap<>();
+        HashSet<String> used = new HashSet<>();
+
+        for (BackendFactEntity fact : originalQuestion.getSolutionFacts()) {
+            if (fact.getVerb().equals("before_direct")) {
+                if (!before.containsKey(fact.getObject())) {
+                    before.put(fact.getObject(), new ArrayList<>());
+                }
+                before.get(fact.getObject()).add(fact.getSubject());
+            } else if (fact.getVerb().equals("before")) {
+                beforeIndirect.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("text")) {
+                texts.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("index")) {
+                indexes.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("high_precedence_diff_precedence")) {
+                highPrecedence.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("high_precedence_left_assoc")) {
+                samePrecedenceLeftAssoc.put(fact.getSubject(), fact.getObject());
+            } else if (fact.getVerb().equals("high_precedence_right_assoc")) {
+                samePrecedenceRightAssoc.put(fact.getSubject(), fact.getObject());
+            }
+        }
+
+        AnswerObjectEntity failedAnswer = null;
+        if (originalQuestion.getResponses() == null || originalQuestion.getResponses().size() == 0) {
+            return null;
+        }
+        for (ResponseEntity response : originalQuestion.getResponses()) {
+            used.add(response.getLeftAnswerObject().getDomainInfo());
+            failedAnswer = response.getLeftAnswerObject();
+        }
+
+        if (failedAnswer == null) {
+            return null;
+        }
+
+        List<BackendFactEntity> possibleViolationFacts = new ArrayList<>();
+        {
+            BackendFactEntity factOriginalMistake = new BackendFactEntity("","","original_mistake", "", failedLaw);
+            possibleViolationFacts.add(factOriginalMistake);
+        }
+
+        Integer failedIndex = Integer.parseInt(indexes.get(failedAnswer.getDomainInfo()));
+
+        HashMap<String, String> templates = new HashMap<>();
+        for (AnswerObjectEntity origAnswer : originalQuestion.getAnswerObjects()) {
+            if (origAnswer.getDomainInfo().equals("end_token")) {
+                continue;
+            }
+            String text = texts.get(origAnswer.getDomainInfo());
+            Integer index = Integer.parseInt(indexes.get(origAnswer.getDomainInfo()));
+            String domainInfo = origAnswer.getDomainInfo();
+
+            possibleViolationFacts.add(new BackendFactEntity(String.valueOf(origAnswer.getAnswerId()), "text", text));
+            possibleViolationFacts.add(new BackendFactEntity(String.valueOf(origAnswer.getAnswerId()), "index", String.valueOf(index)));
+
+            if (origAnswer.getDomainInfo().equals(failedAnswer.getDomainInfo())) {
+                templates.put("operator", text);
+                templates.put("pos", index.toString());
+                templates.put("operator_domain_info", domainInfo);
+            }
+
+            if (index < failedIndex && !used.contains(origAnswer.getDomainInfo())) {
+                templates.put("left_operator", text);
+                templates.put("left_operator_pos", index.toString());
+                templates.put("left_operator_domain_info", domainInfo);
+
+                if (highPrecedence.containsMapping(failedAnswer.getDomainInfo(), origAnswer.getDomainInfo())) {
+                    templates.put("left_operator_priority", "low");
+                    templates.put("left_operator_correct", "wrong");
+                } else if (highPrecedence.containsMapping(origAnswer.getDomainInfo(), failedAnswer.getDomainInfo())) {
+                    templates.put("left_operator_priority", "high");
+                    templates.put("left_operator_correct", "correct");
+                } else if (samePrecedenceLeftAssoc.containsMapping(origAnswer.getDomainInfo(), failedAnswer.getDomainInfo())) {
+                    templates.put("left_operator_priority", "same");
+                    templates.put("left_operator_associativity", "L");
+                    templates.put("left_operator_correct", "correct");
+                } else {
+                    templates.put("left_operator_priority", "same");
+                    templates.put("left_operator_associativity", "R");
+                    templates.put("left_operator_correct", "wrong");
+                }
+            }
+            if (index > failedIndex && !used.contains(origAnswer.getDomainInfo()) && !templates.containsKey("right_operator")) {
+                templates.put("right_operator", text);
+                templates.put("right_operator_pos", index.toString());
+                templates.put("right_operator_domain_info", domainInfo);
+
+                if (highPrecedence.containsMapping(origAnswer.getDomainInfo(), failedAnswer.getDomainInfo())) {
+                    templates.put("right_operator_priority", "high");
+                    templates.put("right_operator_correct", "correct");
+                } else if (highPrecedence.containsMapping(failedAnswer.getDomainInfo(), origAnswer.getDomainInfo())) {
+                    templates.put("right_operator_priority", "low");
+                    templates.put("right_operator_correct", "wrong");
+                } else if (samePrecedenceRightAssoc.containsMapping(origAnswer.getDomainInfo(), failedAnswer.getDomainInfo())) {
+                    templates.put("right_operator_priority", "same");
+                    templates.put("right_operator_associativity", "R");
+                    templates.put("right_operator_correct", "correct");
+                } else {
+                    templates.put("right_operator_priority", "same");
+                    templates.put("right_operator_associativity", "L");
+                    templates.put("right_operator_correct", "wrong");
+                }
+            }
+            //TODO: check in parenthesis left/right
+            //TODO: check is failed complex beginning and have inner unused
+            //TODO: check operator with strict order
+        }
+
+        StringSubstitutor stringSubstitutor = new StringSubstitutor(templates);
+        stringSubstitutor.setEnableUndefinedVariableException(true);
+
+        try {
+            String text = stringSubstitutor.replace(supplementaryQuestion.getQuestionText().getText());
+            text = text.replaceAll(getMessage("expr_domain.SAME_PRECEDENCE_TEMPLATE", lang), getMessage("expr_domain.OPERATOR_TEMPLATE", lang));
+
+            supplementaryQuestion.getQuestionData().setQuestionText(text);
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+
+        boolean sameAnswers = false;
+        HashSet<String> answerTexts = new HashSet<>();
+        List<AnswerObjectEntity> answers = new ArrayList<>();
+        for (AnswerObjectEntity answer : supplementaryQuestion.getAnswerObjects()) {
+            try {
+                String result = stringSubstitutor.replace(answer.getHyperText());
+                if (answerTexts.contains(result)) {
+                    sameAnswers = true;
+                }
+
+                AnswerObjectEntity newAnswer = new AnswerObjectEntity();
+                answerTexts.add(result);
+                newAnswer.setHyperText(result);
+                newAnswer.setAnswerId(answer.getAnswerId());
+
+                List<SupplementaryAnswerTransition> transitions = supplementaryConfig.get(failedLaw).get(answer.getDomainInfo());
+
+                boolean isAnswerCorrect = false;
+                for (SupplementaryAnswerTransition transition : transitions) {
+                    String[] transitionCheckParts = transition.check.split(";");
+                    boolean transitionSuit = false;
+                    if (transition.check.equals("correct")) {
+                        transitionSuit = true;
+                    } else if (transitionCheckParts.length == 3) {
+                        String subject = templates.get(transitionCheckParts[0] + "_domain_info");
+                        String object = templates.get(transitionCheckParts[2] + "_domain_info");
+                        if (transitionCheckParts[1].equals("before")) {
+                            transitionSuit = beforeIndirect.containsMapping(subject, object);
+                        } else if (transitionCheckParts[1].equals("high_precedence")) {
+                            transitionSuit = highPrecedence.containsMapping(subject, object);
+                        } else if (transitionCheckParts[1].equals("same_precedence")) {
+                            transitionSuit = samePrecedenceLeftAssoc.containsMapping(subject, object) || samePrecedenceRightAssoc.containsMapping(subject, object)
+                                    || samePrecedenceLeftAssoc.containsMapping(object, subject) || samePrecedenceRightAssoc.containsMapping(object, subject);
+                        } else if (transitionCheckParts[1].equals("same_precedence_left_assoc")) {
+                            transitionSuit = samePrecedenceLeftAssoc.containsMapping(subject, object);
+                        } else if (transitionCheckParts[1].equals("same_precedence_right_assoc")) {
+                            transitionSuit = samePrecedenceRightAssoc.containsMapping(subject, object);
+                        } else {
+                            throw new IllegalStateException("Supplementary answer correctness check verb is not supported");
+                        }
+                    }
+
+                    if (transitionSuit) {
+                        newAnswer.setDomainInfo(transition.question);
+                        isAnswerCorrect = transition.correct;
+                        if (!isAnswerCorrect) {
+                            BackendFactEntity mistake = new BackendFactEntity(String.valueOf(answer.getAnswerId()), "detailed_law", transition.detailed_law);
+                            possibleViolationFacts.add(mistake);
+                        } else {
+                            BackendFactEntity mistake = new BackendFactEntity(String.valueOf(answer.getAnswerId()), "is_correct", "");
+                            possibleViolationFacts.add(mistake);
+                        }
+                        break;
+                    }
+                }
+
+                if (newAnswer.getDomainInfo() == null) {
+                    throw new IllegalStateException("Supplementary answer correctness check failed");
+                }
+
+                // skip question with same answers
+                if (sameAnswers && isAnswerCorrect) {
+                    ViolationEntity violationEntity = new ViolationEntity();
+                    violationEntity.setLawName(newAnswer.getDomainInfo());
+                    return makeSupplementaryQuestion(originalQuestion, violationEntity, lang);
+                }
+
+                answers.add(newAnswer);
+            } catch (IllegalArgumentException ex) {
+                // pass, this variant should not be used
+            }
+        }
+        supplementaryQuestion.setAnswerObjects(answers);
+        supplementaryQuestion.getQuestionData().setSolutionFacts(possibleViolationFacts);
+        return supplementaryQuestion;
+    }
+
+    @Override
+    public InterpretSentenceResult judgeSupplementaryQuestion(Question question, AnswerObjectEntity answer) {
+        InterpretSentenceResult interpretSentenceResult = new InterpretSentenceResult();
+
+        interpretSentenceResult.violations = new ArrayList<>();
+        interpretSentenceResult.isAnswerCorrect = true;
+
+        ViolationEntity violationEntity = new ViolationEntity();
+        if (answer.getDomainInfo() != null) {
+            violationEntity.setLawName(answer.getDomainInfo());
+        }
+
+        List<BackendFactEntity> violationFacts = new ArrayList<>();
+        violationFacts.addAll(question.getSolutionFacts());
+
+        for (BackendFactEntity fact : question.getSolutionFacts()) {
+            if (fact.getSubject().equals(String.valueOf(answer.getAnswerId()))) {
+                if (fact.getVerb().equals("detailed_law")) {
+                    violationEntity.setDetailedLawName(fact.getObject());
+                    interpretSentenceResult.isAnswerCorrect = false;
+                    if (violationEntity.getLawName() == null) {
+                        violationEntity.setLawName(fact.getObject());
+                    }
+                } else if (fact.getVerb().equals("text") || fact.getVerb().equals("index")) {
+                    violationFacts.add(fact);
+                }
+            }
+        }
+
+        violationFacts.addAll(question.getSolutionFacts());
+        violationEntity.setViolationFacts(violationFacts);
+        if (violationEntity.getLawName() != null || violationEntity.getDetailedLawName() != null) {
+            interpretSentenceResult.violations.add(violationEntity);
+        }
+
+        return interpretSentenceResult;
     }
 
     @Override
     public InterpretSentenceResult interpretSentence(List<BackendFactEntity> violations) {
-        List<MistakeEntity> mistakes = new ArrayList<>();
+        List<ViolationEntity> mistakes = new ArrayList<>();
 
-        // retrieve subjects' info from facts ...
-        Map<String, BackendFactEntity> nameToText = new HashMap<>();
-        Map<String, BackendFactEntity> nameToPos = new HashMap<>();
-
+        String questionType = "";
         for (BackendFactEntity violation : violations) {
-            if (violation.getVerb().equals("text")) {
-                nameToText.put(violation.getSubject(), violation);
-            } else if (violation.getVerb().equals("index")) {
-                nameToPos.put(violation.getSubject(), violation);
+            if (violation.getVerb().equals("student_error_more_precedence")
+                    || violation.getVerb().equals("student_error_left_assoc")
+                    || violation.getVerb().equals("student_error_right_assoc")
+                    || violation.getVerb().equals("student_error_strict_operands_order")
+                    || violation.getVerb().equals("student_error_unevaluated_operand")
+                    || violation.getVerb().equals("student_error_early_finish")
+                    || violation.getVerb().equals("student_error_in_complex")) {
+                questionType = EVALUATION_ORDER_QUESTION_TYPE;
             }
         }
 
-        // filter facts and fill mistakes list ...
-        for (BackendFactEntity violation : violations) {
-            MistakeEntity mistake = new MistakeEntity();
-            if (violation.getVerb().equals("student_error_more_precedence")) {
-                if (getIndexFromName(violation.getSubject(), false).orElse(0) > getIndexFromName(violation.getObject(), false).orElse(0)) {
-                    mistake.setLawName("error_single_token_binary_operator_has_unevaluated_higher_precedence_left");
-                } else {
-                    mistake.setLawName("error_single_token_binary_operator_has_unevaluated_higher_precedence_right");
+        if (questionType.equals(EVALUATION_ORDER_QUESTION_TYPE)) {
+            // retrieve subjects' info from facts ...
+            Map<String, BackendFactEntity> nameToText = new HashMap<>();
+            Map<String, BackendFactEntity> nameToPos = new HashMap<>();
+            Map<String, BackendFactEntity> nameToBeforeThirdOperator = new HashMap<>();
+
+            for (BackendFactEntity violation : violations) {
+                if (violation.getVerb().equals("text")) {
+                    nameToText.put(violation.getSubject(), violation);
+                } else if (violation.getVerb().equals("index")) {
+                    nameToPos.put(violation.getSubject(), violation);
+                } else if (violation.getVerb().equals("before_third_operator")) {
+                    nameToBeforeThirdOperator.put(violation.getSubject(), violation);
                 }
-            } else if (violation.getVerb().equals("student_error_left_assoc")) {
-                mistake.setLawName("error_single_token_binary_operator_has_unevaluated_same_precedence_left_associativity_left");
-            } else if (violation.getVerb().equals("student_error_right_assoc")) {
-                mistake.setLawName("error_single_token_binary_operator_has_unevaluated_same_precedence_right_associativity_right");
-            } else if (violation.getVerb().equals("wrong_type")) {
-                mistake.setLawName("error_wrong_type");
             }
-            if (mistake.getLawName() != null) {
-                mistake.setViolationFacts(new ArrayList<>(Arrays.asList(
-                        violation,
-                        nameToText.get(violation.getObject()),
-                        nameToText.get(violation.getSubject()),
-                        nameToPos.get(violation.getObject()),
-                        nameToPos.get(violation.getSubject())
-                )));
-                mistakes.add(mistake);
+
+            // filter facts and fill mistakes list ...
+            for (BackendFactEntity violation : violations) {
+                ViolationEntity violationEntity = new ViolationEntity();
+                if (violation.getVerb().equals("student_error_more_precedence")) {
+                    if (getIndexFromName(violation.getSubject(), false).orElse(0) > getIndexFromName(violation.getObject(), false).orElse(0)) {
+                        violationEntity.setLawName("error_base_higher_precedence_left");
+                    } else {
+                        violationEntity.setLawName("error_base_higher_precedence_right");
+                    }
+                } else if (violation.getVerb().equals("student_error_left_assoc")) {
+                    violationEntity.setLawName("error_base_same_precedence_left_associativity_left");
+                } else if (violation.getVerb().equals("student_error_right_assoc")) {
+                    violationEntity.setLawName("error_base_same_precedence_right_associativity_right");
+                } else if (violation.getVerb().equals("student_error_strict_operands_order")) {
+                    violationEntity.setLawName("error_base_student_error_strict_operands_order");
+                } else if (violation.getVerb().equals("student_error_unevaluated_operand")) {
+                    violationEntity.setLawName("error_base_student_error_unevaluated_operand");
+                } else if (violation.getVerb().equals("student_error_early_finish")) {
+                    violationEntity.setLawName("error_base_student_error_early_finish");
+                } else if (violation.getVerb().equals("student_error_in_complex")) {
+                    violationEntity.setLawName("error_base_student_error_in_complex");
+                } else if (violation.getVerb().equals("wrong_type")) {
+                    violationEntity.setLawName("error_wrong_type");
+                }
+                if (violationEntity.getLawName() != null) {
+                    ArrayList<BackendFactEntity> facts = new ArrayList<>(Arrays.asList(
+                            violation,
+                            nameToText.get(violation.getObject()),
+                            nameToText.get(violation.getSubject()),
+                            nameToPos.get(violation.getObject()),
+                            nameToPos.get(violation.getSubject())));
+                    if (nameToBeforeThirdOperator.containsKey(violation.getObject())) {
+                        facts.add(nameToBeforeThirdOperator.get(violation.getObject()));
+                        facts.add(nameToPos.get(nameToBeforeThirdOperator.get(violation.getObject()).getObject()));
+                        facts.add(nameToText.get(nameToBeforeThirdOperator.get(violation.getObject()).getObject()));
+                    }
+                    violationEntity.setViolationFacts(facts);
+                    mistakes.add(violationEntity);
+                }
             }
         }
 
         InterpretSentenceResult result = new InterpretSentenceResult();
-        result.mistakes = mistakes;
+        result.violations = mistakes;
         result.correctlyAppliedLaws = calculateCorrectlyAppliedLaws(violations);
+        result.isAnswerCorrect = mistakes.isEmpty();
 
         ProcessSolutionResult processResult = processSolution(violations);
         result.CountCorrectOptions = processResult.CountCorrectOptions;
-        result.IterationsLeft = processResult.IterationsLeft + (mistakes.isEmpty() ? 0 : 1);
+        result.IterationsLeft = processResult.IterationsLeft + (result.isAnswerCorrect ? 0 : 1);
         return result;
     }
 
@@ -986,9 +1423,9 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
     }
 
     @Override
-    public ArrayList<HyperText> makeExplanation(List<MistakeEntity> mistakes, FeedbackType feedbackType) {
+    public ArrayList<HyperText> makeExplanation(List<ViolationEntity> mistakes, FeedbackType feedbackType) {
         ArrayList<HyperText> result = new ArrayList<>();
-        for (MistakeEntity mistake : mistakes) {
+        for (ViolationEntity mistake : mistakes) {
             result.add(makeExplanation(mistake, feedbackType));
         }
         return result;
@@ -1005,7 +1442,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         return "operator ";
     }
 
-    private HyperText makeExplanation(MistakeEntity mistake, FeedbackType feedbackType) {
+    private HyperText makeExplanation(ViolationEntity mistake, FeedbackType feedbackType) {
 
         // retrieve subjects' info from facts, and find base and third ...
         BackendFactEntity base = null;

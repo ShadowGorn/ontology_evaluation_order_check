@@ -14,6 +14,7 @@ public class QuestionEntity {
     private QuestionType questionType;
     private QuestionStatus questionStatus;
     private String questionText;
+    private String questionName;
 
     private String questionDomainType;
     private Boolean areAnswersRequireContext;

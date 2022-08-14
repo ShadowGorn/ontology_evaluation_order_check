@@ -10,5 +10,5 @@ public class ExplanationTemplateInfoEntity {
 
     private String fieldName;
     private String value;
-    private MistakeEntity mistake;
+    private ViolationEntity mistake;
 }

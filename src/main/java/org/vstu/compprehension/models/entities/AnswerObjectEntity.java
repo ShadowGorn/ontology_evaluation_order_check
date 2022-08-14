@@ -9,6 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AnswerObjectEntity {
     private Long id;
+    private Integer answerId;
     private String hyperText;
     private String domainInfo;
     private boolean isRightCol;

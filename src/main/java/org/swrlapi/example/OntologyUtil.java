@@ -189,6 +189,7 @@ public class OntologyUtil {
             return this;
         }
         List<ErrorPart> parts;
+        String type;
     }
 
     public static String getOperatorTextDescriptionRu(String errorText) {
@@ -544,7 +545,7 @@ public class OntologyUtil {
                     "operator",
                     thirdOperatorPos
             )).add(new ErrorPart(
-                    "must be evaluated before​"
+                    "must be evaluated before"
             )).add(new ErrorPart(
                     "its right operand",
                     "operator",
