@@ -37,6 +37,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
     static final String QUESTIONS_CONFIG_PATH = "org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-questions.json";
     static final String SUPPLEMENTARY_CONFIG_PATH = "org/vstu/compprehension/models/businesslogic/domains/programming-language-expression-domain-supplementary-strategy.json";
 
+    public static final String END_EVALUATION = "student_end_evaluation";
 
     ResourceBundle localeRu;
     ResourceBundle localeEng;
@@ -276,7 +277,7 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
                 val baseQuestionText = getMessage("expr_domain.BASE_QUESTION_TEXT", langStr(userLang));
                 //TODO: remove this hack supporting old format
                 if (!q.getStatementFacts().isEmpty() && (q.getStatementFacts().get(0).getVerb() == null)) {
-                    entity.setQuestionText(baseQuestionText + ExpressionToHtml(""));
+                    entity.setQuestionText(baseQuestionText + ExpressionToHtml(q.getStatementFacts()));
                 } else {
                     entity.setQuestionText(baseQuestionText + text
                             .replace("end evaluation", getMessage("expr_domain.END_EVALUATION", langStr(userLang)))
@@ -396,29 +397,31 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
         return answerObject;
     }
 
-    public static String ExpressionToHtml(String text) {
-        StringBuilder sb = new StringBuilder(text);
-
-        // Wrap every token of the expression with <span> and some metadata ...
-        Pattern pattern = Pattern.compile("\\<\\=|\\>\\=|\\=\\=|\\!\\=|\\<\\<|\\>\\>|\\+|\\-|\\*|\\/|\\<|\\>|\\w+");
-        Matcher matcher = pattern.matcher(sb.toString());
+    public static String ExpressionToHtml(List<BackendFactEntity> expression) {
+        StringBuilder sb = new StringBuilder("");
+        sb.append("<p class='comp-ph-expr'>");
         int idx = 0;
         int anwerIdx = -1;
-        int offset = 0;
-        while (offset < sb.length() && matcher.find(offset)) {
-            String match = matcher.group(0);
-            String replaceStr = match.matches("\\w")
-                    ? "<span data-comp-ph-pos='" + (++idx) +"' class='comp-ph-expr-const'>" + matcher.group(0) +"</span>"
-                    : "<span data-comp-ph-pos='" + (++idx) +"' id='answer_" + (++anwerIdx) +"' class='comp-ph-expr-op-btn'>" + matcher.group(0) +"</span>";
+        for (BackendFactEntity fact : expression) {
+            String tokenValue = "";
+            if (fact.getSubjectType() != null) { // Token has value
+                tokenValue = fact.getSubjectType();
+            }
 
-            sb.replace(matcher.start(), matcher.end(), replaceStr);
-            offset = matcher.start() + replaceStr.length() ;
-            matcher = pattern.matcher(sb.toString());
+            if (fact.getSubject() != null && fact.getSubject().equals("operator")) {
+                sb.append("<span data-comp-ph-pos='").append(++idx).append("' id='answer_").append(++anwerIdx).append("' class='comp-ph-expr-op-btn' data-comp-ph-value='").append(tokenValue).append("'>").append(fact.getObject()).append("</span>");
+            } else if (fact.getSubject() != null && fact.getSubject().equals(END_EVALUATION)) {
+                sb.append("<span data-comp-ph-pos='").append(++idx).append("' id='answer_").append(++anwerIdx).append("' class='comp-ph-expr-op-btn comp-ph-expr-op-end' data-comp-ph-value=''>").append(fact.getObject()).append("</span>");
+            } else {
+                sb.append("<span data-comp-ph-pos='").append(++idx).append("' class='comp-ph-expr-const' data-comp-ph-value='").append(tokenValue).append("'>").append(fact.getObject()).append("</span>");
+            }
         }
 
-        sb.insert(0, "<p class='comp-ph-expr'>");
-        sb.append("<!-- Original expression: " + text + "-->");
-        sb.append("</p>");
+        sb.append("<!-- Original expression: ");
+        for (BackendFactEntity fact : expression) {
+            sb.append(fact.getObject()).append(" ");
+        }
+        sb.append("-->").append("</p>");
         return QuestionTextToHtml(sb.toString());
     }
 
@@ -745,10 +748,14 @@ public class ProgrammingLanguageExpressionDomain extends Domain {
     }
 
     String getMessage(String x, String lang) {
-        if (lang.equals("ru")) {
-            return localeRu.getString(x);
-        } else {
-            return localeEng.getString(x);
+        try {
+            if (lang.equals("ru")) {
+                return localeRu.getString(x);
+            } else {
+                return localeEng.getString(x);
+            }
+        } catch (MissingResourceException xcp) {
+            return x;
         }
     }
 

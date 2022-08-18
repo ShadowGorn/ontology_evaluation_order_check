@@ -30,6 +30,14 @@ public class ProgrammingLanguageExpressionDomainTest {
         assertTrue(domain.getPositiveLaw("single_token_binary_execution").isPositiveLaw());
     }
 
+    List<BackendFactEntity> createStatement(List<String> expression, List<String> isOperator) {
+        List<BackendFactEntity> facts = new ArrayList<>();
+        for (int i = 0; i < expression.size(); ++i) {
+            facts.add(new BackendFactEntity(isOperator.get(i),"",expression.get(i)));
+        }
+        return facts;
+    }
+
     @Test
     public void testQuestionGeneration() throws Exception {
         List<Tag> tags = new ArrayList<>();
@@ -51,7 +59,7 @@ public class ProgrammingLanguageExpressionDomainTest {
         qr.setDeniedConcepts(List.of(
                 domain.getConcept("associativity")
         ));
-        assertEquals(ProgrammingLanguageExpressionDomain.ExpressionToHtml("a == b < c"), domain.makeQuestion(qr, tags, Language.ENGLISH).getQuestionText().getText());
+        assertEquals("<p>Press the operators in the expression in the order they are evaluated</p>"+ProgrammingLanguageExpressionDomain.ExpressionToHtml(createStatement(List.of("a", "==", "b", "<", "c"), List.of("", "operator", "", "operator", ""))), domain.makeQuestion(qr, tags, Language.ENGLISH).getQuestionText().getText());
 
         QuestionRequest qr2 = new QuestionRequest();
         qr2.setTargetConcepts(List.of(
@@ -64,7 +72,7 @@ public class ProgrammingLanguageExpressionDomainTest {
         qr2.setDeniedConcepts(List.of(
                 domain.getConcept("precedence")
         ));
-        assertEquals(ProgrammingLanguageExpressionDomain.ExpressionToHtml("a + b + c"), domain.makeQuestion(qr2, tags, Language.ENGLISH).getQuestionText().getText());
+        assertEquals("<p>Press the operators in the expression in the order they are evaluated</p>"+ProgrammingLanguageExpressionDomain.ExpressionToHtml(createStatement(List.of("a", "+", "b", "+", "c"), List.of("", "operator", "", "operator", ""))), domain.makeQuestion(qr2, tags, Language.ENGLISH).getQuestionText().getText());
 
         QuestionRequest qr3 = new QuestionRequest();
         qr3.setTargetConcepts(List.of(
@@ -79,7 +87,7 @@ public class ProgrammingLanguageExpressionDomainTest {
         qr3.setDeniedConcepts(List.of(
 
         ));
-        assertEquals(ProgrammingLanguageExpressionDomain.ExpressionToHtml("a + b + c * d"), domain.makeQuestion(qr3, tags, Language.ENGLISH).getQuestionText().getText());
+        assertEquals("<p>Press the operators in the expression in the order they are evaluated</p>"+ProgrammingLanguageExpressionDomain.ExpressionToHtml(createStatement(List.of("a", "+", "b", "+", "c", "*", "d"), List.of("", "operator", "", "operator", "", "operator", ""))), domain.makeQuestion(qr3, tags, Language.ENGLISH).getQuestionText().getText());
 
         QuestionRequest qr4 = new QuestionRequest();
         qr4.setTargetConcepts(List.of());
@@ -116,7 +124,7 @@ public class ProgrammingLanguageExpressionDomainTest {
                 domain.getConcept("associativity")
         ));
         Question question = domain.makeQuestion(qr, tags, Language.ENGLISH);
-        assertEquals(ProgrammingLanguageExpressionDomain.ExpressionToHtml("a == b < c"), question.getQuestionText().getText());
+        assertEquals("<p>Press the operators in the expression in the order they are evaluated</p>"+ProgrammingLanguageExpressionDomain.ExpressionToHtml(createStatement(List.of("a", "==", "b", "<", "c"), List.of("", "operator", "", "operator", ""))), question.getQuestionText().getText());
 
         Backend backend = new JenaBackend();
         List<BackendFactEntity> solution = backend.solve(
