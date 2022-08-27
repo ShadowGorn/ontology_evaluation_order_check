@@ -40,6 +40,7 @@ public class JsonRequester {
     // {"expression":[{"text":"a","check_order":1000,"enabled":false},{"text":".","check_order":1000,"enabled":true},{"text":"b","check_order":1000,"enabled":false},{"text":"(","check_order":1000,"enabled":true},{"text":"c","check_order":1000,"enabled":false},{"text":"+","check_order":1,"status":"wrong","enabled":true},{"text":"1","check_order":1000,"enabled":false},{"text":"*","check_order":1000,"enabled":true},{"text":"d","check_order":1000,"enabled":false},{"text":")","check_order":1000,"enabled":false}],"errors":[{"parts":[{"text":"operator * at pos 8","type":"operator","index":8},{"text":"should be evaluated before","type":"plain_text"},{"text":"operator + at pos 6,","type":"operator","index":6},{"text":"because","type":"plain_text"},{"text":"operator *","type":"operator","index":8},{"text":"has higher","type":"plain_text"},{"text":"precedence","type":"term"}],"type":"error_base_higher_precedence_right"}],"lang":"en","task_lang":"cpp","action":"get_supplement","type":"main"}
     // {"expression":[{"text":"a","check_order":1000,"enabled":false},{"text":".","check_order":1000,"enabled":true},{"text":"b","check_order":1000,"enabled":false},{"text":"(","check_order":1000,"enabled":true},{"text":"c","check_order":1000,"enabled":false},{"text":"+","check_order":1,"enabled":true},{"text":"1","check_order":1000,"enabled":false},{"text":"*","check_order":1000,"enabled":true},{"text":"d","check_order":1000,"enabled":false},{"text":")","check_order":1000,"enabled":false}],"answers":[{"text":"precedence of operator c at pos 5","status":"correct","additional_info":"select_highest_precedence_left_operator","enabled":true},{"text":"associativity of operator c at pos 5","status":"wrong","additional_info":"select_precedence_or_associativity_left_influence","enabled":true},{"text":"precedence of operator 1 at pos 7","status":"correct","additional_info":"select_highest_precedence_right_operator","enabled":true},{"text":"associativity of operator 1 at pos 7","status":"wrong","additional_info":"select_precedence_or_associativity_right_influence","enabled":true}],"errors":[{"parts":[], "type":"select_precedence_or_associativity_right_influence"}],"lang":"en","task_lang":"cpp","action":"get_supplement","type":"supplementary","text":"What prevents evaluation of operator + at pos 6 ?"}
     // {"expression":[{"text":"a","check_order":1000,"enabled":false},{"text":".","check_order":1000,"enabled":true},{"text":"b","check_order":1000,"enabled":false},{"text":"(","check_order":1000,"enabled":true},{"text":"c","check_order":1000,"enabled":false},{"text":"+","check_order":1,"enabled":true},{"text":"1","check_order":1000,"enabled":false},{"text":"*","check_order":1000,"enabled":true},{"text":"d","check_order":1000,"enabled":false},{"text":")","check_order":1000,"enabled":false}],"answers":[{"text":"precedence","status":"correct","additional_info":"select_highest_precedence_right_operator","enabled":true},{"text":"associativity","status":"wrong","additional_info":"error_select_precedence_or_associativity_left","enabled":true}],"errors":[{"parts":[], "type":"select_highest_precedence_right_operator"}],"lang":"en","task_lang":"cpp","action":"get_supplement","type":"supplementary","text":"What influences evaluation order at first?"}
+    // {"expression":[{"text":"a"},{"text":"<"},{"text":"b"},{"text":"*"},{"text":"c"},{"text":"*"},{"text":"d"},{"text":"+"},{"text":"e"},{"text":"*"},{"text":"f"}],"errors":[],"lang":"en", "task_lang":"cpp", "action":"next_step"}
 
     public String response(String request) {
         Message message;
@@ -237,28 +238,25 @@ public class JsonRequester {
             if (correctAnswer == null) {
                 return new Gson().toJson(message);
             }
-            pos = 0;
-            for (AnswerObjectEntity answer : helper.getQuestion().getAnswerObjects()) {
-                if (answer.getDomainInfo().equals(correctAnswer.answer.getDomainInfo())) {
-                    for (MessageToken token : message.expression) {
-                        if (token.check_order != 1000 && token.check_order != 0) {
-                            token.enabled = false;
-                            token.status = "correct";
-                        }
-                    }
 
-                    message.expression.get(pos).enabled = false;
-                    message.expression.get(pos).status = "suggested";
-                    message.expression.get(pos).check_order = last_check_order + 1;
-
-                    OntologyUtil.Error error = new OntologyUtil.Error();
-                    OntologyUtil.ErrorPart errorPart = new ErrorPart(correctAnswer.explanation.getText());
-                    message.errors.add(error.add(errorPart));
-
-                    return new Gson().toJson(message);
+            for (MessageToken token : message.expression) {
+                if (token.check_order != 1000 && token.check_order != 0) {
+                    token.enabled = false;
+                    token.status = "correct";
                 }
-                pos++;
             }
+
+            pos = Integer.parseInt(correctAnswer.answer.getDomainInfo().substring("op__0__".length())) - 1;
+            message.expression.get(pos).enabled = false;
+            message.expression.get(pos).status = "suggested";
+            message.expression.get(pos).check_order = last_check_order + 1;
+
+            OntologyUtil.Error error = new OntologyUtil.Error();
+            OntologyUtil.ErrorPart errorPart = new ErrorPart(correctAnswer.explanation.getText());
+            message.errors.add(error.add(errorPart));
+
+            return new Gson().toJson(message);
+
         }
 
         return new Gson().toJson(message);
